@@ -11,14 +11,21 @@
     </image>
     <generator>Hugo -- 0.128.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 07 Jul 2024 16:18:05 +0200</lastBuildDate>
+    <lastBuildDate>Sun, 07 Jul 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>My First Post</title>
+      <title>Nonlinear Functional Analysis: Bifurcation Theory</title>
+      <link>http://localhost:1313/posts/bifurcation-theory/</link>
+      <pubDate>Sun, 07 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/bifurcation-theory/</guid>
+      <description>Introduction to Uniparametric Bifurcation Theory.</description>
+    </item>
+    <item>
+      <title>My 1st post</title>
       <link>http://localhost:1313/posts/my-first-post/</link>
-      <pubDate>Sun, 07 Jul 2024 16:18:05 +0200</pubDate>
+      <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
       <guid>http://localhost:1313/posts/my-first-post/</guid>
-      <description>Introduction </description>
+      <description>Desc Text.</description>
     </item>
   </channel>
 </rss>

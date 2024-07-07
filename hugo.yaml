@@ -77,7 +77,7 @@ params:
   # home-info mode
   homeInfoParams:
     Title: "Welcome to Dani's Blog"
-    Content: Hi, this is Daniel López Montero. I will upload notes, projects and some thoughts on topics I am interested at. I have a degree in mathematics and like to program, read and play some sports in my spare time.
+    Content: Hi, this is Daniel López Montero. I will upload notes, projects and some thoughts on topics I am interested in. I am a Master student of Mathematics, work as a data scientist and like to program, read and play football, basketball and padel in my spare time.
 
   socialIcons:
     - name: linkedin
@@ -149,3 +149,18 @@ markup:
     # guessSyntax: true
     # lineNos: true
     # style: monokai
+  goldmark:
+    extensions:
+      passthrough:
+        delimiters:
+          block:
+          - - \[
+            - \]
+          - - $$
+            - $$
+          inline:
+          - - \(
+            - \)
+          - - $
+            - $
+        enable: true
