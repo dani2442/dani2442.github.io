@@ -1,5 +1,11 @@
 {
     "cSpell.words": [
-        "mathfrak"
+        "mathcal",
+        "mathfrak",
+        "mathbb"
+    ],
+    "cSpell.enableFiletypes": [
+        "markdown-math",
+        "tex"
     ]
 }
