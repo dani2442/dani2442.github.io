@@ -1,6 +1,6 @@
 ---
 title: "Nonlinear Functional Analysis: Bifurcation Theory"
-date: 2024-07-07
+date: 2024-07-11
 tags: ["mathematics"]
 author: "Daniel López Montero"
 showToc: true
