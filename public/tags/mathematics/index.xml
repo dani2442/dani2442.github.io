@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Mathematics on dani2442&#39;s Blog</title>
     <link>http://localhost:1313/tags/mathematics/</link>
     <description>Recent content in Mathematics on dani2442&#39;s Blog</description>
-    <image>
-      <title>dani2442&#39;s Blog</title>
-      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
-    </image>
-    <generator>Hugo -- 0.128.2</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 07 Jul 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/mathematics/index.xml" rel="self" type="application/rss+xml" />
@@ -18,7 +13,7 @@
       <link>http://localhost:1313/posts/bifurcation-theory/</link>
       <pubDate>Sun, 07 Jul 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/bifurcation-theory/</guid>
-      <description>Introduction to Uniparametric Bifurcation Theory.</description>
+      <description>Several non-linear problems relevant in practical applications can be expressed as a fixed point equation. In many cases, it is crucial to investigate how the model’s behavior changes with variations in a parameter, denoted as $\lambda$. In practical applications, $\lambda$ represents a physical or empirical magnitude of interest. Bifurcation Theory is a subfield in Nonlinear Functional Analysis that tries to study the general behavior of the equations that can be written as $\mathfrak{F}(\lambda, u)=0$ where $\lambda$ is the bifurcation parameter.</description>
     </item>
   </channel>
 </rss>
