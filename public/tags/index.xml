@@ -20,5 +20,12 @@
       <guid>http://localhost:1313/tags/mathematics/</guid>
       <description></description>
     </item>
+    <item>
+      <title>First</title>
+      <link>http://localhost:1313/tags/first/</link>
+      <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
+      <guid>http://localhost:1313/tags/first/</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>
