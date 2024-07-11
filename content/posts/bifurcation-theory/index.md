@@ -5,17 +5,11 @@ tags: ["mathematics"]
 author: "Daniel López Montero"
 showToc: true
 draft: false
-description: "Introduction to Uniparametric Bifurcation Theory."
+description: "Introduction to Bifurcation Theory from simple eigenvalues."
 ShowWordCount: false
 ShowReadingTime: true
 comments: true
 UseHugoToc: true
-cover:
-    image: "<image path/url>" # image path/url
-    alt: "<alt text>" # alt text
-    caption: "<text>" # display caption under cover
-    relative: false # when using page bundles set this to true
-    hidden: true # only hide on current single page
 editPost:
     URL: "https://github.com/dani2442/dani2442.github.io/content"
     Text: "Suggest Changes" # edit text

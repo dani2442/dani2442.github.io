@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>dani2442&#39;s Blog</title>
-    <link>http://localhost:1313/</link>
+    <link>http://localhost:1313/posts/bifurcation-theory/</link>
     <description>Recent content on dani2442&#39;s Blog</description>
     <image>
       <title>dani2442&#39;s Blog</title>
@@ -11,14 +11,6 @@
     </image>
     <generator>Hugo -- 0.128.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 11 Jul 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Nonlinear Functional Analysis: Bifurcation Theory</title>
-      <link>http://localhost:1313/posts/bifurcation-theory/</link>
-      <pubDate>Thu, 11 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/bifurcation-theory/</guid>
-      <description>Introduction to Bifurcation Theory from simple eigenvalues.</description>
-    </item>
+    <atom:link href="http://localhost:1313/posts/bifurcation-theory/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
