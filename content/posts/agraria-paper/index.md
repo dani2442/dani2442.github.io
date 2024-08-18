@@ -4,7 +4,7 @@ date: 2024-08-18
 tags: ["mathematics", "simulation", "differentiable programming", "neural ODEs", "optimization"]
 author: "Daniel López Montero"
 showToc: true
-draft: true
+draft: false
 description: "Optimization using Differntiable Programming and Neural ODEs."
 ShowWordCount: false
 ShowReadingTime: true
