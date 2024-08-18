@@ -9,10 +9,24 @@
       <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
       <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
     </image>
-    <generator>Hugo -- 0.128.2</generator>
+    <generator>Hugo -- 0.133.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 11 Jul 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 18 Aug 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Differentiable programming for gradient-based control and optimization in physical systems</title>
+      <link>http://localhost:1313/posts/agraria-paper/</link>
+      <pubDate>Sun, 18 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/agraria-paper/</guid>
+      <description>Optimization using Differntiable Programming and Neural ODEs.</description>
+    </item>
+    <item>
+      <title>Traffic Flow Dynamics</title>
+      <link>http://localhost:1313/posts/traffic-flow/</link>
+      <pubDate>Sat, 17 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/traffic-flow/</guid>
+      <description>Introduction to Traffic Flow Dynamics.</description>
+    </item>
     <item>
       <title>Nonlinear Functional Analysis: Bifurcation Theory</title>
       <link>http://localhost:1313/posts/bifurcation-theory/</link>
