@@ -9,7 +9,7 @@
       <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
       <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
     </image>
-    <generator>Hugo -- 0.147.0</generator>
+    <generator>Hugo -- 0.147.8</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 29 Apr 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
@@ -40,6 +40,20 @@
       <pubDate>Thu, 11 Jul 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/bifurcation-theory/</guid>
       <description>Introduction to Bifurcation Theory from simple eigenvalues.</description>
+    </item>
+    <item>
+      <title>Nonlinear Functional Analysis: Bifurcation Theory</title>
+      <link>http://localhost:1313/posts/finite_volume_method/</link>
+      <pubDate>Thu, 11 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/finite_volume_method/</guid>
+      <description>Introduction to Bifurcation Theory from simple eigenvalues.</description>
+    </item>
+    <item>
+      <title>My 1st post</title>
+      <link>http://localhost:1313/posts/my-first-post/</link>
+      <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
+      <guid>http://localhost:1313/posts/my-first-post/</guid>
+      <description>Desc Text.</description>
     </item>
   </channel>
 </rss>

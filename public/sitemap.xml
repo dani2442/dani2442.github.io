@@ -47,6 +47,15 @@
     <loc>http://localhost:1313/posts/bifurcation-theory/</loc>
     <lastmod>2024-07-11T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/posts/finite_volume_method/</loc>
+    <lastmod>2024-07-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/first/</loc>
+    <lastmod>2020-09-15T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/my-first-post/</loc>
+    <lastmod>2020-09-15T11:30:03+00:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/categories/</loc>
   </url>
 </urlset>
