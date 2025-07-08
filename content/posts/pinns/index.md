@@ -130,7 +130,6 @@ The objective is to find the state variables—velocity components $(u,v)$ and p
 
 
 ## References
-
 [Raissi, 2019] Raissi, M., Perdikaris, P., and Karniadakis, G. E. (2019). Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations. Journal of Computational Physics, 378:686–707.
 
 [Chen, 2019] Chen, R. T. Q., Rubanova, Y., Bettencourt, J., and Duvenaud, D. (2019). Neural Ordinary Differential Equations. arXiv:1806.07366 [cs].
