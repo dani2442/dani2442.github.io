@@ -5,6 +5,9 @@
     <loc>http://localhost:1313/</loc>
     <lastmod>2025-04-29T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/tags/deep-learning/</loc>
+    <lastmod>2025-04-29T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/tags/functional-data-analysis/</loc>
     <lastmod>2025-04-29T00:00:00+00:00</lastmod>
   </url><url>
@@ -12,6 +15,18 @@
     <lastmod>2025-04-29T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/mathematics/</loc>
+    <lastmod>2025-04-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/ode/</loc>
+    <lastmod>2025-04-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/pde/</loc>
+    <lastmod>2025-04-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/physics/</loc>
+    <lastmod>2025-04-29T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/pinns/</loc>
     <lastmod>2025-04-29T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/</loc>
@@ -46,15 +61,6 @@
   </url><url>
     <loc>http://localhost:1313/posts/bifurcation-theory/</loc>
     <lastmod>2024-07-11T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/finite_volume_method/</loc>
-    <lastmod>2024-07-11T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/first/</loc>
-    <lastmod>2020-09-15T11:30:03+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/my-first-post/</loc>
-    <lastmod>2020-09-15T11:30:03+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/</loc>
   </url>
