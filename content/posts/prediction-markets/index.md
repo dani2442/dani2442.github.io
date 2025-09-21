@@ -16,18 +16,17 @@ editPost:
     appendFilePath: true # to append file path to Edit link
 ---
 
-## Introduction
 
-I always thought that actions matter more than words. And the maximum expression of this idea is the stock market, and most recently in prediction markets (such as Polymarket). For example, you can bet on wide varied of topics that stretched from who might win the election to how many tweets will Elon Musk post in a day.  
+I always thought that actions matter more than words. The ultimate expression of this idea is the stock market and, more recently, prediction markets (such as Polymarket). For example, you can bet on a wide variety of topics that stretch from who might win an election to how many tweets Elon Musk will post in a day. 
 
-During the past few years I feel that we have lost the trust on institutions and journalism [1]. This has play an important role on the rise of this new financial instruments. It became clear during the last US election where there was a big gap between the polls and where the money went [2]. In fact, there is mathematical backup for the information aggregation provided by prediction markets [3]. However, we must not glorify it and never guessed as there is the risk of insider trading and there is a perverse incentive for market manipulation.
+Over the past few years, I feel that we have lost trust in institutions and journalism in general [1]. This has play an important role on the rise of this new financial instruments. This manipulation became clear during the last US election, where there was a big gap between the polls and where the money was going [2]. In contrast, in financial markets there is an asymmetry of power in the outcome, i.e., it's mostly a big fish game. Despite this, there is mathematical backing for the information aggregation provided by prediction markets [3] and the last few years of results confirms it. However, we must not glorify them, as there is a risk of insider trading and a perverse incentive for market manipulation.
 
 Now, how does it work behind the curtains?
 
-First, lets see how compares to old markets and what differs. New market theory tells us that the price at the current moment of something is between the lower seller and the highest bidder (the difference between both is called the spread and represents the liquidity of the market). In prediction market the price is the odds of the bet, which is binary (win or lose). And once the bet is settle you receive the total quantity. For example, if you buy 20€ at an odd of 20%, you will receive 100€ or 0€ depending on the outcome. The interesting part is that you can sell your bet at any point in time, for example if the market now prices 40% odds, you can get back 40€.
+First, let's see how this compares to traditional markets and what the differences are. Traditional market theory tells us that the current price of an asset falls between the lowest price a seller is asking and the highest price a bidder is offering (the difference between these two is called the spread and represents the market's liquidity). In a prediction market, the "price" represents the odds of a binary outcome (win or lose). Once the bet is settled, you receive the payout. For example, if you bet €20 on an outcome with a 20% probability, you will receive €100 if you're right or €0 if you're wrong. The interesting part is that you can sell your bet at any point in time. For instance, if the market's perceived probability rises to 40%, you could sell your position for €40.
 
 ## Mathematical Modeling:
-The use of maths in finance is rather late. The Modern Portolio Theory introduced by Harry Markowitz dates to 50's, the black-scholes equation for options pricing appeared in 70's, and the first interest rates such as Vasicek Model and CIR Model in late 70's and 80's. I expect new work in predictive modeling in the following years.
+The application of advanced mathematics in finance is a relatively recent development. For example, Modern Portfolio Theory, introduced by Harry Markowitz, dates to the '50s; the Black-Scholes equation for options pricing appeared in the '70s; and the first major interest rate models, such as the Vasicek and CIR models, emerged in the late '70s and '80s [4, 5, 6, 7]. I expect to see further developments in predictive modeling in the coming years.
 
 Now, we can derive a simple model that can be used for this modelling task, namely two-point information-filtering model. 
 
@@ -168,10 +167,10 @@ plt.show()
 
 
 Main takeaways (opinion):
-- I think this market will continue to grow at a fast pace, I think the information that the market provides is very useful to consumers and the market itself.
-- I don't like that in Polymarket, for long-term bets it do not appreciate with the current interest rate, so you kind of bear inflation risk (as the currency used behind is USDT, which is the stable coin for dollars, i.e., 1$ = 1 USDT)
-- I expect institutions to start getting involved rather than the current majority of retailers that currently use it.
-- I think we will see the introduction of more complex financial instruments such as derivatives.
+- I believe this market will continue to grow rapidly, as the information it provides is very useful to consumers and the market participants themselves.
+- A drawback of platforms like Polymarket is that capital tied up in long-term bets doesn't accrue interest. This means users are exposed to inflation risk, as the underlying currency is a stablecoin pegged to the dollar, i.e., 1$ = 1 USDT
+- I expect institutions to become more involved, shifting the user base from its current majority of retail investors..
+- I think we will see the introduction of more complex financial instruments such as derivatives on prediction markets outcomes.
 - Increase in regulation (avoid insider trading, market manipulation, etc).
 - Future work in mathematical models, introduction of Modern Portfolio Theory, hedging, risk, etc.
 
@@ -186,4 +185,10 @@ Main takeaways (opinion):
 
 [3] https://projects.iq.harvard.edu/files/yiling/files/icecr04.pdf
 
+[4] Baxter, M. y Rennie, A., Financial calculus an introduction to derivative pricing, Cambridge University Press
 
+[5] Hull, J., Options, futures, and other derivative securities, Prentice-Hall.
+
+[6] Neftci, S.N., An Introduction to the Mathematics of Financial Derivatives, Academic Press
+
+[7] Wilmott, P., Howison, S. y Dewynne, J, Option pricing: mathematical models and computation, Oxford Finantial.
