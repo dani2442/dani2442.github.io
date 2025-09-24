@@ -1,7 +1,7 @@
 ---
 title: "Prediction Markets"
 date: 2025-09-24
-tags: ["mathematics", "physics", "deep learning", "PDE", "ODE"]
+tags: ["mathematics", "finance", "stochastic differential equations", "prediction markets"]
 author: "Daniel López Montero"
 showToc: true
 draft: false
