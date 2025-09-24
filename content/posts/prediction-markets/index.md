@@ -1,6 +1,6 @@
 ---
 title: "Prediction Markets"
-date: 2025-09-20
+date: 2025-09-24
 tags: ["mathematics", "physics", "deep learning", "PDE", "ODE"]
 author: "Daniel López Montero"
 showToc: true
@@ -28,9 +28,18 @@ First, let's see how this compares to traditional markets and what the differenc
 ## Mathematical Modeling:
 The application of advanced mathematics in finance is a relatively recent development. For example, Modern Portfolio Theory, introduced by Harry Markowitz, dates to the '50s; the Black-Scholes equation for options pricing appeared in the '70s; and the first major interest rate models, such as the Vasicek and CIR models, emerged in the late '70s and '80s [4, 5, 6, 7]. I expect to see further developments in predictive modeling in the coming years.
 
-Now, we can derive a simple model that can be used for this modelling task, namely two-point information-filtering model. 
+Now, we can derive a simple mathematical model for this task. There are several models that can be used: 
 
-The unknown event is $X\in\{0,1\}$ with prior
+| Mathematical model | Stochastic Differential Equation |
+| ---- | ------ |
+|Two-point information-filtering model | $dP_t = \sigma P_t(1-P_t) dW_t$ |
+| Log-diffusion model (see Appendix [A](#a-derivation-of-the-log-odd-diffusion-model)) | $dP_t = P_t(1-P_t)(\mu + \frac{1}{2}\sigma^2(1-2P_t))dt +  P_t(1-P_t)\sigma dW_t $ |
+| Wright-Fisher model | $\sqrt{\gamma P_t(1-P_t)} dW_t$
+|
+
+We will focus on the two-point information-filtering model as it is Martingale process, i.e., $\mathbb{E}[P_{t+1} | P_{t}] = P_t$. This property is very natural to assume.
+
+Let us denote the unknown event by $X\in\{0,1\}$ with prior probabilities
 
 $$
 P(X=1)=p,\qquad P(X=0)=1-p.
@@ -39,7 +48,7 @@ $$
 We assume the market (or an information stream) observes the continuous process
 
 $$
-\xi_t=\sigma X t + B_t,
+\xi_t=\sigma X t + B_t,\tag{1}
 $$
 
 where $B_t$ is a standard Brownian motion (noise) and $\sigma>0$ is a signal-to-noise parameter (how strong the signal is). So conditional on $X$,
@@ -58,16 +67,16 @@ $$
 =\exp(\sigma\xi_t-\tfrac12\sigma^2 t).
 $$
 
-Then by Bayes
+Then using the natural filtration $\mathcal{F}_t=\sigma(\xi_s : s\leq t)$ and Bayes yields
 
 $$
 P_t:=\Pr(X=1\mid\mathcal F_t)
-=\frac{p\,L_t}{p\,L_t+(1-p)}
+=\frac{pf(\xi_t | X = 1)}{pf(\xi_t|X=1) + (1-p)f(\xi_t|X=0)}
 =\frac{p\exp(\sigma\xi_t-\tfrac12\sigma^2 t)}{p\exp(\sigma\xi_t-\tfrac12\sigma^2 t)+(1-p)}.
 $$
 
 This is an explicit closed form for the posterior in terms of $\xi_t$. It’s a logistic-type formula.
-Now, Differentiate $\xi_t$:
+Now, Differentiate $\xi_t$ in (1):
 
 $$
 d\xi_t=\sigma X\,dt + dB_t.
@@ -81,7 +90,7 @@ $$
 
 Properties:
 
-* $E[dW_t\mid\mathcal F_t]=E[d\xi_t\mid\mathcal F_t]-\sigma P_t dt=0$. So $W_t$ is a continuous martingale.
+* $E[dW_t\mid\mathcal F_t]=E[d\xi_t\mid\mathcal F_t]-\sigma P_t dt=\sigma\mathbb{E}[X |\mathcal{F}_t]dt - \sigma P_t dt =0$. So $W_t$ is a continuous martingale.
 * $(dW_t)^2=(d\xi_t)^2=(dB_t)^2=dt$ (cross terms with $dt$ vanish), so $\langle W\rangle_t = t$.
 
 By Lévy’s characterization, $W_t$ is a Brownian motion relative to $\mathcal F_t$. This is the standard *innovation* Brownian motion.
@@ -126,7 +135,7 @@ $$
 \boxed{\,dP_t=\sigma P_t(1-P_t)\,dW_t\,.}
 $$
 
-
+Notice that the model satisfies $P_t \in [0,1] $ and becomes constant when $P_t$ is 0 or 1. However, this model might not be able to arrive at a conclusion when the event is supposed to end, i.e., $P_T = 0 \text{ or }1$ (see the Experiments). See Appendix [B](#b-event-triggering-at) for a follow up on this issue.
 
 
 ## Experiment
@@ -192,3 +201,135 @@ Main takeaways (opinion):
 [6] Neftci, S.N., An Introduction to the Mathematics of Financial Derivatives, Academic Press
 
 [7] Wilmott, P., Howison, S. y Dewynne, J, Option pricing: mathematical models and computation, Oxford Finantial.
+
+
+## Appendix
+
+### (A) Derivation of the Log-odd diffusion model
+This model is an analogue to Black–Scholes idea. Assume log-odds $Y_t=\log\frac{P_t}{1-P_t}$ follows an arithmetic Brownian motion
+
+$$
+dY_t = \mu\,dt + \sigma\,dW_t.
+$$
+
+Set $P_t = f(Y_t)$ with $f(y) = \dfrac{1}{1+e^{-y}}$ (the sigmoid). By Itô:
+
+$$
+f'(y)=P(1-P),\qquad f''(y)=P(1-P)(1-2P).
+$$
+
+Thus
+
+$$
+dP_t = f'(Y_t)\,dY_t + \tfrac12 f''(Y_t)\,(dY_t)^2
+= P_t(1-P_t)\big(\mu\,dt + \sigma\,dW_t\big)
++ \tfrac12\sigma^2 P_t(1-P_t)(1-2P_t)\,dt,
+$$
+
+or collecting terms
+
+$$
+\boxed{\,dP_t = P_t(1-P_t)\,\sigma\,dW_t
+\;+\;P_t(1-P_t)\Big(\mu + \tfrac12\sigma^2(1-2P_t)\Big)\,dt. \,}
+$$
+
+### (B) Event triggering at $T$
+
+We have studied the two-point information-filtering model.
+However, this model does not handle a very important aspect. Imagine an event is resolver at time $T$. The model may not converge in time and in most applications the last moments are the most important. 
+
+We can make the same filtering model but force the information to become infinitely informative as 
+$t \rightarrow T^-$, which drives the posterior to 0 or 1 by time $T$. We can modify the equation with a time-dependent signal strength that guarantees resolution at $T$.
+
+$$
+dP_t = \sigma P_t(1-P_t)dW_t
+$$
+
+Replace the constant signal coefficient by a deterministic time-dependent one. Let
+
+$$
+d\xi_t = \sigma_t X\,dt + dB_t,\qquad t\in[0,T),
+$$
+
+with $X\in\{0,1\}$ and prior $\Pr(X=1)=p$. Here $\sigma_t>0$ is deterministic and continuous on $[0,T)$. (When needed we think of $\xi_0=0$.)
+
+> When $\sigma_t\equiv\sigma$ this is the previous model; now $\sigma_t$ may blow up as $t\to T$ to create arbitrarily large signal-to-noise.
+
+The likelihood ratio up to time $t$ is
+
+$$
+L_t
+=\frac{d\mathbb P(\xi_{[0,t]}\mid X=1)}{d\mathbb P(\xi_{[0,t]}\mid X=0)}
+=\exp\Big(\int_0^t \sigma_s\,d\xi_s - \tfrac12\int_0^t\sigma_s^2\,ds\Big).
+$$
+
+This is the Girsanov / Gaussian likelihood formula (check by completing the square).
+By Bayes,
+
+$$
+P_t=\frac{p\exp\big(\int_0^t\sigma_s\,d\xi_s-\tfrac12\int_0^t\sigma_s^2\,ds\big)}
+{p\exp\big(\int_0^t\sigma_s\,d\xi_s-\tfrac12\int_0^t\sigma_s^2\,ds\big)+(1-p)}.
+$$
+
+This reduces to the earlier closed form when $\sigma_s\equiv\sigma$.
+As before define the innovation
+
+$$
+dW_t := d\xi_t - \sigma_t P_t\,dt.
+$$
+
+One checks $W_t$ is an $\mathcal F_t$-Brownian motion. Repeating the Itô calculation (same logistic derivatives as before) yields the SDE
+
+$$
+\boxed{\,dP_t=\sigma_t\,P_t(1-P_t)\,dW_t\,.}
+$$
+
+So $P_t$ remains a martingale (no drift) and its instantaneous volatility is $\sigma_t P_t(1-P_t)$.
+
+**Condition that forces resolution at $T$**
+
+Intuition: the posterior is driven by the log-odds
+
+$$
+\Lambda_t:=\log\frac{P_t}{1-P_t}
+=\log\frac{p}{1-p}+\int_0^t\sigma_s\,d\xi_s-\tfrac12\int_0^t\sigma_s^2\,ds.
+$$
+
+Under the true value $X$, write $d\xi_s=\sigma_s X\,ds+dB_s$. Then
+
+$$
+\Lambda_t
+=\log\frac{p}{1-p}+\int_0^t\sigma_s\,dB_s
++\int_0^t\sigma_s^2(X-\tfrac12)\,ds.
+$$
+
+The deterministic term $\int_0^t\sigma_s^2(X-\tfrac12)\,ds$ has sign depending on $X$. If the cumulative information $\int_0^T\sigma_s^2\,ds$ **diverges** to $+\infty$, this deterministic term dominates the stochastic martingale $\int_0^t\sigma_s\,dB_s$ as $t\to T$, and $\Lambda_t$ tends to $+\infty$ when $X=1$ and to $-\infty$ when $X=0$. Therefore
+
+$$
+P_T:=\lim_{t\to T^-}P_t=\begin{cases}1,& X=1,\\ 0,& X=0,\end{cases}
+\quad\text{a.s.}
+$$
+
+So a sufficient condition for almost-sure resolution by time $T$ is
+
+$$
+\boxed{\ \int_0^T \sigma_s^2\,ds = +\infty.\ }
+$$
+
+If $\int_0^T\sigma_s^2 ds<\infty$ then the posterior need not hit $\{0,1\}$ at $T$; the information gathered is finite and the posterior may remain in $(0,1)$ with positive probability.
+
+Take for example
+
+$$
+\sigma_s = \frac{\kappa}{\sqrt{T-s}},\qquad 0\le s<T,
+$$
+
+for some $\kappa>0$. Thus this $\sigma_s$ forces resolution at (or before) $T$. The SDE for $P_t$ becomes
+
+$$
+dP_t=\frac{\kappa}{\sqrt{T-t}}\,P_t(1-P_t)\,dW_t,
+$$
+
+Here, I show the result of a simulation using this new model:
+
+![](prediction_market_simulations_v2.png)
