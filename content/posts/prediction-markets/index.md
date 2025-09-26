@@ -222,9 +222,7 @@ $$
 Thus
 
 $$
-dP_t = f'(Y_t)\,dY_t + \tfrac12 f''(Y_t)\,(dY_t)^2
-= P_t(1-P_t)\big(\mu\,dt + \sigma\,dW_t\big)
-+ \tfrac12\sigma^2 P_t(1-P_t)(1-2P_t)\,dt,
+dP_t = f'(Y_t)\,dY_t + \tfrac12 f''(Y_t)\,(dY_t)^2 = P_t(1-P_t)\big(\mu\,dt + \sigma\,dW_t\big)+ \frac{1}{2}\sigma^2 P_t(1-P_t)(1-2P_t)\,dt,
 $$
 
 or collecting terms
