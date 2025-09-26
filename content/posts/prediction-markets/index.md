@@ -213,7 +213,7 @@ $$
 dY_t = \mu\,dt + \sigma\,dW_t.
 $$
 
-Set $P_t = f(Y_t)$ with $f(y) = \dfrac{1}{1+e^{-y}}$ (the sigmoid). By Itô:
+Set $P_t = f(Y_t)$ with $f(y) = \frac{1}{1+e^{-y}}$ (the sigmoid). By Itô:
 
 $$
 f'(y)=P(1-P),\qquad f''(y)=P(1-P)(1-2P).
@@ -222,14 +222,14 @@ $$
 Thus
 
 $$
-dP_t = f'(Y_t)\,dY_t + \tfrac12 f''(Y_t)\,(dY_t)^2 = P_t(1-P_t)\big(\mu\,dt + \sigma\,dW_t\big)+ \frac{1}{2}\sigma^2 P_t(1-P_t)(1-2P_t)\,dt,
+dP_t = f'(Y_t)\,dY_t + \frac{1}{2} f''(Y_t)\,(dY_t)^2 = P_t(1-P_t)\big(\mu\,dt + \sigma\,dW_t\big)+ \frac{1}{2}\sigma^2 P_t(1-P_t)(1-2P_t)\,dt,
 $$
 
 or collecting terms
 
 $$
 \boxed{\,dP_t = P_t(1-P_t)\,\sigma\,dW_t
-\;+\;P_t(1-P_t)\Big(\mu + \tfrac12\sigma^2(1-2P_t)\Big)\,dt. \,}
+\;+\;P_t(1-P_t)\Big(\mu + \frac{1}{2}\sigma^2(1-2P_t)\Big)\,dt. \,}
 $$
 
 ### (B) Event triggering at $T$
