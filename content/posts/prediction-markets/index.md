@@ -320,7 +320,7 @@ If $\int_0^T\sigma_s^2 ds<\infty$ then the posterior need not hit $\{0,1\}$ at $
 Take for example
 
 $$
-\sigma_s = \frac{\kappa}{\sqrt{T-s}},\quad\quad 0\leq s<T,
+\sigma_s = \frac{\kappa}{\sqrt{T-s}},\quad\quad 0\leq s\leq T
 $$
 
 for some $\kappa>0$. Thus this $\sigma_s$ forces resolution at (or before) $T$. The SDE for $P_t$ becomes
