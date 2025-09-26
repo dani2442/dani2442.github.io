@@ -17,16 +17,18 @@ editPost:
 ---
 
 
-I always thought that actions matter more than words. The ultimate expression of this idea is the stock market and, more recently, prediction markets (such as Polymarket). For example, you can bet on a wide variety of topics that stretch from who might win an election to how many tweets Elon Musk will post in a day. 
+I always thought that actions matter more than words. The ultimate expression of this idea is the stock market and, more recently, prediction markets (such as Polymarket). For example, you can bet on a wide variety of topics that stretch from who might win an election to how many tweets Elon Musk will post in a single day. 
 
-Over the past few years, I feel that we have lost trust in institutions and journalism in general [1]. This has play an important role on the rise of this new financial instruments. This manipulation became clear during the last US election, where there was a big gap between the polls and where the money was going [2]. In contrast, in financial markets there is an asymmetry of power in the outcome, i.e., it's mostly a big fish game. Despite this, there is mathematical backing for the information aggregation provided by prediction markets [3] and the last few years of results confirms it. However, we must not glorify them, as there is a risk of insider trading and a perverse incentive for market manipulation.
+Over the past few years, public trust in institutions and journalism has eroded [[1]](#references), and this distrust has fueled the rise of new financial instruments like prediction markets. This data manipulation became clear during the last US election, where a big gap emerged between conventional polling data and the probabilities implied by market activity [[2]](#references). 
 
-Now, how does it work behind the curtains?
+In contrast, traditional financial markets often resemble a "big fish game", where there is an asymmetry of information and influence. The information is aggregated, resulting in a single number, the price. The effectiveness of this "wisdom of the crowds" approach is supported by mathematical theories of information aggregation [[3]](#references), and has been largely validated by recent results. However, we must not glorify them, as there is a risk of insider trading and a perverse incentive for market manipulation.
+
+Now, how does it work behind the scenes?
 
 First, let's see how this compares to traditional markets and what the differences are. Traditional market theory tells us that the current price of an asset falls between the lowest price a seller is asking and the highest price a bidder is offering (the difference between these two is called the spread and represents the market's liquidity). In a prediction market, the "price" represents the odds of a binary outcome (win or lose). Once the bet is settled, you receive the payout. For example, if you bet €20 on an outcome with a 20% probability, you will receive €100 if you're right or €0 if you're wrong. The interesting part is that you can sell your bet at any point in time. For instance, if the market's perceived probability rises to 40%, you could sell your position for €40.
 
 ## Mathematical Modeling:
-The application of advanced mathematics in finance is a relatively recent development. For example, Modern Portfolio Theory, introduced by Harry Markowitz, dates to the '50s; the Black-Scholes equation for options pricing appeared in the '70s; and the first major interest rate models, such as the Vasicek and CIR models, emerged in the late '70s and '80s [4, 5, 6, 7]. I expect to see further developments in predictive modeling in the coming years.
+The application of advanced mathematics in finance is a relatively recent development. For example, Modern Portfolio Theory, introduced by Harry Markowitz, dates to the '50s; the Black-Scholes equation for options pricing appeared in the '70s; and the first major interest rate models, such as the Vasicek and CIR models, emerged in the late '70s and '80s [[4, 5, 6, 7]](#references). I expect to see further developments in predictive modeling in the coming years.
 
 Now, we can derive a simple mathematical model for this task. There are several models that can be used: 
 
@@ -35,7 +37,6 @@ Now, we can derive a simple mathematical model for this task. There are several 
 |Two-point information-filtering model | $dP_t = \sigma P_t(1-P_t) dW_t$ |
 | Log-diffusion model (see Appendix [A](#a-derivation-of-the-log-odd-diffusion-model)) | $dP_t = P_t(1-P_t)(\mu + \frac{1}{2}\sigma^2(1-2P_t))dt +  P_t(1-P_t)\sigma dW_t $ |
 | Wright-Fisher model | $\sqrt{\gamma P_t(1-P_t)} dW_t$
-|
 
 We will focus on the two-point information-filtering model as it is Martingale process, i.e., $\mathbb{E}[P_{t+1} | P_{t}] = P_t$. This property is very natural to assume.
 
