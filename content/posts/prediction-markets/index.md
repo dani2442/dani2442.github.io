@@ -36,7 +36,7 @@ Now, we can derive a simple mathematical model for this task. There are several 
 | ---- | ------ |
 |Two-point information-filtering model | $dP_t = \sigma P_t(1-P_t) dW_t$ |
 | Log-diffusion model (see Appendix [A](#a-derivation-of-the-log-odd-diffusion-model)) | $dP_t = P_t(1-P_t)(\mu + \frac{1}{2}\sigma^2(1-2P_t))dt +  P_t(1-P_t)\sigma dW_t $ |
-| Wright-Fisher model | $\sqrt{\gamma P_t(1-P_t)} dW_t$
+| Wright-Fisher model | $dP_t =\sqrt{\gamma P_t(1-P_t)} dW_t$
 
 We will focus on the two-point information-filtering model as it is Martingale process, i.e., $\mathbb{E}[P_{t+1} | P_{t}] = P_t$. This property is very natural to assume.
 
