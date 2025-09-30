@@ -11,26 +11,40 @@
     </image>
     <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 27 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 28 Sep 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Applications</title>
+      <link>http://localhost:1313/tags/applications/</link>
+      <pubDate>Sun, 28 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/applications/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Data Science</title>
+      <link>http://localhost:1313/tags/data-science/</link>
+      <pubDate>Sun, 28 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/data-science/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Finance</title>
       <link>http://localhost:1313/tags/finance/</link>
-      <pubDate>Sat, 27 Sep 2025 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 28 Sep 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/tags/finance/</guid>
       <description></description>
     </item>
     <item>
       <title>Rockets</title>
       <link>http://localhost:1313/tags/rockets/</link>
-      <pubDate>Sat, 27 Sep 2025 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 28 Sep 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/tags/rockets/</guid>
       <description></description>
     </item>
     <item>
       <title>Satellites</title>
       <link>http://localhost:1313/tags/satellites/</link>
-      <pubDate>Sat, 27 Sep 2025 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 28 Sep 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/tags/satellites/</guid>
       <description></description>
     </item>
@@ -130,6 +144,13 @@
       <link>http://localhost:1313/tags/numerical-methods/</link>
       <pubDate>Sat, 17 Aug 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/tags/numerical-methods/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>First</title>
+      <link>http://localhost:1313/tags/first/</link>
+      <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
+      <guid>http://localhost:1313/tags/first/</guid>
       <description></description>
     </item>
   </channel>
