@@ -19,7 +19,7 @@ editPost:
 
 Last week I came across this very high quality image, at first I thought that it must be one these expensive satellites that costs millions of dollars. Then I started digging and and found out how ignorant i am about the recent advances in satellites.
 
-![](high_resolution.jpeg)
+![](high_resolution2.jpg)
 
 Apparently, there are three main orbits used by current satellites [[1]](#References):
 - LEO (Low Earth Orbit): ~160–2,000 km; short orbital period (90–120 min); low latency; used for Earth observation, Starlink, ISS.
@@ -55,7 +55,7 @@ There are a few players in the game: Planet Labs, Maxar, Satellotic, Capella Spa
 The interesting part is that each company generate an overwhelming 100 TB of data per day! You need a very good infrastructure to manage and deliver that amount of information. And more importantly, you need very good resources to compute and process this data to extract the relevant information. A few months ago, deepmind offered us a glimpse of how to process this amounts of data with AlphaEarth [[12]](#references).
 
 ### Costs and business model
-The weight of these satellites is 2-4kg for communication and between 50-200kg for imagery satellites. So putting in orbit a single satellite can cost approx 4k-400k USD. And for example, Planet Labs subscription costs 20k USD/year. So with a few subscriptions you have a profitable business. 
+The weight of these satellites is 2-4kg for communication and between 50-200kg for imagery satellites. So putting in orbit a single satellite can cost approx 4k-400k USD [[13]](#references). And for example, Planet Labs subscription costs 20k USD/year. So with a few subscriptions you have a profitable business (assuming the materials and labour do not *go into orbit* hehehe). 
 
 
 ### But who uses these services and information?
@@ -69,9 +69,19 @@ I guess we all can figure how we can use the communication services [[14]](#refe
 | Nomads and tourists | Users who travel frequently and want connectivity on the go. |
 | Government and military | emergency services, defense, reliability, redundancy. Ukranian war for example.  |
 
-However, it is not entirely obvious why would anyone want to use the imagery services. I was very curious who and what did they main customers. Before analysing the use cases, it is important to make a distinction in latency requirements. I will not delve much into applications where there is not a coursed constraint in latency and high-quality as these application are already a commonplace in the industry and have been mostly solved using previous generation satellites such as Sentinel [[13]](#references). 
+For me, it is not entirely obvious why would anyone want to use the imagery services. I was very curious about some use cases from their users. I'll give share some use cases that requires up-to-date imagery or high-resolution images, as they have only been possible thanks to recents advancements.
 
+1. Disaster response & rapid damage assessment: During the huge flood that isolated Valencia last year [[15]](#references), the most affected areas where quickly identify thanks to this new resources
+![alt text](valencia.png)
 
+2. Agriculture: We are currently seeing a decline in working-age population in most of the developed countries. The most hardous and paid jobs are usually left with vacancies. Automation will be necessary in the following years and this includes the monitoring of crops, their water concentration, health state, pests control, etc [[16]](#references).
+![alt text](agriculture.png)
+
+3. Tracking ships and suspicious activity in the coast: The ocean is vast and lacks any posible infraestructure that allows monitoring. And despite been the 21st century there are still many problems with piracy and smuggling. Also, there is a big problems with refugees that emigrate through the Mediterranean Sea and costs lives on a daily basis. SAR imagery makes it almost imposible to miss this scenarios and the maritine guard is already making use of them [[17]](#references)
+![alt text](maritine.png)
+
+4. Industrial monitoring, prevention and planning: Many suppliers, customers can benefit from a better information flow of the information provided by the satellites. It can be use for road planning and improvements in the city measuring the traffic congestion. The same way with ports, parking spots, etc. Also, this information can be valuable in the financial markets and improve value estimation by estimating future revenues. On the other hand, one can use this information to contrast, verify and compare other sources of data less reliable.
+![alt text](image.png)
 
 
 ### References
@@ -102,3 +112,9 @@ However, it is not entirely obvious why would anyone want to use the imagery ser
 [13] https://www.esa.int/Applications/Observing_the_Earth/Copernicus/Sentinel-2
 
 [14] https://en.wikipedia.org/wiki/Starlink#Applications
+
+[15] https://www.bbc.com/news/articles/cz7wvpyewxlo
+
+[16] https://eos.com/products/crop-monitoring/satellite-images-for-agriculture/
+
+[17] https://marine.copernicus.eu/services/use-cases/coastguard-tracking-shorelines-satellite-imagery-understanding-coastal-changes

@@ -140,7 +140,7 @@ Notice that the model satisfies $P_t \in [0,1] $ and becomes constant when $P_t$
 
 
 ## Experiment
-We can simulate the two-point information-filtering model that obtained in the previous section and we obtain the following figure
+We can simulate the two-point information-filtering model that obtained in the previous section using a discretization scheme like Euler-Maruyama. We obtain the following figure
 
 ![](prediction_market_simulations.png)
 
