@@ -1,10 +1,10 @@
 ---
 title: "Low-Earth Orbit"
-date: 2025-09-28
+date: 2025-10-01
 tags: ["finance", "satellites", "rockets", "applications", "data science"]
 author: "Daniel López Montero"
 showToc: true
-draft: true
+draft: false
 description: "Analysis and Predictions"
 ShowWordCount: false
 ShowReadingTime: true
@@ -17,7 +17,7 @@ editPost:
 ---
 
 
-Last week I came across this very high quality image, at first I thought that it must be one these expensive satellites that costs millions of dollars. Then I started digging and and found out how ignorant i am about the recent advances in satellites.
+Last week I came across this very high quality image, at first I thought that it must be one these expensive satellites that costs millions of dollars. Then I started digging and found out how ignorant i am about the recent advances in satellites.
 
 ![](high_resolution2.jpg)
 
@@ -26,9 +26,9 @@ Apparently, there are three main orbits used by current satellites [[1]](#Refere
 - MEO (Medium Earth Orbit) ~2,000–35,786 km; orbital period ~2–12 hrs; GPS/GNSS satellites.
 - GEO (Geostationary Earth Orbit): exactly 35,786 km, equatorial; 24-hr period, appears fixed above Earth; ideal for telecom, TV, weather satellites.
 
-![alt text](orbits.png)
+
   
-Before talking about the satellites, we need to understand the main driver of these advancements. There's been in increase in reliance and a major reduction in costs to put satellites in orbit. To put things in perspective, between 70's and 2000s the average launch costed 18.5k USD/kg and recently the Falcon Heavy only costs 1.4k USD/kg (more than x10!!!) [[2]](#references). Also, success rate over 99.46% [[5]](#references).
+Before talking about the satellites, we need to understand the main driver of these advancements. There's been a huge decrease on rocket failure rates and reduction in the costs of putting them into orbit. To put things in perspective, between 1970s and the 2000s the average launch was about 18.5k USD/kg, while recently the Falcon Heavy only costs around 1.4k USD/kg (more than 10x reduction!!!) [[2]](#references). Also, success rate over 99.46% [[5]](#references).
 
 
 ![](combined.png)
@@ -38,28 +38,28 @@ This is perfect example of the Rebound Effect phenomenon [[4]](#references):
 
 
 
-The current market cap is approx 1.3 trillion$ (almost GDP of Spain) and it is estimated that more than 10,000 satellites are currently orbiting the Earth. They can be divided into two main categories:
+The current market cap is approx 1.3 trillion$ (almost GDP of Spain) and it is estimated that more than 10,000 satellites are currently orbiting Earth. They can be divided into two main categories:
 
 ### 1. Communication and internet
-The most known are SpaceX (Starlink) and Amazon (Project Kuiper). They have approximately 8000 and 3000 in orbit, respectively. It has limitations in speed limit: average 20-100Mbps for download and 10-20Mbps for upload and ~50ms latency for a modest price of 29€/month [[7, 8]](#references). 
+The best-known are SpaceX (Starlink) and Amazon (Project Kuiper) with approximately 8000 and 3000 in orbit, respectively. It has limitations in speed limit: average 20-100Mbps for download and 10-20Mbps for upload and ~50ms latency, for a modest price of 29€/month [[7, 8]](#references). 
 
-You may not be able to play *csgo* or *rankeds*, but certainly covers 99% of daily tasks. Also, beware that more than 31% of the global population does not have access to mobile network [[6, 9]](#references). And many studies suggest that lack of access to technology negatively impacts and worsens exclusion and poverty [[10, 11]](#references).
+You may not be able to play *csgo* or *ranked* matches, but certainly covers 99% of daily tasks. Also, more than 31% of the global population does not have access to mobile network [[6, 9]](#references). And many studies suggest that lack of access to technology exacerbates exclusion and poverty [[10, 11]](#references).
   
 ### 2. Earth Observation
-This category includes Governmental devices (mainly reconnaissance and spy) and imagery satellites. Apparently, they provide real-time and high-quality images of up to 30cm resolution. 
+This category includes Governmental devices (mainly reconnaissance and spy) and imagery satellites. Apparently, they provide real-time and high-quality images with resolutions down to 30cm. 
 
-There is a high number of sensors that can carry on-board. The most widely used is the Optical Imagery (regular camera; only day), Synthetic Aperture Radar or *SAR* (microwaves and reflections; day and night), Hyperspectral Imagery (infrared spectrum), Thermal Infrared, atmospheric/radio measurements (weather prediction and meteorology).
+Satellites can carry a wide variety of sensors. The most used are Optical Imagery (regular camera; only day), Synthetic Aperture Radar or *SAR* (microwaves and reflections; day and night), Hyperspectral Imagery (infrared spectrum), Thermal Infrared, atmospheric/radio measurements (weather prediction and meteorology). These cutting-edge sensors can cost up to 40M USD each one and they can be very difficult to replicate.
 
 There are a few players in the game: Planet Labs, Maxar, Satellotic, Capella Space, etc. For context, Planet Labs has more than 200 satellites in orbit.  
 
-The interesting part is that each company generate an overwhelming 100 TB of data per day! You need a very good infrastructure to manage and deliver that amount of information. And more importantly, you need very good resources to compute and process this data to extract the relevant information. A few months ago, deepmind offered us a glimpse of how to process this amounts of data with AlphaEarth [[12]](#references).
+The interesting part is that each company generate an overwhelming ~100 TB of data per day! You need a very strong infrastructure to manage and deliver that amount of information. More importantly, you need substantial compute resources to process this data to extract the relevant information. A few months ago, deepmind offered a glimpse of how to process such amounts of data with AlphaEarth [[12]](#references).
 
 ### Costs and business model
-The weight of these satellites is 2-4kg for communication and between 50-200kg for imagery satellites. So putting in orbit a single satellite can cost approx 4k-400k USD [[13]](#references). And for example, Planet Labs subscription costs 20k USD/year. So with a few subscriptions you have a profitable business (assuming the materials and labour do not *go into orbit* hehehe). 
+The mass of these satellites is typically 2-4kg for communication and between 50-200kg for imagery satellites. Putting in orbit a single satellite can cost approx 4k-400k USD [[13]](#references). So the vast majority of the cost is spent down on mainland. For example, Planet Labs subscription costs 20k USD/year. With a few hundred subscriptions, you have a profitable business (assuming the materials and labour do not *go into orbit* hehehe). 
 
 
 ### But who uses these services and information?
-I guess we all can figure how we can use the communication services [[14]](#references): 
+I guess we all can figure most of the use cases for communication services [[14]](#references): 
 
 | Use Case | Examples |
 |--------------------------------|----------|
@@ -69,18 +69,18 @@ I guess we all can figure how we can use the communication services [[14]](#refe
 | Nomads and tourists | Users who travel frequently and want connectivity on the go. |
 | Government and military | emergency services, defense, reliability, redundancy. Ukranian war for example.  |
 
-For me, it is not entirely obvious why would anyone want to use the imagery services. I was very curious about some use cases from their users. I'll give share some use cases that requires up-to-date imagery or high-resolution images, as they have only been possible thanks to recents advancements.
+In contrast, for me, it is not entirely obvious why would anyone want to use the imagery services. I was very curious about some use cases from their users. Here are some examples that become possible thanks to recent to recent advancements.
 
-1. Disaster response & rapid damage assessment: During the huge flood that isolated Valencia last year [[15]](#references), the most affected areas where quickly identify thanks to this new resources
+1. Disaster response & rapid damage assessment: During the huge flood that isolated Valencia last year [[15]](#references), the most affected areas where quickly identifed thanks to these new resources
 ![alt text](valencia.png)
 
-2. Agriculture: We are currently seeing a decline in working-age population in most of the developed countries. The most hardous and paid jobs are usually left with vacancies. Automation will be necessary in the following years and this includes the monitoring of crops, their water concentration, health state, pests control, etc [[16]](#references).
+2. Agriculture: Developed countries are seeing a decline in working-age populations. The most arduous and hazardous jobs are often left vacant. Automation will be necessary in the coming years, including monitoring of crops, water content, health status, pest control, etc. [[16]](#references).
 ![alt text](agriculture.png)
 
-3. Tracking ships and suspicious activity in the coast: The ocean is vast and lacks any posible infraestructure that allows monitoring. And despite been the 21st century there are still many problems with piracy and smuggling. Also, there is a big problems with refugees that emigrate through the Mediterranean Sea and costs lives on a daily basis. SAR imagery makes it almost imposible to miss this scenarios and the maritine guard is already making use of them [[17]](#references)
+3. Tracking ships and suspicious activity in the coast: The ocean is vast and lacks any posible infraestructure for monitoring. Despite being the 21st century, problems with piracy and smuggling. Also, there is an onoing humanitarian criese with refugees attempting to cross Mediterranina and costing lives on a daily basis. SAR imagery makes it almost imposible to miss these scenarios and the maritine authorities are already making use of these tools [[17]](#references)
 ![alt text](maritine.png)
 
-4. Industrial monitoring, prevention and planning: Many suppliers, customers can benefit from a better information flow of the information provided by the satellites. It can be use for road planning and improvements in the city measuring the traffic congestion. The same way with ports, parking spots, etc. Also, this information can be valuable in the financial markets and improve value estimation by estimating future revenues. On the other hand, one can use this information to contrast, verify and compare other sources of data less reliable.
+4. Industrial monitoring, prevention and planning: Many suppliers, customers can benefit from a better information flow provided by the satellites. It can be use for road planning, traffic congestion measurement, port and parking monitoring, and industrial site surveillance. This information can also be valuable in financial markets to improve revenue estimates or to verify and compare less reliable data sources.
 ![alt text](image.png)
 
 
@@ -118,3 +118,11 @@ For me, it is not entirely obvious why would anyone want to use the imagery serv
 [16] https://eos.com/products/crop-monitoring/satellite-images-for-agriculture/
 
 [17] https://marine.copernicus.eu/services/use-cases/coastguard-tracking-shorelines-satellite-imagery-understanding-coastal-changes
+
+
+### Suplemental Material
+
+A useful website that shows real-time satellite locations is https://satellitemap.space/. I highly recommend checking it out:
+
+
+![alt text](satellite.gif)
