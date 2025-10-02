@@ -29,6 +29,15 @@
     <loc>http://localhost:1313/tags/</loc>
     <lastmod>2025-09-28T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/posts/gaussian-processes/</loc>
+    <lastmod>2025-09-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/gaussian-processes/</loc>
+    <lastmod>2025-09-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/machine-learning/</loc>
+    <lastmod>2025-09-24T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/tags/mathematics/</loc>
     <lastmod>2025-09-24T00:00:00+00:00</lastmod>
   </url><url>
