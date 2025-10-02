@@ -17,7 +17,7 @@ editPost:
 ---
 
 
-Last week I came across this very high quality image, at first I thought that it must be one these expensive satellites that costs millions of dollars. Then I started digging and found out how ignorant i am about the recent advances in satellites.
+Last week I came across this very high-quality image, at first I thought that it must be one of those expensive satellites that cost millions of dollars. Then I started digging and found out how ignorant i am about the recent advances in satellites.
 
 ![](high_resolution2.jpg)
 
@@ -36,6 +36,8 @@ Before talking about the satellites, we need to understand the main driver of th
 This is perfect example of the Rebound Effect phenomenon [[4]](#references):
 > "as costs fall, previously unviable uses become attractive, creating new markets or applications."
 
+
+In another chapter, these reductions in costs actually open the door to transplanetary flights. There is still significant room for improvement. For example, SpaceX recently opened its new factory, enabling the production of up to 1,000 rockets per year. Much like Henry Ford, who achieved major cost reductions through mass production, I expect a similar outcome here.
 
 
 The current market cap is approx 1.3 trillion$ (almost GDP of Spain) and it is estimated that more than 10,000 satellites are currently orbiting Earth. They can be divided into two main categories:
