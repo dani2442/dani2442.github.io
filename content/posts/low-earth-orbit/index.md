@@ -8,7 +8,6 @@ draft: false
 description: "Analysis and Predictions"
 ShowWordCount: false
 ShowReadingTime: true
-disableComments: false
 comments: true
 UseHugoToc: true
 editPost:
