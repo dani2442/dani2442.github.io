@@ -1,0 +1,11 @@
+{{ define "main" }}
+<article>
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+  
+  <!-- Add Giscus comments -->
+  {{ if not .Params.disableComments }}
+    {{ partial "giscus.html" . }}
+  {{ end }}
+</article>
+{{ end }}

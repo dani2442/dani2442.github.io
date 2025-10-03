@@ -21,13 +21,6 @@
       <description>Analysis and Predictions</description>
     </item>
     <item>
-      <title>Gaussian Processes</title>
-      <link>http://localhost:1313/posts/gaussian-processes/</link>
-      <pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/gaussian-processes/</guid>
-      <description>Analysis, Predictions and Experiments</description>
-    </item>
-    <item>
       <title>Prediction Markets</title>
       <link>http://localhost:1313/posts/prediction-markets/</link>
       <pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate>
@@ -68,20 +61,6 @@
       <pubDate>Thu, 11 Jul 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/bifurcation-theory/</guid>
       <description>Introduction to Bifurcation Theory from simple eigenvalues.</description>
-    </item>
-    <item>
-      <title>Nonlinear Functional Analysis: Bifurcation Theory</title>
-      <link>http://localhost:1313/posts/finite_volume_method/</link>
-      <pubDate>Thu, 11 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/finite_volume_method/</guid>
-      <description>Introduction to Bifurcation Theory from simple eigenvalues.</description>
-    </item>
-    <item>
-      <title>My 1st post</title>
-      <link>http://localhost:1313/posts/my-first-post/</link>
-      <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
-      <guid>http://localhost:1313/posts/my-first-post/</guid>
-      <description>Desc Text.</description>
     </item>
   </channel>
 </rss>
