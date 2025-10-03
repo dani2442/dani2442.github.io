@@ -2,10 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/tags/applications/</loc>
-    <lastmod>2025-10-01T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/</loc>
+    <lastmod>2025-10-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/gaussian-processes/</loc>
+    <lastmod>2025-10-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/gaussian-processes/</loc>
+    <lastmod>2025-10-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/kernel-methods/</loc>
+    <lastmod>2025-10-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/machine-learning/</loc>
+    <lastmod>2025-10-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2025-10-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/probability/</loc>
+    <lastmod>2025-10-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/stochastic-processes/</loc>
+    <lastmod>2025-10-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2025-10-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/applications/</loc>
     <lastmod>2025-10-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/data-science/</loc>
@@ -17,16 +41,10 @@
     <loc>http://localhost:1313/posts/low-earth-orbit/</loc>
     <lastmod>2025-10-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2025-10-01T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/tags/rockets/</loc>
     <lastmod>2025-10-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/satellites/</loc>
-    <lastmod>2025-10-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/</loc>
     <lastmod>2025-10-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/mathematics/</loc>
@@ -62,9 +80,6 @@
     <loc>http://localhost:1313/posts/functional-pca/</loc>
     <lastmod>2025-04-29T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/probability/</loc>
-    <lastmod>2025-04-29T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/tags/differentiable-programming/</loc>
     <lastmod>2024-08-18T00:00:00+00:00</lastmod>
   </url><url>
@@ -88,6 +103,15 @@
   </url><url>
     <loc>http://localhost:1313/posts/bifurcation-theory/</loc>
     <lastmod>2024-07-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/finite_volume_method/</loc>
+    <lastmod>2024-07-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/first/</loc>
+    <lastmod>2020-09-15T11:30:03+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/my-first-post/</loc>
+    <lastmod>2020-09-15T11:30:03+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/</loc>
   </url>

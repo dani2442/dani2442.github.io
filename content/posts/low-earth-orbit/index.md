@@ -146,8 +146,7 @@ In contrast, for me, it is not entirely obvious why would anyone want to use the
 
 
 
-
-## Suplemental Material
+## Supplementary Material
 
 A useful website that shows real-time satellite locations is https://satellitemap.space/. I highly recommend checking it out:
 
