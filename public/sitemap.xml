@@ -11,6 +11,9 @@
     <loc>http://localhost:1313/tags/gaussian-processes/</loc>
     <lastmod>2025-10-03T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/posts/metrics/</loc>
+    <lastmod>2025-10-03T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/tags/kernel-methods/</loc>
     <lastmod>2025-10-03T00:00:00+00:00</lastmod>
   </url><url>
@@ -58,6 +61,18 @@
   </url><url>
     <loc>http://localhost:1313/tags/stochastic-differential-equations/</loc>
     <lastmod>2025-09-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/analog-computing/</loc>
+    <lastmod>2025-09-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/futurology/</loc>
+    <lastmod>2025-09-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/inference/</loc>
+    <lastmod>2025-09-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/llm/</loc>
+    <lastmod>2025-09-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/deep-learning/</loc>
     <lastmod>2025-07-08T00:00:00+00:00</lastmod>

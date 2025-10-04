@@ -21,6 +21,13 @@
       <description>Math and Code</description>
     </item>
     <item>
+      <title>Importance of Matrics</title>
+      <link>http://localhost:1313/posts/metrics/</link>
+      <pubDate>Fri, 03 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/metrics/</guid>
+      <description>Math and Code</description>
+    </item>
+    <item>
       <title>Low-Earth Orbit</title>
       <link>http://localhost:1313/posts/low-earth-orbit/</link>
       <pubDate>Wed, 01 Oct 2025 00:00:00 +0000</pubDate>
@@ -33,6 +40,13 @@
       <pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/prediction-markets/</guid>
       <description>Analysis, Predictions and Experiments</description>
+    </item>
+    <item>
+      <title>Analog computing in LLMs</title>
+      <link>http://localhost:1313/posts/analog-computing/</link>
+      <pubDate>Sun, 14 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/analog-computing/</guid>
+      <description>Analog computing &#43; AI</description>
     </item>
     <item>
       <title>Physics-Informed Neural Networks</title>

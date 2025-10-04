@@ -105,6 +105,27 @@
       <description></description>
     </item>
     <item>
+      <title>Futurology</title>
+      <link>http://localhost:1313/tags/futurology/</link>
+      <pubDate>Sun, 14 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/futurology/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Inference</title>
+      <link>http://localhost:1313/tags/inference/</link>
+      <pubDate>Sun, 14 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/inference/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Llm</title>
+      <link>http://localhost:1313/tags/llm/</link>
+      <pubDate>Sun, 14 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/llm/</guid>
+      <description></description>
+    </item>
+    <item>
       <title>Deep Learning</title>
       <link>http://localhost:1313/tags/deep-learning/</link>
       <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
