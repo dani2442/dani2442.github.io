@@ -17,7 +17,7 @@ editPost:
 ---
 
 
-Gaussian Processes regression is one of the key algorithms within machine learning. They have a beautiful mathematical theory behind to back them up and I hope in this blog post we come to appreciate them more. I will divide this post in theory and practice, including a sample code.
+Gaussian Processes regression is one of the key algorithms within machine learning. With this blog post I want to appreciate the beautiful mathematical theory behind that back them up. I will divide this post in theory and practice, including a sample code.
 
 One of the key advantages of Gaussian Processes vs Deep Learning methods is that it inherently provide with confidence intervals and a higher level of interpretability. However, it comes with a hidden cost, it is has a very wide variety of hyperparameters that are far from easy to configure, i.e., only the kernel selection is very challenging. Understanding and having a good intuition in the inner workings of this algorithm is key to make the most of it. 
 
