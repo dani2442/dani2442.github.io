@@ -45,7 +45,7 @@ Very recently, I have seen someone on twitter who is trying to implement it on h
 
 For so long, we have adapted the hardware to fit our software, it's time to turn things around! Richard Sutton has long argued this point (see Bitter Lesson [[3]](#references)). Just as transformers mapped neatly onto the strengths of GPUs, we may now see a new wave of research into models designed to be analog-friendly, i.e., architectures that can be efficiently ported to analog computing.
 
-Inference, in particular, seems ripe for disruption. Training will likely remain dominated by gpus with Nvidia still leading, i.e., train on gpu -> inference on custom-device. It might be interesting exploring the implications of this result (if this hold), we will probably have inference at no cost and a surge of custom-built analog components for different use cases. I 
+Inference, in particular, seems ripe for disruption. Training will likely remain dominated by gpus with Nvidia still leading, i.e., train on gpu -> inference on custom-device. It might be interesting exploring the implications of this result (if this hold), we will probably have inference at no cost and a surge of custom-built analog components for different use cases. 
 
 **Additional info:**
 - The code is available [[6]](#references)
