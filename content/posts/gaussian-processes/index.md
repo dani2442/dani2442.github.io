@@ -7,6 +7,7 @@ showToc: true
 draft: true
 description: "Math and Code"
 ShowWordCount: false
+TocOpen: true
 ShowReadingTime: true
 comments: true
 UseHugoToc: true
@@ -17,19 +18,32 @@ editPost:
 ---
 
 
-Gaussian Processes regression is one of the key algorithms within machine learning. With this blog post I want to appreciate the beautiful mathematical theory behind that back them up. I will divide this post in theory and practice, including a sample code.
+Gaussian Process Regression is one of the key algorithms in machine learning and with this post I want to appreciate the beautiful mathematical theory behind them. I will divide this post into theory and practice, including a sample code.
 
-One of the key advantages of Gaussian Processes vs Deep Learning methods is that it inherently provide with confidence intervals and a higher level of interpretability. However, it comes with a hidden cost, it is has a very wide variety of hyperparameters that are far from easy to configure, i.e., only the kernel selection is very challenging. Understanding and having a good intuition in the inner workings of this algorithm is key to make the most of it. 
+One of the key advantages of Gaussian Processes vs Deep Learning methods is that it inherently provide with interpretatibility with confidence intervals and uncertainty estimation. Also, it offers really good extrapolation properties as we will see. However, it comes with a hidden cost, it is has a very wide variety of hyperparameters that are far from easy to configure, i.e., only the kernel selection is already challenging and depends case per case basis. Understanding and having a good intuition in the inner workings of this algorithm is key to make the most of it. 
 
-# 1. Theory
+## 1. Theory
 
-Problem setup
+For context, a Gaussian process is a type of stochastic process that behaves like an infinite dimensional normal Gaussian distribution. It was introduced by the great Wiener in 1923 [[3]](#references--supplementary-material) and later used for regression in 1960s by Daniel Krige. 
+
+Firstly, I will write the definition of Gaussian process for the shake of completeness:
+
+> A process $X(t)$, $t\in I$ is said to be *Gaussian* when all finite-dimensional projections $(X(t_1), \dots, X(t_n))$ have a Gaussian distribution for $t_1, \dots, t_n \in I$, $n\in \mathbb{N}$.
+> 
+> This entails that the Gaussian process is entirely determined when we know:
+> - The mean function $\mu(t) = \mathbb{E}[X(t)]$.
+> - The covariance function $\text{Cov}(X(t), X(s)) = \mathbb{E}[X(t)X(s)] - \mu(t)\mu(s)$.
+
+Gaussian processes belong the family of kernel methods and they are studied in a mathematical structure called *Reproducing Kernel Hilbert Spaces* or RKHS. This allows the use of more complex mathematical structure (non-linear) at *almost* no cost computationally. Some of other kernel methods that you may know are Kernel PCA (non-linear version of PCA) or Support Vector Machines (SVM). Even the self-attention mechanism can be understood as a kernel method [[4]](#references--supplementary-material).
+
+Now, Gaussian processes is a regression algorithm, the goal is to find a function $f$ that maps an input $x$ to an output $y$, or in other words, $f(x) = y$. Let us setup the problem mathematically:
 
 - Training inputs: $X=\{x_i\}_{i=1}^n$.
 - Latent function values at training inputs: $f = [f(x_1),\dots,f(x_n)]^\top$.
-- Test input: $x_*$ with latent value $f_* = f(x_*)$.
-- Observations: $y_i = f(x_i) + \varepsilon_i$, with noise $\varepsilon_i\stackrel{\text{iid}}{\sim}\mathcal N(0,\sigma^2)$. So $y = f + \varepsilon$.
+- Likelihood, $p(y|f)$, is Gaussian: 
+$$y_i = f(x_i) + \varepsilon_i \text{, with noise }\varepsilon_i\stackrel{\text{iid}}{\sim}\mathcal N(0,\sigma^2)$$
 - Prior on $f(\cdot)\sim \mathcal{GP}$: a Gaussian process with mean $m(\cdot)$ and covariance kernel $k(\cdot,\cdot)$. For now assume $m(\cdot)\equiv 0$; we’ll generalize later.
+- Test input: $x_*$ with latent value $f_* = f(x_*)$.
 
 Define covariance matrices/vectors:
 
@@ -38,7 +52,18 @@ Define covariance matrices/vectors:
 - $k_{**} = k(x_*,x_*) = \operatorname{Var}(f_*)$.
 - Covariance of the observed vector $y$: $\mathrm{Cov}(y,y)=K+\sigma^2 I \equiv C_{yy}$.
 
-## (Option 1) Best Linear Unbaised Estimator (BLUE)
+Some of the most common used kernels in GPR are:
+$$
+\begin{align}
+k(x,x') &= e^{-\frac{1}{2\sigma}\|x-x'\|^2} \tag{Radial Basis Function (RBF)}\\
+k(x,x') &= (\gamma x^\top x' + r)^d \tag{Polynomial kernel}\\
+k(x,x') &= \frac{x^\top x'}{\|x\|\cdot \|x'\|} \tag{Cosine similarity kernel}
+\end{align}
+$$
+
+In the following sections we will see three different ways to understand the mathematical formulation of GPR.
+
+### (Option 1) Best Linear Unbaised Estimator (BLUE)
 
 Our goal is to find the linear estimator $\hat f_* := w^\top y$ that minimizes mean squared error (MSE)
 $$
@@ -92,10 +117,9 @@ $$
 
 This equals the GP posterior variance at $x_*$. So the minimal achievable MSE by any linear estimator equals the posterior variance.
 
+### (Option 2) Orthogonality interpretation
 
-## (Option 2) Orthogonality interpretation
-
-An equivalent, illuminating derivation uses the orthogonality principle (linear projection): the error $e = f_* - w^\top y$ of the best linear estimator must be uncorrelated with the data used in the estimator:
+An equivalent, this derivation uses the orthogonality principle (linear projection): the error $e = f_* - w^\top y$ of the best linear estimator must be uncorrelated with the data used in the estimator:
 
 $$
 \mathbb E[e, y] = 0 \quad\Rightarrow\quad \mathbb E[(f_* - w^\top y) y] = 0.
@@ -104,8 +128,7 @@ $$
 Thus $\mathbb E[f_* y] - \mathbb E[y y^\top] w = 0$, i.e. $k_* - C_{yy} w = 0$, giving the same solution $w = C_{yy}^{-1} k_*$. So the GP predictor is the linear projection of $f_*$ onto the subspace spanned by the observed $y$.
 
 
-
-## (Option 3) Joint Gaussian Conditioning
+### (Option 3) Joint Gaussian Conditioning
 
 The standard GP route uses the joint distribution of $y$ and $f_*$ is Gaussian:
 
@@ -121,7 +144,7 @@ k_*^\top & k_{**}
 
 This can be done because the evaluation of a Gaussian Process at finite points is distributed as a normal. The conditional variable of a joint Gaussian is given by
 $$
-f_* | y \sim \mathcal N(k_*^\top C_{yy}^{-1} y , k_{**} - k_*^\top C_{yy}^{-1} k_*)
+f_* | y \sim \mathcal N(k_*^\top C_{yy}^{-1} y , k_{**} - k_*^\top C_{yy}^{-1} k_*) \tag{Posterior}
 $$
 Therefore, the conditional expectation and variance for a multivariate Gaussian yields
 $$\mathbb E[f_* \mid y] = k_*^\top C_{yy}^{-1} y,
@@ -135,7 +158,7 @@ So the posterior mean equals the linear estimator we derived by minimizing MSE. 
 
 
 
-## 1.2 Nonzero mean function
+### 1.2 Nonzero mean function
 
 If the GP has mean function $m(\cdot)$, write $m_X = [m(x_1),\dots,m(x_n)]^\top$ and $m_* = m(x_*)$. The model is $y = m_X + (f - m_X) + \varepsilon$. Working with centered quantities $y - m_X$ and $f_* - m_*$ (which have zero mean) gives the estimator
 
@@ -147,7 +170,7 @@ $$
 So you subtract the prior mean from observations, apply the same weight matrix, and add the prior mean back at the test point.
 
 
-## 1.3 Complexity Analysis
+### 1.3 Complexity Analysis
 
 - The training complexity is $\mathcal O(n^3)$ due to inversion of the matrix $C_{yy}$.
 - The prediction
@@ -156,13 +179,13 @@ So you subtract the prior mean from observations, apply the same weight matrix, 
 
 But keep in mind that using GPUs this can be parallelized and improved drastically.
 
-# 2. Practice and Code
+## 2. Practice and Code
 
 For this implementation we will use the RBF Kernel:
 $$
 K(x,x') = e^{-\frac{1}{2\sigma}\|x-x'\|^2}
 $$
-This kernel is widely used because it is local and *universal* (Corollary 4.58, [[1]](#references)). This latter property it is very useful to guarante for asympotitacally proving that it converges to the best possible solution.
+This kernel is widely used because it is local and *universal* (Corollary 4.58, [[1]](#references--supplementary-material)). This latter property it is very useful to guarante for asympotitacally proving that it converges to the best possible solution.
 
 The implementation is straightforward using the previous section.
 ```python
@@ -190,7 +213,7 @@ class GaussianProcess:
         return mu_s, cov_s
 ```
 
-Now we use a very simple dataset, fit the Gaussian Process and plot the results.
+Now we use a very simple dataset, fit the Gaussian Process and plot the results. 
 
 ```python
 # Training data (noisy observations)
@@ -220,6 +243,275 @@ plt.show()
 ```
 
 ![](gaussian_result.png)
+
+
+
+
+## References & Supplementary Material
+
+[1] Steinwart, I. and Christmann, A., 2008. Support vector machines. Springer Science & Business Media.  \
+[2] Williams, Christopher KI, and Carl Edward Rasmussen. Gaussian processes for machine learning. Vol. 2, no. 3. Cambridge, MA: MIT press, 2006. \
+[3] https://djalil.chafai.net/docs/M2/history-brownian-motion/Wiener%20-%201923.pdf \
+[4] https://x.com/docmilanfar/status/1974328880564752525  
+[5] Visual explanation of Gaussian Processes:
+https://distill.pub/2019/visual-exploration-gaussian-processes/ \
+[6] Scikit code examples (optimized): https://scikit-learn.org/stable/modules/gaussian_process.html \
+[7] GPytorch (Efficient GP library using torch as backend): https://github.com/cornellius-gp/gpytorch
+
+## Appendix
+
+### (A) Gaussian Process Classification
+As we saw in section [1](#option-3-joint-gaussian-conditioning), in the case of classification there is no closed form formula to calculate it.
+In GP classification, the outputs $y_i \in \{0,1\}$, so a Gaussian likelihood doesn’t make sense.
+Instead, we assume the likelihood is given by a sigmoid function (or logistic):
+$$
+p(y_i=1 \mid f_i) \equiv \sigma(f_i)= \frac{1}{1 + e^{-f_i}}
+$$
+The joint model is:
+$$
+p(\mathbf{y}, \mathbf{f}) = p(\mathbf{y} \mid \mathbf{f}) p(\mathbf{f})
+$$
+where the prior is given by the Gaussian process, as in previous section,
+$$
+p(\mathbf{f}) = \mathcal{N}(\mathbf{f} \mid 0, K)
+$$
+and
+$$
+p(\mathbf{y} \mid \mathbf{f}) = \prod_{i=1}^n \sigma(f_i)^{y_i} [1 - \sigma(f_i)]^{1 - y_i}
+$$
+The problem is that the posterior is **intractable**. We want:
+$$
+p(\mathbf{f} \mid \mathbf{y}) = \frac{p(\mathbf{y} \mid \mathbf{f}) p(\mathbf{f})}{p(\mathbf{y})}
+$$
+but since $p(\mathbf{y} \mid \mathbf{f}) $ is non-Gaussian, the posterior is not Gaussian and $p(\mathbf{y}) = \int p(\mathbf{y} \mid \mathbf{f}) p(\mathbf{f}) d\mathbf{f} $ is intractable. The solution is to approximate the posterior by a Gaussian distribution. The following table compares both methods. 
+
+
+
+
+| Aspect     | GP Regression             | GP Classification             |
+| ---------- | ------------------------- | ----------------------------- |
+| Likelihood | Gaussian                  | Bernoulli via logistic/probit |
+| Posterior  | Analytic                  | Approximate (Laplace/EP)      |
+| Output     | Continuous mean, variance | Class probabilities           |
+| Training   | Linear algebra only       | Iterative (Newton-Raphson)    |
+
+
+
+The **Laplace approximation** is a general method to approximate an intractable distribution with a **Gaussian centered at its mode**.
+
+The idea:
+[
+p(\mathbf{f} \mid \mathbf{y}) \approx \mathcal{N}(\mathbf{f} \mid \hat{\mathbf{f}}, \Sigma)
+]
+where:
+
+* ( \hat{\mathbf{f}} = \arg\max_{\mathbf{f}} \log p(\mathbf{f} \mid \mathbf{y}) ) (the **mode**),
+* ( \Sigma^{-1} = - \nabla^2_{\mathbf{f}} \log p(\mathbf{f} \mid \mathbf{y}) \big|_{\mathbf{f} = \hat{\mathbf{f}}} ) (the **curvature / Hessian** at the mode).
+
+---
+
+### Why this makes sense
+
+The Laplace method relies on a **second-order Taylor expansion** of the log-posterior around its mode.
+
+Let:
+[
+\psi(\mathbf{f}) = \log p(\mathbf{f} \mid \mathbf{y})
+]
+
+Then we can approximate ( \psi(\mathbf{f}) ) near its maximum ( \hat{\mathbf{f}} ) by a **quadratic function**:
+
+[
+\psi(\mathbf{f}) \approx \psi(\hat{\mathbf{f}}) - \frac{1}{2} (\mathbf{f} - \hat{\mathbf{f}})^T A (\mathbf{f} - \hat{\mathbf{f}})
+]
+
+where:
+[
+A = - \nabla^2 \psi(\mathbf{f}) \big|_{\hat{\mathbf{f}}}
+]
+
+Exponentiating both sides gives:
+
+[
+p(\mathbf{f} \mid \mathbf{y}) \propto e^{\psi(\mathbf{f})} \approx e^{\psi(\hat{\mathbf{f}})} , \exp!\left( -\frac{1}{2} (\mathbf{f} - \hat{\mathbf{f}})^T A (\mathbf{f} - \hat{\mathbf{f}}) \right)
+]
+
+That’s just a **Gaussian density**:
+[
+p(\mathbf{f} \mid \mathbf{y}) \approx \mathcal{N}(\mathbf{f} \mid \hat{\mathbf{f}}, A^{-1})
+]
+
+---
+
+## 🧮 3. Applying this to GP classification
+
+We start from the **log posterior**:
+
+[
+\log p(\mathbf{f} \mid \mathbf{y}) = \log p(\mathbf{y} \mid \mathbf{f}) + \log p(\mathbf{f}) + \text{const}
+]
+
+### (a) The GP prior:
+
+[
+\log p(\mathbf{f}) = -\frac{1}{2} \mathbf{f}^T K^{-1} \mathbf{f} - \frac{1}{2} \log |K| + \text{const}
+]
+
+### (b) The likelihood (for logistic link):
+
+[
+\log p(\mathbf{y} \mid \mathbf{f}) = \sum_i \big[ y_i \log \sigma(f_i) + (1 - y_i)\log (1 - \sigma(f_i)) \big]
+]
+
+---
+
+## 🚀 4. Finding the mode ( \hat{\mathbf{f}} )
+
+We maximize ( \log p(\mathbf{f} \mid \mathbf{y}) ) using Newton-Raphson:
+
+[
+\nabla \log p(\mathbf{f} \mid \mathbf{y}) = \nabla \log p(\mathbf{y} \mid \mathbf{f}) - K^{-1} \mathbf{f}
+]
+[
+\nabla^2 \log p(\mathbf{f} \mid \mathbf{y}) = -W - K^{-1}
+]
+where
+[
+W = -\nabla^2 \log p(\mathbf{y} \mid \mathbf{f}) = \text{diag}(\pi_i (1 - \pi_i)), \quad \pi_i = \sigma(f_i)
+]
+
+We iteratively update:
+[
+\mathbf{f}_{\text{new}} = \mathbf{f} - (K^{-1} + W)^{-1} (\nabla \log p(\mathbf{y} \mid \mathbf{f}) - K^{-1} \mathbf{f})
+]
+until convergence to ( \hat{\mathbf{f}} ).
+
+---
+
+## 🧱 5. Gaussian approximation
+
+Once ( \hat{\mathbf{f}} ) is found, the Hessian (negative curvature) at the mode gives:
+
+[
+\Sigma^{-1} = K^{-1} + W
+]
+
+So the **approximate posterior** is:
+
+[
+p(\mathbf{f} \mid \mathbf{y}) \approx \mathcal{N}(\mathbf{f} \mid \hat{\mathbf{f}}, \Sigma)
+]
+
+---
+
+## 🔮 6. Using the approximation for prediction
+
+For a new input ( x_* ), the joint prior is:
+[
+\begin{bmatrix}
+\mathbf{f} \ f_*
+\end{bmatrix} \sim \mathcal{N}\left(
+0,
+\begin{bmatrix}
+K & k_* \
+k_*^T & k_{**}
+\end{bmatrix}
+\right)
+]
+
+Then, integrating out ( \mathbf{f} ) (under the approximate Gaussian posterior) gives:
+[
+p(f_* \mid \mathbf{y}) \approx \mathcal{N}(f_* \mid m_*, v_*)
+]
+with:
+[
+m_* = k_*^T K^{-1} \hat{\mathbf{f}}, \quad v_* = k_{**} - k_*^T (K^{-1} - K^{-1}\Sigma K^{-1}) k_*
+]
+
+Then, the **predictive class probability** is:
+[
+p(y_* = 1 \mid \mathbf{y}) = \int \sigma(f_*) p(f_* \mid \mathbf{y}) , df_*
+]
+≈ (for probit link)
+[
+\Phi!\left( \frac{m_*}{\sqrt{1 + v_*}} \right)
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### (B) Functional Gaussian Processes
+
+Up until now, we have considered a data that belongs to $\mathbb{R}$. The generalization to the euclidean space, $x\in \mathbb{R}^n$ and $y\in \mathbb{R}^m$, is straightfoward using the same procedure. However, one may ask, 
+
+> what if we consider data that are functions instead of points?
+
+This same question is the root of Functional Data Analysis (FDA). And, with this in mind, we can generalize the Gaussian process to take functions or even produce functions. In this case, consider a problem where our data is a function/time-series, $x(t)$ and we want to map it to variable $y$, i.e., $y = f(x(t))$. We can also predict functions, but for the shake of simplicity we assume that $y\in \mathbb{R}$.
+
+Let us put an example. Imagine that we have the following dataset of Brownian motion as input $x(t)$:
+
+> **Goal**: given $x(t)$, $1\leq t\leq T$, we want to predict the value at $x(T)$. 
+
+We can use a functional kernel
+$$
+k(x,x') = e^{-\frac{1}{2\sigma^2}\|x-x'\|_{L^2}^2} \tag{Functional RBF}
+$$
+and proceed as before. Let us include the code:
+
+```python
+def rbf_kernel(x1, x2, dt, sigma=1.0):
+    y = np.square(x1[:, None, :] - x2[None, :, :])
+    integral = np.sum(dt * (y[...,:-1] + y[...,1:]) * 0.5, axis=-1)
+    return np.exp(-1 / (2*sigma**2) * integral)
+```
+Generate the dataset and use the Gaussian Process to fit and predict. Notice that we use the same `GaussianProcess` class as before.
+```python
+N = 100
+num = 10
+dt = 1/(N-1)
+t = np.linspace(0,1,N)
+
+def generate_brownian(num, N):
+    incs = np.sqrt(dt) * np.random.randn(num, N-1)
+    return np.concatenate((np.zeros((num,1)), np.cumsum(incs, axis=1)), axis=1)
+
+X_train = generate_brownian(num, N)
+X_test = generate_brownian(3, N)
+
+# Training data (noisy observations)
+y_train = X_train[:,-1] + 0.1 * np.random.randn(X_train.shape[0])
+y_test = X_test[:,-1]
+
+# Fit GP and predict
+gp = GaussianProcess(rbf_kernel, dt)
+gp.fit(X_train, y_train)
+mu_s, cov_s = gp.predict(X_test)
+std_s = np.sqrt(np.diag(cov_s))
+```
+
+
+
+We obtain the following results for the the 3 test samples.
+
+![alt text](functional_gpr.png)
+
+The results are quite good despite only using 10 training samples.
+
+
+
+### (B) Stable Guassian Process with Cholesky decomposition
+
 
 One last aspect we have skipped during the implementation is that the matrix $C_{yy}$ is invertible. This is not a very good assumption and in practice it can lead to unstable behaviour. However, there is a nice patch using the Cholesky decomposition. 
 $C_{yy}$ is positive definite since $C_{yy} = K + \sigma I$ where $K$ is positive semi-definite. Hence,
@@ -292,18 +584,7 @@ class GaussianProcess:
 
 
 
-# References
-
-[1] Steinwart, I. and Christmann, A., 2008. Support vector machines. Springer Science & Business Media.  
-[2] https://distill.pub/2019/visual-exploration-gaussian-processes/
-
-
-
-
-# Appendix
-
-
-## (A) Relation between Gaussian Process Regression and Maximum Mean Discrepancy (MMD)
+### (C) Relation between Gaussian Process Regression and Maximum Mean Discrepancy (MMD)
 
 
 Let $\mathcal H$ be the RKHS with reproducing kernel $k(\cdot,\cdot)$. For a location $x$ denote the representer $k_x := k(\cdot,x)\in\mathcal H$.
