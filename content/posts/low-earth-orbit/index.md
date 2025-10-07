@@ -68,7 +68,7 @@ There are a few players in the game: Planet Labs, Maxar, Satellotic, Capella Spa
 The interesting part is that each company generate an overwhelming ~100 TB of data per day! You need a very strong infrastructure to manage and deliver that amount of information. More importantly, you need substantial compute resources to process this data to extract the relevant information. A few months ago, deepmind offered a glimpse of how to process such amounts of data with AlphaEarth [[12]](#references).
 
 ## Costs and business model
-The mass of these satellites is typically 2-4kg for communication and between 50-200kg for imagery satellites. Putting in orbit a single satellite can cost approx 4k-400k USD [[13]](#references). So the vast majority of the cost is spent down on mainland. For example, Planet Labs subscription costs 20k USD/year. The median life span of these Low-Earth Orbit satellites is roughly 2-3 years (friction is greater), so profitability is not trivial (assuming the materials and labour do not *go into orbit* hehehe). 
+The mass of these satellites is typically 200-800kg for communication and between 50-200kg for imagery satellites. Putting in orbit a single satellite can cost approx 4k-400k USD [[13]](#references). So the vast majority of the cost is spent down on mainland. For example, Planet Labs subscription costs 20k USD/year. The median life span of these Low-Earth Orbit satellites is roughly 5-7 years (friction is greater), so profitability is not trivial (assuming the materials and labour do not *go into orbit* hehehe). 
 
 
 ## But who uses these services and information?
