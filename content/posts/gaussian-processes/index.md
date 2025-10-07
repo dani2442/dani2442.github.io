@@ -393,7 +393,7 @@ $$
 \log p(\mathbf{y} \mid f) = \sum_i \big[ y_i \log \sigma(f_i) + (1 - y_i)\log (1 - \sigma(f_i)) \big]
 $$
 
-> (Step 2) Now we will find the mode $\hat{f}$
+> (Step 2) Now we will find the mode, denoted by $\hat{f}$.
 
 We maximize $\log p(f \mid \mathbf{y})$ using Newton-Raphson:
 
