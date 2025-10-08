@@ -22,6 +22,8 @@ Gaussian Process Regression is one of the most elegant and theoretically rich al
 
 One of the key advantages of Gaussian Processes compared to Deep Learning methods is that they inherently provide interpretability (through confidence intervals and uncertainty estimation). They also offer excellent extrapolation properties, as we will see, and a way to incorporate knowledge about the structure of the data into the model. However, these benefits come at a cost. The algorithm has a wide variety of hyperparameters that are difficult to configure; for instance, kernel selection alone is challenging. Understanding and having a good intuition for the inner workings of this algorithm (and the data) is key to making the most of it.
 
+![](image.png)
+
 ## 1. Theory
 
 For context, a Gaussian process is a stochastic process that generalizes the multivariate normal distribution to (potentially) infinite index sets. Wiener studied related objects in 1923 [[3]](#references--supplementary-material), and Krige and others later popularized Gaussian process for regression.
@@ -450,7 +452,6 @@ class GaussianProcessClassifier:
         self.y_train = y_train.reshape(-1)
         self.K = self.kernel(X_train, X_train) + self.noise * np.eye(len(X_train))
         
-        # Initialize latent function values
         f = np.zeros_like(self.y_train)
         
         # Newton-Raphson iteration for Laplace approximation
@@ -458,11 +459,9 @@ class GaussianProcessClassifier:
             pi = 1 / (1 + np.exp(-f))  # logistic sigmoid
             W = np.diag(pi * (1 - pi))
             
-            # Compute B inverse directly
             B = np.eye(len(X_train)) + np.sqrt(W) @ self.K @ np.sqrt(W)
             B_inv = np.linalg.inv(B)
-            
-            # Solve for b using inverse instead of Cholesky
+
             sqrt_W = np.sqrt(W)
             b = sqrt_W @ B_inv @ sqrt_W @ self.K @ (self.y_train - pi)
             
@@ -528,11 +527,11 @@ Note: in this example a periodic kernel would be more appropriate than a plain R
 
 So far, inputs have been finite-dimensional vectors. The extension to the Euclidean space ($x\in\mathbb{R}^n$, $y\in\mathbb{R}^m$) is straightforward. But we can go further: 
 
->what if each input is itself a function?
+> What if each input is itself a function?
 
 This question lies at the heart of Functional Data Analysis (FDA). We can define kernels on function spaces and apply GP machinery to map functions to scalars or to other functions. For simplicity we focus on scalar outputs $y\in\mathbb{R}$.
 
-For example, suppose inputs are Brownian-motion trajectories and the goal is to predict the endpoint x(T) given the trajectory on [0,T]. One can use a functional RBF kernel based on the L^2 distance between functions:
+For example, suppose inputs are Brownian-motion trajectories and the goal is to predict the endpoint $x(T)$ given the trajectory on [0,T]. One can use a functional RBF kernel based on the L^2 distance between functions:
 $$
 k(x,x') = \exp\left(-\frac{1}{2\sigma^2}\|x-x'\|_{L^2}^2\right) \tag{Functional RBF}
 $$
@@ -604,7 +603,7 @@ $$
 $$  
 
 
-**Predictive covariance**
+**(2) Predictive covariance**
 
 The predictive covariance is:
 
