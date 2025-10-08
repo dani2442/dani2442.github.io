@@ -4,7 +4,7 @@ date: 2025-10-03
 tags: ["machine learning", "gaussian processes", "probability", "stochastic processes", "kernel methods"]
 author: "Daniel López Montero"
 showToc: true
-draft: true
+draft: false
 description: "Math and Code"
 ShowWordCount: false
 TocOpen: true
@@ -18,25 +18,22 @@ editPost:
 ---
 
 
-Gaussian Process Regression is one of the key algorithms in machine learning and with this post I want to appreciate the beautiful mathematical theory behind them. I will divide this post into theory and practice, including a sample code.
+Gaussian Process Regression is one of the most elegant and theoretically rich algorithms in machine learning. With this post, I want to celebrate the mathematical beauty underlying Gaussian Processes. I will divide this post into two sections: theory and practice, accompanied by code examples.
 
-One of the key advantages of Gaussian Processes vs Deep Learning methods is that it inherently provide with interpretatibility with confidence intervals and uncertainty estimation. Also, it offers really good extrapolation properties as we will see. However, it comes with a hidden cost, it is has a very wide variety of hyperparameters that are far from easy to configure, i.e., only the kernel selection is already challenging and depends case per case basis. Understanding and having a good intuition in the inner workings of this algorithm is key to make the most of it. 
+One of the key advantages of Gaussian Processes compared to Deep Learning methods is that they inherently provide interpretability (through confidence intervals and uncertainty estimation). They also offer excellent extrapolation properties, as we will see, and a way to incorporate knowledge about the structure of the data into the model. However, these benefits come at a cost. The algorithm has a wide variety of hyperparameters that are difficult to configure; for instance, kernel selection alone is challenging. Understanding and having a good intuition for the inner workings of this algorithm (and the data) is key to making the most of it.
 
 ## 1. Theory
 
-For context, a Gaussian process is a type of stochastic process that behaves like an infinite dimensional normal Gaussian distribution. It was introduced by the great Wiener in 1923 [[3]](#references--supplementary-material) and later used for regression in 1960s by Daniel Krige. 
+For context, a Gaussian process is a stochastic process that generalizes the multivariate normal distribution to (potentially) infinite index sets. Wiener studied related objects in 1923 [[3]](#references--supplementary-material), and Krige and others later popularized Gaussian process for regression.
 
-Firstly, I will write the definition of Gaussian process for the shake of completeness:
+For completeness, here is a standard definition of a Gaussian process:
 
-> A process $X(t)$, $t\in I$ is said to be *Gaussian* when all finite-dimensional projections $(X(t_1), \dots, X(t_n))$ have a Gaussian distribution for $t_1, \dots, t_n \in I$, $n\in \mathbb{N}$.
-> 
-> This entails that the Gaussian process is entirely determined when we know:
-> - The mean function $\mu(t) = \mathbb{E}[X(t)]$.
-> - The covariance function $\text{Cov}(X(t), X(s)) = \mathbb{E}[X(t)X(s)] - \mu(t)\mu(s)$.
+> A process $X(t)$, $t\in I$, is *Gaussian* if every finite collection $(X(t_1), \dots, X(t_n))$ has a multivariate normal distribution for any $t_1,\dots,t_n\in I$, $n\in\mathbb{N}$.  
+> Consequently, a Gaussian process is fully specified by its mean function $\mu(t)=\mathbb{E}[X(t)]$ and covariance function $\operatorname{Cov}(X(t),X(s)) = \mathbb{E}[(X(t)-\mu(t))(X(s)-\mu(s))]$.
 
-Gaussian processes belong the family of kernel methods and they are studied in a mathematical structure called *Reproducing Kernel Hilbert Spaces* or RKHS. This allows the use of more complex mathematical structure (non-linear) at *almost* no cost computationally. Some of other kernel methods that you may know are Kernel PCA (non-linear version of PCA) or Support Vector Machines (SVM). Even the self-attention mechanism can be understood as a kernel method [[4]](#references--supplementary-material).
+Gaussian processes belong to the family of kernel methods and are studied using the mathematical space: Reproducing Kernel Hilbert Spaces (RKHS). Kernels let us inject prior assumptions about function smoothness, periodicity, linear trends, etc., and often enable powerful nonparametric models with manageable computational cost for modest dataset sizes. Other kernel methods you may know include Kernel PCA (a nonlinear variant of PCA) and Support Vector Machines (SVMs). Even the self-attention can be explained in terms of kernels [[4]](#references--supplementary-material).
 
-Now, Gaussian processes is a regression algorithm, the goal is to find a function $f$ that maps an input $x$ to an output $y$, or in other words, $f(x) = y$. Let us setup the problem mathematically:
+Gaussian process regression aims to infer a function $f$ mapping inputs $x$ to outputs $y$, i.e. $y = f(x)$ and we assume that this $f$ is a Gaussian Process with a given covariance. We set up the problem as follows:
 
 - Training inputs: $X=\{x_i\}_{i=1}^n$.
 - Latent function values at training inputs: $f = [f(x_1),\dots,f(x_n)]^\top$.
@@ -52,38 +49,38 @@ Define covariance matrices/vectors:
 - $k_{**} = k(x_*,x_*) = \operatorname{Var}(f_*)$.
 - Covariance of the observed vector $y$: $\mathrm{Cov}(y,y)=K+\sigma^2 I \equiv C_{yy}$.
 
-Some of the most common used kernels in GPR are:
+Some commonly used kernels (covariance functions) in GPR are:
 $$
-\begin{align}
-k(x,x') &= \exp\left\{-\frac{1}{2\sigma}\|x-x'\|^2\right\} \tag{Radial Basis Function (RBF)}\\
-k(x,x') &= (\gamma x^\top x' + r)^d \tag{Polynomial kernel}\\
-k(x,x') &= \frac{x^\top x'}{\|x\|\cdot \|x'\|} \tag{Cosine similarity kernel}\\
-k(x,x') &= \exp\left\{-\frac{\sin^2(\pi|x-x'|/p)}{\ell^2}\right\}\tag{Periodic kernel}
-\end{align}
+\begin{aligned}
+k(x,x') &= \exp\left\{-\frac{1}{2\ell^2}\|x-x'\|^2\right\} \quad\text{(Radial Basis Function / RBF)}\\
+k(x,x') &= (\gamma x^\top x' + r)^d \quad\text{(Polynomial kernel)}\\
+k(x,x') &= \frac{x^\top x'}{\|x\|\cdot \|x'\|} \quad\text{(Cosine similarity kernel)}\\
+k(x,x') &= \exp\left\{-\frac{\sin^2\big(\pi|x-x'|/p\big)}{\ell^2}\right\} \quad\text{(Periodic kernel)}
+\end{aligned}
 $$
 
 In the following sections we will see three different ways to understand the mathematical formulation of GPR.
 
-### (Option 1) Best Linear Unbaised Estimator (BLUE)
+### (Option 1) Best Linear Unbiased Estimator (BLUE)
 
-Our goal is to find the linear estimator $\hat f_* := w^\top y$ that minimizes mean squared error (MSE)
+Our goal is to find the linear estimator $\hat f_* := w^\top y$ that minimizes mean squared error (MSE):
 $$
 \mathrm{MSE}(w)=\mathbb E\big[(f_* - w^\top y)^2\big].
 $$
-Write the MSE and expand (expectations are over the joint prior of $f$ and noise):
+Expand the MSE (expectations are over the joint prior of $f$ and the noise):
 
 $$
 \begin{aligned}
 \mathrm{MSE}(w)
-&= \mathbb E[f_*^2] - 2,\mathbb E[f_*, w^\top y] + \mathbb E[w^\top y y^\top w] \\
-&= k_{**} - 2, w^\top \mathbb E[y f_*] + w^\top \mathbb E[y y^\top] w.
+&= \mathbb E[f_*^2] - 2\mathbb E[f_*, w^\top y] + \mathbb E[w^\top y y^\top w] \\
+&= k_{**} - 2 w^\top \mathbb E[y f_*] + w^\top \mathbb E[y y^\top] w.
 \end{aligned}
 $$
 
 But $\mathbb E[y f_*] = k_*$ and $\mathbb E[yy^\top] = C_{yy} = K + \sigma^2 I$. So
 
 $$
-\mathrm{MSE}(w) = k_{**} - 2, w^\top k_* + w^\top C_{yy} w.
+\mathrm{MSE}(w) = k_{**} - 2 w^\top k_* + w^\top C_{yy} w.
 $$
 
 This is a quadratic function of $w$. Differentiate w.r.t. $w$ and set gradient to zero:
@@ -105,7 +102,7 @@ $$
 \boxed{\hat f_* = {w^*}^\top y = k_*^\top (K+\sigma^2 I)^{-1} y.}
 $$
 
-This is exactly the usual GP posterior mean (for zero prior mean).
+This is exactly the usual GP posterior mean (for a zero prior mean).
 
 The minimal MSE (plug $w^*$ back in) is
 
@@ -116,11 +113,11 @@ $$
 \end{aligned}
 $$
 
-This equals the GP posterior variance at $x_*$. So the minimal achievable MSE by any linear estimator equals the posterior variance.
+This equals the GP posterior variance at $x_*$. Thus the minimal achievable MSE by any linear estimator equals the posterior variance.
 
 ### (Option 2) Orthogonality interpretation
 
-An equivalent, this derivation uses the orthogonality principle (linear projection): the error $e = f_* - w^\top y$ of the best linear estimator must be uncorrelated with the data used in the estimator:
+An equivalent derivation uses the orthogonality principle (linear projection): the error $e = f_* - w^\top y$ of the best linear estimator must be uncorrelated with the data used in the estimator:
 
 $$
 \mathbb E[e, y] = 0 \quad\Rightarrow\quad \mathbb E[(f_* - w^\top y) y] = 0.
@@ -129,9 +126,9 @@ $$
 Thus $\mathbb E[f_* y] - \mathbb E[y y^\top] w = 0$, i.e. $k_* - C_{yy} w = 0$, giving the same solution $w = C_{yy}^{-1} k_*$. So the GP predictor is the linear projection of $f_*$ onto the subspace spanned by the observed $y$.
 
 
-### (Option 3) Joint Gaussian Conditioning
+### (Option 3) Joint Gaussian conditioning
 
-The standard GP route uses the joint distribution of $y$ and $f_*$ is Gaussian:
+The standard GP route uses the fact that the joint distribution of $y$ and $f_*$ is Gaussian:
 
 
 $$\begin{bmatrix} y \\ f_* \end{bmatrix}
@@ -143,9 +140,9 @@ k_*^\top & k_{**}
 \end{bmatrix}
 \right).$$
 
-This can be done because the evaluation of a Gaussian Process at finite points is distributed as a normal. The conditional variable of a joint Gaussian is given by
+This follows because any finite collection of evaluations of a Gaussian process is jointly Gaussian. The conditional distribution of a joint Gaussian is
 $$
-f_* | y \sim \mathcal N(k_*^\top C_{yy}^{-1} y , k_{**} - k_*^\top C_{yy}^{-1} k_*) \tag{Posterior}
+f_* \mid y \sim \mathcal N\big(k_*^\top C_{yy}^{-1} y , k_{**} - k_*^\top C_{yy}^{-1} k_*\big) \tag{Posterior}
 $$
 Therefore, the conditional expectation and variance for a multivariate Gaussian yields
 $$\mathbb E[f_* \mid y] = k_*^\top C_{yy}^{-1} y,
@@ -168,27 +165,27 @@ $$
 $$
 
 
-So you subtract the prior mean from observations, apply the same weight matrix, and add the prior mean back at the test point.
+In practice you subtract the prior mean from the observations, apply the same weight matrix, and add the prior mean back at the test point.
 
 
-### 1.3 Complexity Analysis
+### 1.3 Complexity analysis
 
-- The training complexity is $\mathcal O(n^3)$ due to inversion of the matrix $C_{yy}$.
-- The prediction
-    - Mean: $\mathcal O(n)$ after precomputation of $C_{yy}^{-1}y$.
-    - covariance: $\mathcal O(n^2)$ due to the multiplication of of $C_{yy}^{-1}k_*$.
+- Training complexity is $\mathcal O(n^3)$ due to the inversion of the the $n\times n$ matrix $C_{yy}$.
+- Prediction:
+    - Mean: $\mathcal O(n)$ per test point after precomputing $C_{yy}^{-1}y$ .
+    - Covariance: $\mathcal O(n^2)$ per test point if you compute full predictive covariances; computing only marginal variances is cheaper.
 
-But keep in mind that using GPUs this can be parallelized and improved drastically.
+For larger datasets, approximate or structured methods (sparse GPs, inducing points, kernel approximations, or GPU-accelerated routines) can improve the speed drastically.
 
 ## 2. Practice and Code
 
 For this implementation we will use the RBF Kernel:
 $$
-K(x,x') = e^{-\frac{1}{2\sigma}\|x-x'\|^2}
+k(x,x') = \exp\left(-\frac{1}{2\ell^2}\|x-x'\|^2\right).
 $$
-This kernel is widely used because it is local and *universal* (Corollary 4.58, [[1]](#references--supplementary-material)). This latter property it is very useful to guarante for asympotitacally proving that it converges to the best possible solution.
+This kernel is widely used because it is local and *universal* (see [[1]](#references--supplementary-material)). "Universality" here means the associated RKHS is rich enough to approximate a wide class of continuous functions on compact domains under suitable conditions.
 
-The implementation is straightforward using the previous section.
+The implementation is straightforward from the previous section.
 ```python
 def rbf_kernel(x1, x2, sigma=1.0):
     y = x1.reshape(-1, 1)-x2.reshape(1,-1)
@@ -219,7 +216,7 @@ Now we use a very simple dataset, fit the Gaussian Process and plot the results.
 ```python
 # Training data (noisy observations)
 X_train = np.array([[-4], [-3], [-2], [-1], [1]]).astype(float)
-y_train = np.sin(X_train) + 0.1 * np.random.randn(*X_train.shape)
+y_train = np.sin(X_train).ravel() + 0.1 * np.random.randn(X_train.shape[0])
 
 # Test points
 X_test = np.linspace(-5, 5, 100).reshape(-1, 1)
@@ -247,18 +244,18 @@ plt.show()
 
 
 ### Kernel selection and combination
-In this case, we know that the information is generated by a periodic function with period $2\pi$. Therefore, it makes sense to use a periodic kernel. And we will see that knowing structure of the data in advance can improve the results drastically. Let us see an example with the periodic kernel:
+If the underlying signal is periodic, a periodic kernel is a natural choice. Encoding useful structure in the kernel typically improves extrapolation and predictive performance. For example, the periodic kernel:
 ```python
-def periodic_kernel(x1, x2, period=2*np.pi, l=1.5, sigma=2):
+def periodic_kernel(x1, x2, period=2*np.pi, l=1.5, sigma=2.0):
     y = x1.reshape(-1, 1) - x2.reshape(1, -1)
-    return sigma**2*np.exp(-2 * np.sin(np.pi*y/period)**2/l**2)
+    return sigma**2 * np.exp(-2 * (np.sin(np.pi * y / period)**2) / l**2)
 ```
-In this case we are interested in the extrapolation properties of the algorithm outside the data points. And as we can see compared to the gaussian kernel, it generalizes as we are expecting:
+Here we are interested in extrapolation outside the data points. Compared to the RBF kernel, a periodic kernel often generalizes better when the signal is truly periodic.
 
 ![](periodic_result.png)
 
 
-Now, we will explore a more complex example. Assume that our data has an stationarity and also trend. This problem has been extensively studied in Time-Series and there are already models that can perform this task (see the ARMA family [[8]](#references--supplementary-material)). However, using the Bayesian approach given by Gaussian Processes can lead to similar performances with the plus of a very interpretable and simple model.
+Now, we will explore a more complex example. Assume that our data has a stationary component and also a trend. This problem has been extensively studied in time series and there are already models that can perform this task (see the ARMA family [[8]](#references--supplementary-material)). However, using the Bayesian approach given by Gaussian Processes can lead to similar performance with the added benefit of interpretability.
 
 For this case we will use some of the most interesting properties of kernels:
 
@@ -267,11 +264,11 @@ For this case we will use some of the most interesting properties of kernels:
 In this case we are going to combine the periodic kernel with the linear using the sum.
 
 ```python
-def linear_kernel(x1, x2, c=0, sigma=1):
-    return sigma**2*(x1.reshape(-1, 1)-c)*(x2.reshape(1, -1)-c)
+def linear_kernel(x1, x2, c=0.0, sigma=1.0):
+    return sigma**2 * (x1.reshape(-1, 1) - c) * (x2.reshape(1, -1) - c)
 
-X_train = np.array(-10 + 10*np.random.rand(20)).astype(float)
-y_train = np.sin(X_train)+X_train/2 + 0.2 * np.random.randn(*X_train.shape)
+X_train = (-10 + 20 * np.random.rand(20, 1)).astype(float)
+y_train = np.sin(X_train).ravel() + X_train.ravel() / 2 + 0.2 * np.random.randn(20)
 
 # Test points
 X_test = np.linspace(-12, 10, 100).reshape(-1, 1)
@@ -312,21 +309,21 @@ p(y_i=1 \mid f_i) \equiv \sigma(f_i)= \frac{1}{1 + e^{-f_i}} \tag{Likelihood}
 $$
 The joint model is:
 $$
-p(\mathbf{y}, \mathbf{f}) = p(\mathbf{y} \mid \mathbf{f}) p(\mathbf{f})
+p(y, f) = p(y \mid f) p(f)
 $$
 where the prior is given by the Gaussian process, as in previous section,
 $$
-p(\mathbf{f}) = \mathcal{N}(\mathbf{f} \mid 0, K) \tag{Prior}
+p(f) = \mathcal{N}(f \mid 0, K) \tag{Prior}
 $$
 and
 $$
-p(\mathbf{y} \mid \mathbf{f}) = \prod_{i=1}^n \sigma(f_i)^{y_i} [1 - \sigma(f_i)]^{1 - y_i}
+p(y \mid f) = \sigma(f)^{y} [1 - \sigma(f)]^{1 - y}
 $$
 The problem is that the posterior is **intractable**. We want:
 $$
-p(\mathbf{f} \mid \mathbf{y}) = \frac{p(\mathbf{y} \mid \mathbf{f}) p(\mathbf{f})}{p(\mathbf{y})} \tag{Posterior}
+p(f \mid y) = \frac{p(y \mid f) p(f)}{p(y)} \tag{Posterior}
 $$
-but since $p(\mathbf{y} \mid \mathbf{f}) $ is non-Gaussian, the posterior is not Gaussian and $p(\mathbf{y}) = \int p(\mathbf{y} \mid \mathbf{f}) p(\mathbf{f}) d\mathbf{f} $ is intractable. The solution is to approximate the posterior by a Gaussian distribution. The following table compares both methods. 
+but since $p(y \mid f) $ is non-Gaussian, the posterior is not Gaussian and $p(y) = \int p(y \mid f) p(f) df $ is intractable. The solution is to approximate the posterior by a Gaussian distribution. The following table compares both methods. 
 
 
 
@@ -426,7 +423,7 @@ k_*^T & k_{**}
 \right)
 $$
 
-Then, using the argument of the joint-conditoinal probabtility, the probability of $\mathbf{f}$ under the approximate Gaussian posterior gives:
+Then, using the joint-conditional argument, the probability of $\mathbf{f}$ under the approximate Gaussian posterior gives:
 $$
 p(f_* \mid \mathbf{y}) \approx \mathcal{N}(f_* \mid m_*, v_*)
 $$
@@ -521,7 +518,7 @@ plt.show()
 
 
 
-Notice that we should have used the periodic kernel instead of the RBF kernel. I leave it as an exercise to the reader hehehe.
+Note: in this example a periodic kernel would be more appropriate than a plain RBF kernel. I leave trying that variant as an exercise to the reader heheheh.
 
 
 
@@ -529,21 +526,17 @@ Notice that we should have used the periodic kernel instead of the RBF kernel. I
 
 ### (B) Functional Gaussian Processes
 
-Up until now, we have considered a data that belongs to $\mathbb{R}$. The generalization to the euclidean space, $x\in \mathbb{R}^n$ and $y\in \mathbb{R}^m$, is straightfoward using the same procedure. However, one may ask, 
+So far, inputs have been finite-dimensional vectors. The extension to the Euclidean space ($x\in\mathbb{R}^n$, $y\in\mathbb{R}^m$) is straightforward. But we can go further: 
 
-> what if we consider data that are functions instead of points?
+>what if each input is itself a function?
 
-This same question is the root of Functional Data Analysis (FDA). And, with this in mind, we can generalize the Gaussian process to take functions or even produce functions. In this case, consider a problem where our data is a function/time-series, $x(t)$ and we want to map it to variable $y$, i.e., $y = f(x(t))$. We can also predict functions, but for the shake of simplicity we assume that $y\in \mathbb{R}$.
+This question lies at the heart of Functional Data Analysis (FDA). We can define kernels on function spaces and apply GP machinery to map functions to scalars or to other functions. For simplicity we focus on scalar outputs $y\in\mathbb{R}$.
 
-Let us put an example. Imagine that we have the following dataset of Brownian motion as input $x(t)$:
-
-> **Goal**: given $x(t)$, $1\leq t\leq T$, we want to predict the value at $x(T)$. 
-
-We can use a functional kernel
+For example, suppose inputs are Brownian-motion trajectories and the goal is to predict the endpoint x(T) given the trajectory on [0,T]. One can use a functional RBF kernel based on the L^2 distance between functions:
 $$
-k(x,x') = e^{-\frac{1}{2\sigma^2}\|x-x'\|_{L^2}^2} \tag{Functional RBF}
+k(x,x') = \exp\left(-\frac{1}{2\sigma^2}\|x-x'\|_{L^2}^2\right) \tag{Functional RBF}
 $$
-and proceed as before. Let us include the code:
+and proceed with the standard GP workflow. Example code follows.
 
 ```python
 def rbf_kernel(x1, x2, dt, sigma=1.0):
@@ -586,11 +579,11 @@ The results are quite good despite only using 10 training samples.
 
 
 
-### (C) Stable Guassian Process with Cholesky decomposition
+### (C) Stable Gaussian Process with Cholesky decomposition
 
 
-One last aspect we have skipped during the implementation is that the matrix $C_{yy}$ is invertible. This is not a very good assumption and in practice it can lead to unstable behaviour. However, there is a nice patch using the Cholesky decomposition. 
-$C_{yy}$ is positive definite since $C_{yy} = K + \sigma I$ where $K$ is positive semi-definite. Hence,
+One practical aspect we have skipped is numerical stability when inverting $C_{yy}$. Direct inversion is not recommended. A better approach is to use the Cholesky decomposition. Note that
+$C_{yy} = K + \sigma^2 I$ is positive definite when $\sigma^2>0$ (since $K$ is positive semi-definite). Hence we can write
 $$
 C_{yy} = L L^\top
 $$
@@ -611,7 +604,7 @@ $$
 $$  
 
 
-**(2) Predictive covariance**
+**Predictive covariance**
 
 The predictive covariance is:
 

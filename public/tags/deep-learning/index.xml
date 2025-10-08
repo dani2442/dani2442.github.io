@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Deep Learning on dani2442&#39;s Blog</title>
     <link>http://localhost:1313/tags/deep-learning/</link>
     <description>Recent content in Deep Learning on dani2442&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <image>
+      <title>dani2442&#39;s Blog</title>
+      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 08 Jul 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/deep-learning/index.xml" rel="self" type="application/rss+xml" />
@@ -13,7 +18,7 @@
       <link>http://localhost:1313/posts/pinns/</link>
       <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/pinns/</guid>
-      <description>This post is an extract of my Master&amp;rsquo;s Thesis in Mathematics, it can be found in this GitHub repository for a complete and autocomplete document: repo.&#xA;In our continuous pursuit of enlightenment, knowledge, and understanding of the world around us, we turn to the tool of mathematics. For thousands of years, mathematicians have sought to translate our sensory experiences into a language that captures their essence in the most abstract, universal, and general form.</description>
+      <description>Introduction to Physics-Informed Neural Networks</description>
     </item>
   </channel>
 </rss>
