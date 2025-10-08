@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on dani2442&#39;s Blog</title>
     <link>http://localhost:1313/posts/</link>
     <description>Recent content in Posts on dani2442&#39;s Blog</description>
-    <image>
-      <title>dani2442&#39;s Blog</title>
-      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
-    </image>
-    <generator>Hugo -- 0.150.0</generator>
+    <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 03 Oct 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
@@ -18,84 +13,84 @@
       <link>http://localhost:1313/posts/gaussian-processes/</link>
       <pubDate>Fri, 03 Oct 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/gaussian-processes/</guid>
-      <description>Math and Code</description>
+      <description>Gaussian Processes regression is one of the key algorithms within machine learning. With this blog post I want to appreciate the beautiful mathematical theory behind that back them up. I will divide this post in theory and practice, including a sample code.&#xA;One of the key advantages of Gaussian Processes vs Deep Learning methods is that it inherently provide with confidence intervals and a higher level of interpretability. However, it comes with a hidden cost, it is has a very wide variety of hyperparameters that are far from easy to configure, i.</description>
     </item>
     <item>
       <title>The Importance of (Good) Metrics</title>
       <link>http://localhost:1313/posts/metrics/</link>
       <pubDate>Fri, 03 Oct 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/metrics/</guid>
-      <description>Math and Code</description>
+      <description>At first I wanted this post to be only about metrics in machine learning, but this concept is more universal and does not make sense to study it as a separate problem. The ultimate goal of this post is to make you think and reflect.&#xA;We live surrounded with metrics: grades by teachers, employers, number of publications in Academia, FLOPs in computing, ELO in chess, salary, IQ for intelligence, movies rating in IMDB, books with GoodReads, things we buy in Amazon, election results in democracy, F1 score in machine learning, GDP for countries, EBITDA in finance, likes/followers in instagram, time in TikTok for content recommendation algorithms, etc etc.</description>
     </item>
     <item>
       <title>Low-Earth Orbit</title>
       <link>http://localhost:1313/posts/low-earth-orbit/</link>
       <pubDate>Wed, 01 Oct 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/low-earth-orbit/</guid>
-      <description>Analysis and Predictions</description>
+      <description>Last week I came across this very high-quality image, at first I thought that it must be one of those expensive satellites that cost millions of dollars. Then I started digging and found out how ignorant i am about the recent advances in satellites.&#xA;Apparently, there are three main orbits used by current satellites [1]:&#xA;LEO (Low Earth Orbit): ~160–2,000 km; short orbital period (90–120 min); low latency; used for Earth observation, Starlink, ISS.</description>
     </item>
     <item>
       <title>Prediction Markets</title>
       <link>http://localhost:1313/posts/prediction-markets/</link>
       <pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/prediction-markets/</guid>
-      <description>Analysis, Predictions and Experiments</description>
+      <description>I always thought that actions matter more than words. The ultimate expression of this idea is the stock market and, more recently, prediction markets (such as Polymarket). For example, you can bet on a wide variety of topics that stretch from who might win an election to how many tweets Elon Musk will post in a single day.&#xA;Over the past few years, public trust in institutions and journalism has eroded [1], and this distrust has fueled the rise of new financial instruments like prediction markets.</description>
     </item>
     <item>
       <title>Analog computing in LLMs</title>
       <link>http://localhost:1313/posts/analog-computing/</link>
       <pubDate>Sun, 14 Sep 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/analog-computing/</guid>
-      <description>Analog computing &#43; AI</description>
+      <description>A few days ago, this paper was published in Nature [1] claiming a huge improvement in LLM inference using analog computing:&#xA;&amp;ldquo;Our architecture reduces attention latency and energy consumption by up to two and four orders of magnitude&amp;rdquo;&#xA;This could mean we may soon run LLMs on devices no bigger than smartphones while consuming less power than a light bulb. After taking a deep dive, I believe this might turn out to be one of the most influential results of 2025.</description>
     </item>
     <item>
       <title>Physics-Informed Neural Networks</title>
       <link>http://localhost:1313/posts/pinns/</link>
       <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/pinns/</guid>
-      <description>Introduction to Physics-Informed Neural Networks</description>
+      <description>This post is an extract of my Master&amp;rsquo;s Thesis in Mathematics, it can be found in this GitHub repository for a complete and autocomplete document: repo.&#xA;In our continuous pursuit of enlightenment, knowledge, and understanding of the world around us, we turn to the tool of mathematics. For thousands of years, mathematicians have sought to translate our sensory experiences into a language that captures their essence in the most abstract, universal, and general form.</description>
     </item>
     <item>
       <title>Functional Principal Component Analysis</title>
       <link>http://localhost:1313/posts/functional-pca/</link>
       <pubDate>Tue, 29 Apr 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/functional-pca/</guid>
-      <description>Introduction to Functional PCA.</description>
+      <description>This work is part of project done for a class in the MSc Applied Mathematics in the Autonomous University of Madrid. You can find the complete work here. In this manuscript, we explore the application of dimensionality reduction algorithms to real-world datasets within the context of functional data analysis. We establish several theoretical results related to Principal Component Analysis (PCA) for functional data and introduce a novel variation, Fourier PCA, inspired by Fourier theory.</description>
     </item>
     <item>
       <title>Differentiable programming for gradient-based control and optimization in physical systems</title>
       <link>http://localhost:1313/posts/agraria-paper/</link>
       <pubDate>Sun, 18 Aug 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/agraria-paper/</guid>
-      <description>Optimization using Differntiable Programming and Neural ODEs.</description>
+      <description>We have recently published a paper with GMV at Elsevier and I wanted to share it here also.&#xA;Link to Article: https://www.sciencedirect.com/science/article/pii/S2352467724002248 Abstract This paper presents an exploration of the application of control theory, particularly utilizing a gradient-based algorithm, to automate and optimize the operation of photovoltaic panels and refrigeration systems in warehouse environments. The study emphasizes achieving coordination between energy generation and consumption, specifically harnessing surplus solar energy for efficient refrigeration.</description>
     </item>
     <item>
       <title>Traffic Flow Dynamics</title>
       <link>http://localhost:1313/posts/traffic-flow/</link>
       <pubDate>Sat, 17 Aug 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/traffic-flow/</guid>
-      <description>Introduction to Traffic Flow Dynamics.</description>
+      <description>What do traffic congestion, supermarket lines and fluid dynamics have in common? While we are driving, we are used to think of cars as single individuals/entities. Although, every individual has its own driving tendencies and peculiarities, at a higher-scale, we behave within certain constraints and collective behavior. This quantities can be interpreted in many cases as a homogeneous dense fluid of cars. In this post I will focus on modelling traffic flow using fluid dynamics principles.</description>
     </item>
     <item>
       <title>Nonlinear Functional Analysis: Bifurcation Theory</title>
       <link>http://localhost:1313/posts/bifurcation-theory/</link>
       <pubDate>Thu, 11 Jul 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/bifurcation-theory/</guid>
-      <description>Introduction to Bifurcation Theory from simple eigenvalues.</description>
+      <description>Several non-linear problems relevant in practical applications can be expressed as a fixed point equation. In many cases, it is crucial to investigate how the model’s behavior changes with variations in a parameter, denoted as $\lambda$. In practical applications, $\lambda$ represents a physical or empirical magnitude of interest. Bifurcation Theory is a subfield in Nonlinear Functional Analysis that tries to study the general behavior of the equations that can be written as $\mathfrak{F}(\lambda, u)=0$ where $\lambda$ is the bifurcation parameter.</description>
     </item>
     <item>
       <title>Nonlinear Functional Analysis: Bifurcation Theory</title>
       <link>http://localhost:1313/posts/finite_volume_method/</link>
       <pubDate>Thu, 11 Jul 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/finite_volume_method/</guid>
-      <description>Introduction to Bifurcation Theory from simple eigenvalues.</description>
+      <description></description>
     </item>
     <item>
       <title>My 1st post</title>
       <link>http://localhost:1313/posts/my-first-post/</link>
       <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
       <guid>http://localhost:1313/posts/my-first-post/</guid>
-      <description>Desc Text.</description>
+      <description>Introduction </description>
     </item>
   </channel>
 </rss>

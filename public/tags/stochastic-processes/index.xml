@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Stochastic Processes on dani2442&#39;s Blog</title>
     <link>http://localhost:1313/tags/stochastic-processes/</link>
     <description>Recent content in Stochastic Processes on dani2442&#39;s Blog</description>
-    <image>
-      <title>dani2442&#39;s Blog</title>
-      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
-    </image>
-    <generator>Hugo -- 0.150.0</generator>
+    <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 03 Oct 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/stochastic-processes/index.xml" rel="self" type="application/rss+xml" />
@@ -18,14 +13,14 @@
       <link>http://localhost:1313/posts/gaussian-processes/</link>
       <pubDate>Fri, 03 Oct 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/gaussian-processes/</guid>
-      <description>Math and Code</description>
+      <description>Gaussian Processes regression is one of the key algorithms within machine learning. With this blog post I want to appreciate the beautiful mathematical theory behind that back them up. I will divide this post in theory and practice, including a sample code.&#xA;One of the key advantages of Gaussian Processes vs Deep Learning methods is that it inherently provide with confidence intervals and a higher level of interpretability. However, it comes with a hidden cost, it is has a very wide variety of hyperparameters that are far from easy to configure, i.</description>
     </item>
     <item>
       <title>The Importance of (Good) Metrics</title>
       <link>http://localhost:1313/posts/metrics/</link>
       <pubDate>Fri, 03 Oct 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/metrics/</guid>
-      <description>Math and Code</description>
+      <description>At first I wanted this post to be only about metrics in machine learning, but this concept is more universal and does not make sense to study it as a separate problem. The ultimate goal of this post is to make you think and reflect.&#xA;We live surrounded with metrics: grades by teachers, employers, number of publications in Academia, FLOPs in computing, ELO in chess, salary, IQ for intelligence, movies rating in IMDB, books with GoodReads, things we buy in Amazon, election results in democracy, F1 score in machine learning, GDP for countries, EBITDA in finance, likes/followers in instagram, time in TikTok for content recommendation algorithms, etc etc.</description>
     </item>
   </channel>
 </rss>

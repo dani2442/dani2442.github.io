@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Futurology on dani2442&#39;s Blog</title>
     <link>http://localhost:1313/tags/futurology/</link>
     <description>Recent content in Futurology on dani2442&#39;s Blog</description>
-    <image>
-      <title>dani2442&#39;s Blog</title>
-      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
-    </image>
-    <generator>Hugo -- 0.150.0</generator>
+    <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 14 Sep 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/futurology/index.xml" rel="self" type="application/rss+xml" />
@@ -18,7 +13,7 @@
       <link>http://localhost:1313/posts/analog-computing/</link>
       <pubDate>Sun, 14 Sep 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/analog-computing/</guid>
-      <description>Analog computing &#43; AI</description>
+      <description>A few days ago, this paper was published in Nature [1] claiming a huge improvement in LLM inference using analog computing:&#xA;&amp;ldquo;Our architecture reduces attention latency and energy consumption by up to two and four orders of magnitude&amp;rdquo;&#xA;This could mean we may soon run LLMs on devices no bigger than smartphones while consuming less power than a light bulb. After taking a deep dive, I believe this might turn out to be one of the most influential results of 2025.</description>
     </item>
   </channel>
 </rss>
