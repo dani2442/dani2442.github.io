@@ -37,7 +37,7 @@ The motivation behind physics-informed machine learning is twofold: to harness t
 
 ## Physics-Informed Machine Learning
 
-Data-driven methods often require \textbf{large quantities of data}, which may be scarce or expensive to obtain. Moreover, they typically ignore valuable prior knowledge about the underlying physical system.Incorporating physical knowledge into the learning process:
+Data-driven methods often require **large quantities of data**, which may be scarce or expensive to obtain. Moreover, they typically ignore valuable prior knowledge about the underlying physical system.Incorporating physical knowledge into the learning process:
 - Physics-Informed Neural Networks [Raissi, 2019]
 - NeuralODEs [Chen, 2019]
 
@@ -45,9 +45,9 @@ Data-driven methods often require \textbf{large quantities of data}, which may b
 ### Neural Networks (with tanh)
 
 A Neural Network $u_\theta: \mathbb{R}^{d_1}\rightarrow \mathbb{R}^{d_2}$ is defined by 
-\begin{equation*}
+$$
     u_\theta = \mathcal{A}_{H+1}\circ (\phi \circ \mathcal{A}_H) \circ \dots \circ (\phi \circ \mathcal{A}_1),
-\end{equation*}
+$$
 where $\mathcal{A}_k$ is an affine function and $\phi$ is the activation function, e.g., tanh. And, $\theta\in\Theta$ is the parameter of the neural network. 
 
 We denote $\text{NN}_H^D$ the set of neural networks where $H$ is the number of layers and $D$ is the depth.
@@ -82,11 +82,12 @@ Let $\Omega:=(0,T)$ and $\mathfrak{F}(u,x) := mu''(x) + \gamma u'(x)$  where $u\
 
 Fix $n_1\in \mathbb{N}$. Let $\{\hat{\theta}_n(n_2, n_3)\}_{n\in \mathbb{N}}$ be a minimizing sequence for the empirical risk, i.e., 
 $$ \lim_{n\rightarrow\infty} \widehat{R}_{n_1, n_2, n_3}(u_{\hat{\theta}_n(n_2, n_3)}) = \inf_{\theta\in \Theta_{H,D}} \widehat{R}_{n_1, n_2, n_3}(u_\theta)$$
-We say that $\{\hat{\theta}_n(n_2, n_3)\}_{n\in \mathbb{N}}$ satisfies the \textit{risk-consistency} with respect to the theoretical risk $R_{n_1}$ if 
+We say that $\{\hat{\theta}_n(n_2, n_3)\}_{n\in \mathbb{N}}$ satisfies the *risk-consistency* with respect to the theoretical risk $R_{n_1}$ if 
 $$\lim_{n_2, n_3\rightarrow\infty} \lim_{n\rightarrow \infty} R_{n_1}(u_{\hat{\theta}_n(n_2, n_3)}) = \inf_{\theta\in \Theta_{H,D}} R_{n_1}(u_\theta).$$
 
 The previous example can be used as a counterexample. We can define a sequence $\{\hat{\theta}_n(n_2, n_3)\}_{n\in\mathbb{N}}$ that verifies:
-$$\lim_{n\rightarrow\infty} \widehat{R}_{n_1, n_2, n_3}(u_{\hat{\theta}_n(n_2, n_3)}) = 0 \quad\quad \text{and}  \lim_{n\rightarrow\infty} R_{n_1}(u_{\hat{\theta}_n(n_2, n_3)}) = \infty
+$$
+\lim_{n\rightarrow\infty} \widehat{R}_{n_1, n_2, n_3}(u_{\hat{\theta}_n(n_2, n_3)}) = 0 \quad\quad \text{and}  \lim_{n\rightarrow\infty} R_{n_1}(u_{\hat{\theta}_n(n_2, n_3)}) = \infty$$
 
 
 First, we consider the case where $m=1$ and $\gamma=1$. We use the conditions $\{(0, 0), (1, 1)\}$, which yield the exact solution $$u^\star(x) = \frac{e}{e-1}(1-e^{-x}).$$
