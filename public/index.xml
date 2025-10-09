@@ -11,19 +11,12 @@
     </image>
     <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 03 Oct 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 09 Oct 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Control Theory</title>
-      <link>http://localhost:1313/posts/control-theory/</link>
-      <pubDate>Fri, 03 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/control-theory/</guid>
-      <description>Math and Code</description>
-    </item>
     <item>
       <title>Gaussian Processes</title>
       <link>http://localhost:1313/posts/gaussian-processes/</link>
-      <pubDate>Fri, 03 Oct 2025 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 09 Oct 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/gaussian-processes/</guid>
       <description>Math and Code</description>
     </item>
@@ -103,6 +96,29 @@
       <pubDate>Tue, 15 Sep 2020 11:30:03 +0000</pubDate>
       <guid>http://localhost:1313/posts/my-first-post/</guid>
       <description>Desc Text.</description>
+    </item>
+    <item>
+      <title></title>
+      <link>http://localhost:1313/posts/control-theory/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/control-theory/</guid>
+      <description>&lt;p&gt;title: &amp;ldquo;Control Theory&amp;rdquo;
+date: 2025-10-03
+tags: [&amp;ldquo;machine learning&amp;rdquo;, &amp;ldquo;gaussian processes&amp;rdquo;, &amp;ldquo;probability&amp;rdquo;, &amp;ldquo;stochastic processes&amp;rdquo;, &amp;ldquo;kernel methods&amp;rdquo;]
+author: &amp;ldquo;Daniel López Montero&amp;rdquo;
+showToc: true
+draft: true
+description: &amp;ldquo;A concise introduction to controllability for linear time-invariant systems: Kalman rank condition, the controllability Gramian, and the minimum-energy control.&amp;rdquo;
+ShowWordCount: false
+ShowReadingTime: true
+comments: true
+UseHugoToc: true
+editPost:
+URL: &amp;ldquo;&lt;a href=&#34;https://github.com/dani2442/dani2442.github.io/content%22&#34;&gt;https://github.com/dani2442/dani2442.github.io/content&amp;quot;&lt;/a&gt;
+Text: &amp;ldquo;Suggest Changes&amp;rdquo; # edit text
+appendFilePath: true # to append file path to Edit link
+Consider the linear time-invariant (LTI) system
+&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
