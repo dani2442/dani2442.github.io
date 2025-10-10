@@ -1,3 +1,4 @@
+---
 title: "Control Theory"
 date: 2025-10-03
 tags: ["machine learning", "gaussian processes", "probability", "stochastic processes", "kernel methods"]
@@ -13,6 +14,9 @@ editPost:
     URL: "https://github.com/dani2442/dani2442.github.io/content"
     Text: "Suggest Changes" # edit text
     appendFilePath: true # to append file path to Edit link
+---
+
+
 Consider the linear time-invariant (LTI) system
 $$
 \dot x(t)=Ax(t)+Bu(t),\qquad x(t)\in\mathbb{R}^n,\; u(t)\in\mathbb{R}^m,
