@@ -12,7 +12,7 @@ comments: true
 cover:
     alt: "The alt text"
     caption: ""
-    images: high_resolution2.jpg
+    images: "high_resolution2.jpg"
     relative: false
 UseHugoToc: true
 editPost:
