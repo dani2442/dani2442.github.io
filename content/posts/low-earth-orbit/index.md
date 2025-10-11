@@ -10,9 +10,9 @@ ShowWordCount: false
 ShowReadingTime: true
 comments: true
 cover:
+    image: high_resolution2.jpg
     alt: "The alt text"
-    caption: ""
-    images: "high_resolution2.jpg"
+    caption: "nothing"
     relative: false
 UseHugoToc: true
 editPost:
