@@ -12,8 +12,10 @@ comments: true
 cover:
     image: high_resolution2.jpg
     alt: "The alt text"
-    caption: "nothing"
+    caption: ""
     relative: true
+    hiddenInList: false
+    hidden: false
 UseHugoToc: true
 editPost:
     URL: "https://github.com/dani2442/dani2442.github.io/content"
@@ -24,9 +26,6 @@ editPost:
 
 
 Last week I came across this very high-quality image, at first I thought that it must be one of those expensive satellites that cost millions of dollars. Then I started digging and found out how ignorant i am about the recent advances in satellites.
-
-
-![](high_resolution2.jpg)
 
 
 Apparently, there are three main orbits used by current satellites [[1]](#References):
