@@ -13,7 +13,7 @@ cover:
     image: high_resolution2.jpg
     alt: "The alt text"
     caption: "nothing"
-    relative: false
+    relative: true
 UseHugoToc: true
 editPost:
     URL: "https://github.com/dani2442/dani2442.github.io/content"
