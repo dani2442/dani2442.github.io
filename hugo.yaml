@@ -20,7 +20,7 @@ params:
   title: ExampleSite
   description: "ExampleSite description"
   keywords: [Blog, Portfolio, Machine Learning, Mathematics, Programming]
-  author: Me
+  author: Daniel López Montero
   # author: ["Me", "You"] # multiple authors
   images: ["<link or path of image for opengraph, twitter-cards>"]
   DateFormat: "January 2, 2006"
@@ -37,7 +37,7 @@ params:
   UseHugoToc: true
   disableSpecial1stPost: false
   disableScrollToTop: false
-  comments: false
+  #comments: false
   hidemeta: false
   hideSummary: false
   showtoc: false
@@ -104,10 +104,10 @@ params:
     yandex:
       SiteVerificationTag: "XYZabc"
 
-  cover:
-    hidden: true # hide everywhere but not in structured data
-    hiddenInList: true # hide on list pages and home
-    hiddenInSingle: true # hide on single page
+  #cover:
+  #  hidden: true # hide everywhere but not in structured data
+  #  hiddenInList: true # hide on list pages and home
+  #  hiddenInSingle: true # hide on single page
 
   editPost:
     URL: "https://github.com/dani2442/dani2442.github.io/content"
