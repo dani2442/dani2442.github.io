@@ -9,6 +9,11 @@ description: "Analysis and Predictions"
 ShowWordCount: false
 ShowReadingTime: true
 comments: true
+cover:
+    alt: "The alt text"
+    caption: ""
+    images: high_resolution2.jpg
+    relative: false
 UseHugoToc: true
 editPost:
     URL: "https://github.com/dani2442/dani2442.github.io/content"
