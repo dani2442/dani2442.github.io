@@ -14,8 +14,10 @@ cover:
     alt: "The alt text"
     caption: ""
     relative: true
-    hiddenInList: false
+    hiddenInList: true
     hidden: false
+images:
+    - high_resolution2.jpg
 UseHugoToc: true
 editPost:
     URL: "https://github.com/dani2442/dani2442.github.io/content"
