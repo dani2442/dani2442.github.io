@@ -17,7 +17,7 @@ editPost:
 ---
 
 
-Consider the linear time-invariant (LTI) system
+Consider the linear time-invariant system
 $$
 \dot x(t)=Ax(t)+Bu(t),\qquad x(t)\in\mathbb{R}^n,\; u(t)\in\mathbb{R}^m,
 $$
