@@ -2,6 +2,7 @@
 title: "Functional Principal Component Analysis"
 date: 2025-04-29
 tags: ["mathematics", "probability", "functional data analysis"]
+categories: ["statistics", "machine learning"]
 author: "Daniel López Montero"
 showToc: true
 draft: false

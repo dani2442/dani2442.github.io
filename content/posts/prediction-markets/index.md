@@ -2,6 +2,7 @@
 title: "Prediction Markets"
 date: 2025-09-24
 tags: ["mathematics", "finance", "stochastic differential equations", "prediction markets"]
+categories: ["miscellaneous", "finance", "applied math"]
 author: "Daniel López Montero"
 showToc: true
 draft: false

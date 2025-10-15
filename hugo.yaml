@@ -37,6 +37,7 @@ params:
   UseHugoToc: true
   disableSpecial1stPost: false
   disableScrollToTop: false
+  ShowCodeCopyButtons: true
   #comments: false
   hidemeta: false
   hideSummary: false
@@ -64,7 +65,7 @@ params:
     enabled: false # needs to be explicitly set
     title: ExampleSite
     subtitle: "This is subtitle"
-    imageUrl: "<img location>"
+    imageUrl: "img location"
     imageWidth: 120
     imageHeight: 120
     imageTitle: my image
@@ -127,14 +128,19 @@ params:
     keys: ["title", "permalink", "summary", "content"]
 menu:
   main:
+    - identifier: archives
+      name: archives
+      url: /archives/
+      weight: 10
     - identifier: categories
       name: categories
       url: /categories/
-      weight: 10
+      weight: 20
     - identifier: tags
       name: tags
       url: /tags/
-      weight: 20
+      weight: 30
+    
     # - identifier: web page
     #   name: dprogrammer.org
     #   url: http://dprogrammer.org

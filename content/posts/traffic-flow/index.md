@@ -2,6 +2,7 @@
 title: "Traffic Flow Dynamics"
 date: 2024-08-17
 tags: ["mathematics", "simulation", "numerical methods"]
+categories: ["applied math", "simulation"]
 author: "Daniel López Montero"
 showToc: true
 draft: false
