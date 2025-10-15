@@ -27,12 +27,5 @@
       <guid>http://localhost:1313/posts/control-theory/</guid>
       <description>A concise introduction to controllability for linear time-invariant systems: Kalman rank condition, the controllability Gramian, and the minimum-energy control.</description>
     </item>
-    <item>
-      <title>The Importance of (Good) Metrics</title>
-      <link>http://localhost:1313/posts/metrics/</link>
-      <pubDate>Fri, 03 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/metrics/</guid>
-      <description>Math and Code</description>
-    </item>
   </channel>
 </rss>

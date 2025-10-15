@@ -2,6 +2,7 @@
 title: "Low-Earth Orbit"
 date: 2025-10-01
 tags: ["finance", "satellites", "rockets", "applications", "data science"]
+categories: ["space", "miscellaneous"]
 author: "Daniel López Montero"
 showToc: true
 draft: false

@@ -2,6 +2,7 @@
 title: "Control Theory"
 date: 2025-10-03
 tags: ["machine learning", "gaussian processes", "probability", "stochastic processes", "kernel methods"]
+categories: ["machine learning", "mathematics"]
 author: "Daniel López Montero"
 showToc: true
 draft: true
@@ -42,15 +43,15 @@ We sketch a proof of the equivalence and then show how to construct a minimum-en
 
 The solution with initial condition $x(0)=x_0$ is
 $$
-x(T)=e^{AT}x_0 + \int_{0}^{T} e^{A(T-s)}B\,u(s)\,ds.
+x(T)=e^{AT}x_0 + \int_{0}^{T} e^{A(T-s)}B\,u(s) ds.
 $$
 Define the reachable set from $x_0$ at time $T$:
 $$
-\mathcal{R}_T(x_0)=\left\{ x(T) : x(T)=e^{AT}x_0+\int_0^T e^{A(T-s)}B\,u(s)\,ds,\; u(\cdot)\ \text{admissible}\right\}.
+\mathcal{R}_T(x_0)=\left\{ x(T) : x(T)=e^{AT}x_0+\int_0^T e^{A(T-s)}B u(s)ds, u(\cdot)\ \text{admissible}\right\}.
 $$
 It suffices to study reachability from the origin $x_0=0$, so write
 $$
-\mathcal{R}_T = \left\{\int_0^T e^{A(T-s)}B\,u(s)\,ds \right\}.
+\mathcal{R}_T = \left\{\int_0^T e^{A(T-s)}B u(s) ds \right\}.
 $$
 The system is controllable if for some $T>0$ we have $\mathcal{R}_T=\mathbb{R}^n$.
 

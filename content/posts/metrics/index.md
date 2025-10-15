@@ -1,7 +1,8 @@
 ---
 title: "The Importance of (Good) Metrics"
 date: 2025-10-03
-tags: ["machine learning", "gaussian processes", "probability", "stochastic processes", "kernel methods"]
+tags: ["machine learning", "metrics"]
+categories: ["miscellaneous", "machine learning"]
 author: "Daniel López Montero"
 showToc: true
 draft: true

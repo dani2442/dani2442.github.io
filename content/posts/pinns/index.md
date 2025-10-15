@@ -2,6 +2,7 @@
 title: "Physics-Informed Neural Networks"
 date: 2025-07-08
 tags: ["mathematics", "physics", "deep learning", "PDE", "ODE"]
+categories: ["machine learning"]
 author: "Daniel López Montero"
 showToc: true
 draft: false

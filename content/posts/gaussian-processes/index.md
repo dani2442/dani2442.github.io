@@ -2,6 +2,7 @@
 title: "Gaussian Processes"
 date: 2025-10-09
 tags: ["machine learning", "gaussian processes", "probability", "stochastic processes", "kernel methods"]
+categories: ["machine learning"]
 author: "Daniel López Montero"
 showToc: true
 draft: false

@@ -11,6 +11,63 @@
     </image>
     <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
+    <lastBuildDate>Thu, 09 Oct 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Machine Learning</title>
+      <link>http://localhost:1313/categories/machine-learning/</link>
+      <pubDate>Thu, 09 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/machine-learning/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Mathematics</title>
+      <link>http://localhost:1313/categories/mathematics/</link>
+      <pubDate>Fri, 03 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/mathematics/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Miscellaneous</title>
+      <link>http://localhost:1313/categories/miscellaneous/</link>
+      <pubDate>Fri, 03 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/miscellaneous/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Space</title>
+      <link>http://localhost:1313/categories/space/</link>
+      <pubDate>Wed, 01 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/space/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Applied Math</title>
+      <link>http://localhost:1313/categories/applied-math/</link>
+      <pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/applied-math/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Finance</title>
+      <link>http://localhost:1313/categories/finance/</link>
+      <pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/finance/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Statistics</title>
+      <link>http://localhost:1313/categories/statistics/</link>
+      <pubDate>Tue, 29 Apr 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/statistics/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Simulation</title>
+      <link>http://localhost:1313/categories/simulation/</link>
+      <pubDate>Sat, 17 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/simulation/</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>

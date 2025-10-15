@@ -2,6 +2,7 @@
 title: "Analog computing in LLMs"
 date: 2025-09-14
 tags: ["machine learning", "llm", "inference", "futurology" ]
+categories: ["machine learning"]
 author: "Daniel López Montero"
 showToc: true
 draft: false
