@@ -31,6 +31,10 @@ And in some cases choosing the wrong metrics can lead to catastrophic failure (a
 
 
 ## Egregrious examples of bad metrics
+People coined the term *enshitification* [[8]](#references) to express when a system gets corrupted and degraded due to its poor incentives, we have seen it in many companies. The most famous example is Airbnb, it started as an alternative of dreading hotels, where some host shared a room and both the host and the guest benefited while costing a modest price. However, we have seen that nowadays, Airbnb costs similar to hotels and have contributed greatly to the gentrification of most cities in Europe [[9]](#references).
+
+Now I will give some examples of *enshittification* in many different places:
+
 - p-hacking in statistics: it is a commonplace in statistics to use p-values to describe how confident we are at the results of some statistics test. The standard threshold use to say when a result is *statistically significant* is 0.05, this has led many *scientist* to aim for this arbitrary threshold at all cost. We have seen numerous retractions over the years and i assume uncountable are never noticed [[2]](#references).
 
 - overfitting in machine learning: over the years, there has been many examples of *data leaking*, i.e., training the model using the testing set split [[3]](#references). Also, when your only goal is to optimize for a single metric, you may overfit to that single task, even without using the test, leading to a model that is virtually useless. 
@@ -40,7 +44,6 @@ And in some cases choosing the wrong metrics can lead to catastrophic failure (a
 - Incentives for directives: CEOs were usually payed bonuses based on the results during the earnings each quarter. So many CEOs prioritizes short-term wins over long-term goals for healthy company. They pulled financial tricks and this led to many poor performance for these companies. Consequently, one of the most well-known quotes in investing nowadays is: "Show me the incentive and I'll show you the outcome" attributed to Charlie Munger. 
 
 - in class: although the main goal of going to school is learning, to way to measure is usually quite different, through exams or projects. And probably you or many people you know practice the *art of cheating*. Another way of cheating is memorizing instead of understanding, which led to poor learning and to forget concepts after the exam.
-- football: "ganar, ganar y ganar"
 
 - academia: the most important metric for researchers is the number of publications and citations. This created a big misalignment of goals and nowadays, there is a broken culture were publishing many and fast is the norm [[4]]. The following graphs show the evolution of the number of publications and average cites per paper [[6, 7]](#references). It seems that we are producing so much information no one reads...
 
@@ -51,17 +54,35 @@ And in some cases choosing the wrong metrics can lead to catastrophic failure (a
 - democracy: political parties only care about the results of the next elections and not the long-term prosperity or planning of the city. unaffordability of houses short-term thinking, etc.
 
 
-This is all the same form of: "The end justifies the means" mentality.
-This has all be a byproduct of a disalignmnet of incentives. It is often attributed to this law:
+These are a few examples I could came up with. But I think anyone can come up wit other examples where this pattern arises
 
-> **Goodheart's law**\
+
+Understanding the root problem we see that it has been recurrent in time, it has all be a byproduct of a disalignmnent of incentives. One of the most famous quotes and mantras in investing shows the importance of this concept:
+
+> "Show me the incentive and I will show you the outcome"
+> - Charlie Munger
+
+I think of an incentive like a second derivative, it is a force that moves the interest of the people in one direction. At first, people do not barely notice it but the consequences become clear after some time. Or in maths words:
+
+$$f(t) = f(0) + tf'(0) + \frac{t^2}{2}f''(0) + \mathcal{O}(h^2)$$
+
+When $t$ is small, we barely see the effect of the second derivative, however, when $t$ grows the other terms become irrelevant.
+
+We don't want to leave the result up to 
+Even in the Mean Square Error and Mean Absolute Error there are subtleties and it is important 
+
+
+Designing a system that preserves in time is in most cases imposible. In the long run, most of the benchmarks and incentives can be corrupted in ways no one expects. This is expressed in the *Goodheart's law*:
+
 > "when a measure becomes a target, it ceases to be a good measure"
 
+The problem is that in many cases we think everything works until it doesn't. The corrosion is slow but progressive.  
+
+It seems that nothing escape this destiny, we have seen bots and AI slop flooding most social media.
 However, i don't agree at all. I think that if your metrics and incentives are good enough, an equilibrium will follow. 
 
 
 
-These are a few examples I could came up with. But I want you to think of other examples where this pattern arises
 
 Importance of Benchmarking and recent success in LLMs is due to very well-curated and rich benchmarks: bla bla
 
@@ -70,15 +91,9 @@ For everyone: The first think that came to my mind is how each of one measure su
 
 ![alt text](image.png)
 
-If you are a parent: set the right incentives to your children
-If you are a teacher: set the right incentives to you students
-If you are a leader/employer: set the right incentives to you employees
-
-
-Charlie Monger: tell me your incentive and I will tell you the result
-
 
 This almost seems trivial to say but if a single metric is not enough, use more than one. For example, in machine learning it is very frequent to use the confussion matrix instead of single digit metrics. Modern LLM benchmarking uses many different datasets to compare the models.
+
 
 
 ## References
@@ -95,3 +110,7 @@ This almost seems trivial to say but if a single metric is not enough, use more 
 [6] Monteiro, Maria & Séneca, Joana & Magalhães, Catarina. (2014). The History of Aerobic Ammonia Oxidizers: from the First Discoveries to Today. Journal of microbiology (Seoul, Korea). 52. 537-47. 10.1007/s12275-014-4114-0. 
 
 [7] Mike Thelwall, Pardeep Sud; Scopus 1900–2020: Growth in articles, abstracts, countries, fields, and journals. Quantitative Science Studies 2022; 3 (1): 37–50. doi: https://doi.org/10.1162/qss_a_00177
+
+[8] https://en.wikipedia.org/wiki/Enshittification
+
+[9] Rabiei-Dastjerdi, Hamidreza, Gavin McArdle, and William Hynes. "Which came first, the gentrification or the Airbnb? Identifying spatial patterns of neighbourhood change using Airbnb data." Habitat International 125 (2022): 102582.
