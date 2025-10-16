@@ -3,10 +3,31 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/categories/</loc>
-    <lastmod>2025-10-09T00:00:00+00:00</lastmod>
+    <lastmod>2025-10-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/</loc>
-    <lastmod>2025-10-09T00:00:00+00:00</lastmod>
+    <lastmod>2025-10-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/machine-learning/</loc>
+    <lastmod>2025-10-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/machine-learning/</loc>
+    <lastmod>2025-10-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/metrics/</loc>
+    <lastmod>2025-10-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/miscellaneous/</loc>
+    <lastmod>2025-10-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2025-10-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2025-10-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/metrics/</loc>
+    <lastmod>2025-10-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/gaussian-processes/</loc>
     <lastmod>2025-10-09T00:00:00+00:00</lastmod>
@@ -17,37 +38,16 @@
     <loc>http://localhost:1313/tags/kernel-methods/</loc>
     <lastmod>2025-10-09T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/machine-learning/</loc>
-    <lastmod>2025-10-09T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/machine-learning/</loc>
-    <lastmod>2025-10-09T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2025-10-09T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/tags/probability/</loc>
     <lastmod>2025-10-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/stochastic-processes/</loc>
     <lastmod>2025-10-09T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2025-10-09T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/control-theory/</loc>
     <lastmod>2025-10-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/mathematics/</loc>
-    <lastmod>2025-10-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/metrics/</loc>
-    <lastmod>2025-10-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/miscellaneous/</loc>
-    <lastmod>2025-10-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/metrics/</loc>
     <lastmod>2025-10-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/applications/</loc>
