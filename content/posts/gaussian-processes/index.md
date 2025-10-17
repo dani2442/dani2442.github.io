@@ -75,7 +75,7 @@ Expand the MSE (expectations are over the joint prior of $f$ and the noise):
 $$
 \begin{aligned}
 \mathrm{MSE}(w)
-&= \mathbb E[f_*^2] - 2\mathbb E[f_*, w^\top y] + \mathbb E[w^\top y y^\top w] \\
+&= \mathbb E[f_*^2] - 2\mathbb E[f_* w^\top y] + \mathbb E[w^\top y y^\top w] \\
 &= k_{**} - 2 w^\top \mathbb E[y f_*] + w^\top \mathbb E[y y^\top] w.
 \end{aligned}
 $$
@@ -123,7 +123,7 @@ This equals the GP posterior variance at $x_*$. Thus the minimal achievable MSE 
 An equivalent derivation uses the orthogonality principle (linear projection): the error $e = f_* - w^\top y$ of the best linear estimator must be uncorrelated with the data used in the estimator:
 
 $$
-\mathbb E[e, y] = 0 \quad\Rightarrow\quad \mathbb E[(f_* - w^\top y) y] = 0.
+\mathbb E[e y] = 0 \quad\Rightarrow\quad \mathbb E[(f_* - w^\top y) y] = 0.
 $$
 
 Thus $\mathbb E[f_* y] - \mathbb E[y y^\top] w = 0$, i.e. $k_* - C_{yy} w = 0$, giving the same solution $w = C_{yy}^{-1} k_*$. So the GP predictor is the linear projection of $f_*$ onto the subspace spanned by the observed $y$.
@@ -186,7 +186,7 @@ For this implementation we will use the RBF Kernel:
 $$
 k(x,x') = \exp\left(-\frac{1}{2\ell^2}\|x-x'\|^2\right).
 $$
-This kernel is widely used because it is local and *universal* (see [[1]](#references--supplementary-material)). "Universality" here means the associated RKHS is rich enough to approximate a wide class of continuous functions on compact domains under suitable conditions.
+This kernel is widely used because it is local and *universal* (see Corollary 4.58 [[1]](#references--supplementary-material)). "Universality" here means the associated RKHS is rich enough to approximate a wide class of continuous functions on compact domains under suitable conditions.
 
 The implementation is straightforward from the previous section.
 ```python
