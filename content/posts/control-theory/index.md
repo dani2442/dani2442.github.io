@@ -1,6 +1,8 @@
+---
 title: "Control Theory"
-date: 2025-10-03
-tags: ["machine learning", "gaussian processes", "probability", "stochastic processes", "kernel methods"]
+date: 2025-10-17
+tags: ["machine learning", "control theory", "kernel methods"]
+categories: ["control theory", "machine learning"]
 author: "Daniel López Montero"
 showToc: true
 draft: true
@@ -8,25 +10,87 @@ description: "A concise introduction to controllability for linear time-invarian
 ShowWordCount: false
 ShowReadingTime: true
 comments: true
+TocOpen: true
 UseHugoToc: true
 editPost:
     URL: "https://github.com/dani2442/dani2442.github.io/content"
     Text: "Suggest Changes" # edit text
     appendFilePath: true # to append file path to Edit link
+---
+
+
+## 1. Linear Model
 Consider the linear time-invariant (LTI) system
 $$
 \dot x(t)=Ax(t)+Bu(t),\qquad x(t)\in\mathbb{R}^n,\; u(t)\in\mathbb{R}^m,
 $$
-with constant matrices $+A\in\mathbb{R}^{n\times n}$ and $B\in\mathbb{R}^{n\times m}$. The vector $x(t)$ is the system state and $u(t)$ is the control input we can apply.
+with constant matrices $A\in\mathbb{R}^{n\times n}$ and $B\in\mathbb{R}^{n\times m}$. The vector $x(t)$ is the system state and $u(t)$ is the control input we can apply.
 
-Two basic questions arise:
+### Example 1. Spring-Mass-Damper
+
+Consider a mass $m$ attached to a spring with stiffness $k$ and a damper with damping coefficient $c$. Apply an external force $u(t)$ to the mass. Let $x_1$ be the position of the mass and $x_2$ the velocity of the mass. From Newton's Law,
+$$m(dx_2/dt) = -kx_1 - cx_2 + u(t)$$
+Writing $x=(x_1, x_2)^\top$ with $x_2 = \dot x_1$ yields
+$$
+    \begin{bmatrix} \dot{x}_1 \\ \dot{x}_2 \end{bmatrix} = \begin{bmatrix} 0 & 1 \\ -\frac{k}{m} & -\frac{c}{m} \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} + \begin{bmatrix} 0 \\ \frac{1}{m} \end{bmatrix} u
+$$
+Let us see how this example reflects in the code
+
+```python
+class LinearControlSDE(torch.nn.Module):
+    noise_type = 'diagonal'
+    sde_type = 'ito'
+    
+    def __init__(self, A, B, control_input: callable, sigma=0.1):
+        super().__init__()
+        self.A = A
+        self.B = B
+        self.sigma = sigma
+        self.state_size = A.shape[0]
+        self.control_size = B.shape[1]
+        self.control_input = control_input
+        
+    def f(self, t, x):
+        """Drift function: Ax + Bu"""
+        # Get control input at time t
+        u = self.control_input(t, x)
+        return torch.matmul(x, self.A.T) + torch.matmul(u, self.B.T)
+    
+    def g(self, t, x):
+        """Diffusion function: σ"""
+        batch_size = x.shape[0]
+        state_diffusion = self.sigma * torch.ones(batch_size, self.state_size)
+        return state_diffusion
+```
+
+We set the initial condition as well as initialize the spring-mass-damper system and proceed to simulate it.
+
+```python
+m, k, c = 1.0, 1.0, 0.5
+A = torch.tensor([[0.0, 1.0],[-k/m, -c/m]])
+B = torch.tensor([[0.0], [1.0/m]])
+t_span = [0.0, 20.0] # Time Span
+ts = torch.linspace(t_span[0], t_span[1], 100)
+
+# Initial condition: [position, velocity]
+x0 = torch.tensor([[2.0, 0.0]])
+x_target = torch.tensor([1., 1.])
+
+# Initialize spring-mass-damper system and control
+control_input = lambda t, x: 0
+sde = LinearControlSDE(A, B, control_input=control_input, sigma=0.0) 
+ys = torchsde.sdeint(sde, x0, ts, method="euler", dt_min=1e-1) # Simulate
+```
+![](animation_v1.gif)
+
+Now, two basic questions arise:
 
 - Existence: Given a target state $x_{\mathrm{target}}$ and a horizon $T>0$, does there exist a control $u(\cdot)$ that steers $x(0)=x_0$ to $x(T)=x_{\mathrm{target}}$? 
 - Construction: If such a control exists, can we construct a simple, possibly optimal, control that achieves it?
 
 For finite-dimensional LTI systems both questions have clean answers. The classical Kalman rank condition characterizes existence (controllability). When the condition holds one can also construct an explicit minimum-energy control using the controllability Gramian.
 
-## Kalman controllability criterion
+## 1.1 Controllability: Kalman controllability criterion
 The pair $(A,B)$ (or the LTI system above) is controllable (i.e., one can steer any initial state to any final state in finite time) if and only if the controllability matrix
 $$
 \mathcal{C} = \big[\,B\;\mid\; AB \;\mid\; A^2B \;\mid\; \dots \;\mid\; A^{n-1}B\,\big]
@@ -50,9 +114,9 @@ $$
 $$
 The system is controllable if for some $T>0$ we have $\mathcal{R}_T=\mathbb{R}^n$.
 
-Direction 1 (rank condition fails => not controllable)
+ > Direction 1: rank condition fails => not controllable
 
-If $\operatorname{rank}\mathcal{C}<n$ then there exists a nonzero vector $q\in\mathbb{R}^n$ such that
+If $\operatorname{rank}\mathcal{C}\lt n$ then there exists a nonzero vector $q\in\mathbb{R}^n$ such that
 $$
 q^T A^k B = 0,\qquad k=0,1,\dots,n-1.
 $$
@@ -66,26 +130,12 @@ q^T\int_0^T e^{A(T-s)}B\,u(s)\,ds = \int_0^T q^T e^{A(T-s)}B\,u(s)\,ds = 0.
 $$
 Therefore the scalar $q^T x(T)=q^T e^{AT}x_0$ is independent of the control; one cannot affect that component by any choice of $u$. The reachable set is a strict subset of $\mathbb{R}^n$, so the system is not controllable. This proves the contrapositive: controllability implies $\operatorname{rank}\mathcal{C}=n$.
 
----
-
-## If $\operatorname{rank}(\mathcal{C}) = n$ then controllable (Gramian construction)
+> Direction 2: If $\operatorname{rank}(\mathcal{C}) = n$ then controllable (Gramian construction)
 
 Define the finite-horizon controllability Gramian for $T>0$:
 $$
-W_c(T) \;=\; \int_0^T e^{A\tau} B B^T e^{A^T\tau}\, d\tau.
+W(T) := \int_0^T e^{A\tau} B B^T e^{A^T\tau}\, d\tau.
 $$
-Two facts are central:
-
-1. For any desired displacement $d\in\mathbb{R}^n$ there exists an input $u(\cdot)$ steering $x(0)=0$ to $x(T)=d$ if and only if $d$ lies in the column space (image) of $W_c(T)$. In particular, if $W_c(T)$ is invertible (positive definite) then every $d$ is reachable at time $T$.
-
-2. $W_c(T)$ is positive definite for some (equivalently, sufficiently large) $T>0$ if and only if $\operatorname{rank}\mathcal{C}=n$.
-
-We outline why these hold and how to construct a minimum-energy control.
-
----
-
-### Why the Gramian gives reachability and an explicit minimum-energy control
-
 Let $d = x(T)-e^{AT}x_0$ be the desired displacement. We seek $u(\cdot)$ such that
 $$
 \int_0^T e^{A(T-s)}B\,u(s)\,ds = d.
@@ -100,48 +150,133 @@ u(s) + B^T e^{A^T(T-s)}\lambda = 0 \quad\Rightarrow\quad u(s) = -B^T e^{A^T(T-s)
 $$
 Plugging into the constraint yields
 $$
-d = -\int_0^T e^{A(T-s)}B B^T e^{A^T(T-s)}\,\lambda\,ds = -W_c(T)\lambda.
+d = -\int_0^T e^{A(T-s)}B B^T e^{A^T(T-s)}\,\lambda\,ds = -W(T)\lambda.
 $$
-Therefore, if $W_c(T)$ is invertible, $\lambda = -W_c(T)^{-1} d$ and the minimum-energy control is
+Therefore, if $W(T)$ is invertible ($\Leftrightarrow$ Kalman rank condition [[1]](#why-invertibility-of--is-equivalent-to-the-kalman-rank-condition)), $\lambda = -W(T)^{-1} d$ and the minimum-energy control is
 $$
-\boxed{\;u^*(s)=B^T e^{A^T(T-s)} W_c(T)^{-1} d\; }.
+\boxed{\;u^*(s)=B^T e^{A^T(T-s)} W(T)^{-1} d\; }
 $$
-Substituting this $u^*$ into the state equation yields the desired final state $x(T)=e^{AT}x_0+d$.
+Substituting this $u^*$ into the state equation yields the desired final state $x(T)=e^{AT}x_0+d$. And the total cost of the optimal displacement is given by
+$$
+J(u^\star) = \int_0^T \|u^\star(t)\|^2 dt = d^\top W(T)^{-1} d 
+$$
 
 ---
+> ### (Note) Why invertibility of $W(T)$ is equivalent to the Kalman rank condition
+>
+>    If $\operatorname{rank}\mathcal{C}\lt n$ then, as shown earlier, there exists $q\neq0$ with $q^T A^k B=0$ for $k=0,\dots,n-1$. This implies $B^T e^{A^T\tau}q\equiv0$ and hence
+>    $$ q^T W(T) q = \int_0^T \|B^T e^{A^T\tau}q\|^2\,d\tau = 0, $$
+>    so $W(T)$ is singular for every $T>0$.
+>
+>    Conversely, if $\operatorname{rank}\mathcal{C}=n$ but $W(T)$ were singular for every $T$, there would exist $q\neq0$ with $q^T W(T) q=0$ for all $T$. Hence $B^T e^{A^T\tau} q\equiv0$ for all $\tau\ge0$, and differentiating at $\tau=0$ repeatedly yields
+>    $$    B^T (A^T)^k q = 0\qquad\text{for all }k\ge0,    $$
+>    equivalently $q^T A^k B=0$ for all $k\ge0$. By Cayley–Hamilton only the first $n$ powers are independent, so this contradicts $\operatorname{rank}\mathcal{C}=n$. Therefore for some $T>0$ the Gramian $W(T)$ is invertible, and reachability follows from the construction in the previous section.
 
-### Why invertibility of $W_c(T)$ is equivalent to the Kalman rank condition
 
-If $\operatorname{rank}\mathcal{C}<n$ then, as shown earlier, there exists $q\neq0$ with $q^T A^k B=0$ for $k=0,\dots,n-1$. This implies $B^T e^{A^T\tau}q\equiv0$ and hence
+Let us see the code in action.
+```python
+class OptimalRoute(nn.Module):
+    def __init__(self, A, B, x_target, T, n_steps=200, regularize=1e-9):
+        super().__init__()
+        self.x_target = x_target.reshape(1, -1)
+        self.A = A
+        self.B = B
+        self.T = T
+        self.m_exp = torch.matrix_exp(A * T)
+
+        Wc = compute_gramian(A, B, T, n_steps=n_steps)
+        Wc_reg = Wc + regularize * torch.eye(A.shape[0])
+        self.Wc_inv = torch.inverse(Wc_reg)
+
+    def forward(self, t, x):
+        s = self.T - t
+        term = torch.matrix_exp(self.A.T * s)
+        u = ((self.x_target - x @ self.m_exp.T) @ self.Wc_inv.T) @ term.T @ self.B
+        return u
+```
+
+and we execute the inference
+
+```python
+# Initialize spring-mass-damper system and optimal control
+control_input = OptimalRoute(A, B, x_target, T=t_span[1])
+sde = LinearControlSDE(A, B, control_input=control_input, sigma=0.0)
+xs = torchsde.sdeint(sde, x0, ts, method="euler", dt_min=1e-1) # Simulate multiple trajectories
+```
+
+![](animation_v2.gif)
+
+In the next section we will see how to learn a model, we will start with the linear case and then we will learn more complex models such NeuralODEs or Neural SDEs.
+
+### 1.2 Model fitting
+
+
+Suppose we observe vector signals on an interval $[0,T]$
 $$
-q^T W_c(T) q = \int_0^T \|B^T e^{A^T\tau}q\|^2\,d\tau = 0,
+    X(t) \in\mathbb{R}^n, \qquad U(t) \in \mathbb{R}^m,
 $$
-so $W_c(T)$ is singular for every $T>0$.
-
-Conversely, if $\operatorname{rank}\mathcal{C}=n$ but $W_c(T)$ were singular for every $T$, there would exist $q\neq0$ with $q^T W_c(T) q=0$ for all $T$. Hence $B^T e^{A^T\tau} q\equiv0$ for all $\tau\ge0$, and differentiating at $\tau=0$ repeatedly yields
+and the model is
 $$
-B^T (A^T)^k q = 0\qquad\text{for all }k\ge0,
+    \dot X(t) = AX(t) + BU(t), \qquad \Theta:=[A, B] \in \mathbb{R}^{n\times (n+m)}.
 $$
-equivalently $q^T A^k B=0$ for all $k\ge0$. By Cayley–Hamilton only the first $n$ powers are independent, so this contradicts $\operatorname{rank}\mathcal{C}=n$. Therefore for some $T>0$ the Gramian $W_c(T)$ is invertible, and reachability follows from the construction in the previous section.
-
----
-
-## Conclusion and explicit control law
-
-Putting the arguments together:
-
-- If $\operatorname{rank}\mathcal{C}<n$ there is a nonzero direction that no input can influence; the system is not controllable.
-- If $\operatorname{rank}\mathcal{C}=n$, then for some $T>0$ the Gramian $W_c(T)$ is invertible and the explicit minimum-energy control
+Define the concatenated regressor
 $$
-u(s)=B^T e^{A^T(T-s)} W_c(T)^{-1} \big(x_{\mathrm{target}}-e^{AT}x_0\big)
+    \phi(t) = \begin{bmatrix}
+    X(t) \\
+    U(t)
+    \end{bmatrix}\in \mathbb{R}^{n+m}
 $$
-steers $x(0)=x_0$ to $x(T)=x_{\mathrm{target}}$. Therefore the Kalman rank condition is equivalent to controllability for finite-dimensional LTI systems.
+The continuous least-square problem is
+$$
+    \min_\Theta \|\dot X - \Theta \phi\|_{L^2([0,T])}^2 = \min_{\Theta} \int_0^T \|\dot X(t) - \Theta\phi(t)\|_2^2 dt
+$$
+Following the standard linear least-squares in function space. Let $J(\Theta)$ be function we want to derivate. Consider the an arbitrary perturbation $H\in \mathbb{R}^{n\times (n+m)}$:
+$$
+    J(\Theta + \epsilon H) = \int_0^T \|\dot X - \Theta \phi(t) - \epsilon H\phi(t)\|_2^2 dt = J(\Theta) + 2\epsilon \int_0^T (\Theta \phi(t) - \dot X(t))^\top (H\phi(t))dt + o(\epsilon)
+$$
+Rewriting the linear term using the trace:
+$$
+\begin{aligned}
+    \int_0^T (\Theta \phi - \dot X)^\top (H\phi)dt &= \int_0^T \text{trace}((\Theta \phi - \dot X)^\top H \phi) dt \\
+    &=  \text{trace}(H^\top\int_0^T((\Theta \phi - \dot X) \phi^\top) dt
+\end{aligned}
+$$
+For $\Theta$ to be a stationary point the lienar term must vanish for every $H$ because $\text{trace}(H^\top A) = 0 \quad \forall H$ iff $A=0$. We get the equation
+$$
+    \int_0^T (\Theta \phi(t) - \dot X(t)) \phi(t)^\top dt = 0
+$$
+In other words,
+$$
+    \Theta\int_0^T \phi(t)\phi(t)^\top dt =  \int_0^T \dot X(t) \phi(t)^\top dt.
+$$
+This is a similar result we got before. And if $G:= \int_0^T \phi(t)\phi(t)^\top dt$ is invertible, then the minimizer is unique and we can solve explicitly:
+$$
+    \Theta = \left( \int_0^T \dot X(t) \phi(t)^\top dt\right) G^{-1}.
+$$
+Let us calculate the minimum value of the residual for the optimal value. First define 
+$$
+    B = \int_0^T \dot{X}(t) \phi(t)^\top dt
+$$
+So the optimizer is $\Theta^\star = BG^{-1}$. Now compute the costs at $\Theta^\star$. Start from
+$$
+\begin{aligned}
+    J(\Theta) &= \int_0^T \|\dot X(t) -\Theta \Phi(t)\|_2^2 dt = \underbrace{\int_0^T \|\dot X(t)\|_2^2 dt}_{A} - 2\int_0^T \dot X(t) ^\top \Theta \phi(t)dt + \int_0^T \phi(t)^\top \Theta^\top \Theta \phi(t) dt \\
+    &= A - 2\operatorname{trace}(\Theta B^\top) + \operatorname{trace}(\Theta G\Theta^\top).
+\end{aligned}
+$$
+Evaluating at $\Theta^\star = BG^{-1}$: 
+$$
+    J(\Theta^\star) = A - 2 \operatorname{trace}(BG^{-1}B^\top) + \operatorname{trace}(BG^{-1}G^\top) = A - \operatorname{trace}(BG^{-1}B^\top).
+$$
 
----
 
-### Intuition
+> **Proposition 1. (Minimizer of the least-squares problem)** \
+> Let $\phi(t) = [X(t), U(t)]^\top$ and $B:= \int_0^T \dot X(t) \phi(t)^\top dt$. If $G:=\int_0^T \phi(t)\phi(t)^\top dt$ is invertible, then there exists a unique minimizer of the least-squares problem
+> $$  \Theta^\star :=\arg\min_\Theta \| \dot X(t) - \Theta \phi(t)\|_{L^2([0,T])}^2 $$
+> where $\Theta^\star =BG^{-1}$ and $J(\Theta^\star) = \|\dot X\|_{L^2([0,T])}^2 - \operatorname{trace}(BG^{-1}B^\top)$.
 
-The controllability matrix $\mathcal{C}=[B\; AB\; A^2B\;\dots]$ collects the directions in state space that can be injected through $B$ and propagated by the dynamics $A$. If those propagated directions span $\mathbb{R}^n$ then, by combining time-varying inputs, one can synthesize a control that reaches any target state. If they do not span the state space there exists a direction orthogonal to all those columns that cannot be influenced by any input.
+Therefore, the matrix $\Theta^\star = [A,B]\in \mathbb{R}^{n\times (n+m)}$ uniquely characterizes both the dynamics and the control.
 
-The controllability matrix $\mathcal{C}=[B\; AB\; A^2B\;\dots]$ collects the directions in state space that can be injected through $B$ and propagated by the dynamics $A$. If those propagated directions span $\mathbb{R}^n$ then, by combining time-varying inputs, one can synthesize a control that reaches any target state. If they do not span the state space there exists a direction orthogonal to all those columns that cannot be influenced by any input.
 
+
+## 2. Nonlinear: NeuralODE and Neural SDE
