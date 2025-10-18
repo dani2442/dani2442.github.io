@@ -21,13 +21,6 @@
       <description>Math and Code</description>
     </item>
     <item>
-      <title>Control Theory</title>
-      <link>http://localhost:1313/posts/control-theory/</link>
-      <pubDate>Fri, 03 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/control-theory/</guid>
-      <description>A concise introduction to controllability for linear time-invariant systems: Kalman rank condition, the controllability Gramian, and the minimum-energy control.</description>
-    </item>
-    <item>
       <title>Functional Principal Component Analysis</title>
       <link>http://localhost:1313/posts/functional-pca/</link>
       <pubDate>Tue, 29 Apr 2025 00:00:00 +0000</pubDate>

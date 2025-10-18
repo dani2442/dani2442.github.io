@@ -11,8 +11,22 @@
     </image>
     <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 16 Oct 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 17 Oct 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Control Theory</title>
+      <link>http://localhost:1313/posts/control-theory/</link>
+      <pubDate>Fri, 17 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/control-theory/</guid>
+      <description>A concise introduction to controllability for linear time-invariant systems: Kalman rank condition, the controllability Gramian, and the minimum-energy control.</description>
+    </item>
+    <item>
+      <title>Mixture of Gaussian Processes</title>
+      <link>http://localhost:1313/posts/mixture-gaussian-processes/</link>
+      <pubDate>Fri, 17 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/mixture-gaussian-processes/</guid>
+      <description>A concise introduction to controllability for linear time-invariant systems: Kalman rank condition, the controllability Gramian, and the minimum-energy control.</description>
+    </item>
     <item>
       <title>The Importance of (Good) Metrics</title>
       <link>http://localhost:1313/posts/metrics/</link>
@@ -82,29 +96,6 @@
       <pubDate>Thu, 11 Jul 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/bifurcation-theory/</guid>
       <description>Introduction to Bifurcation Theory from simple eigenvalues.</description>
-    </item>
-    <item>
-      <title></title>
-      <link>http://localhost:1313/posts/control-theory/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/control-theory/</guid>
-      <description>&lt;p&gt;title: &amp;ldquo;Control Theory&amp;rdquo;
-date: 2025-10-03
-tags: [&amp;ldquo;machine learning&amp;rdquo;, &amp;ldquo;gaussian processes&amp;rdquo;, &amp;ldquo;probability&amp;rdquo;, &amp;ldquo;stochastic processes&amp;rdquo;, &amp;ldquo;kernel methods&amp;rdquo;]
-author: &amp;ldquo;Daniel López Montero&amp;rdquo;
-showToc: true
-draft: true
-description: &amp;ldquo;A concise introduction to controllability for linear time-invariant systems: Kalman rank condition, the controllability Gramian, and the minimum-energy control.&amp;rdquo;
-ShowWordCount: false
-ShowReadingTime: true
-comments: true
-UseHugoToc: true
-editPost:
-URL: &amp;ldquo;&lt;a href=&#34;https://github.com/dani2442/dani2442.github.io/content%22&#34;&gt;https://github.com/dani2442/dani2442.github.io/content&amp;quot;&lt;/a&gt;
-Text: &amp;ldquo;Suggest Changes&amp;rdquo; # edit text
-appendFilePath: true # to append file path to Edit link
-Consider the linear time-invariant (LTI) system
-&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
