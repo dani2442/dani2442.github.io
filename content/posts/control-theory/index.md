@@ -134,7 +134,7 @@ Therefore the scalar $q^T x(T)=q^T e^{AT}x_0$ is independent of the control; one
 
 Define the finite-horizon controllability Gramian for $T>0$:
 $$
-W(T) := \int_0^T e^{A\tau} B B^T e^{A^T\tau}\, d\tau.
+W(T) := \int_0^T e^{A\tau} B B^T e^{A^T\tau}\, d\tau. \tag{2}
 $$
 Let $d = x(T)-e^{AT}x_0$ be the desired displacement. We seek $u(\cdot)$ such that
 $$
@@ -162,7 +162,7 @@ J(u^\star) = \int_0^T \|u^\star(t)\|^2 dt = d^\top W(T)^{-1} d
 $$
 
 ---
-> ### (Note) Why invertibility of $W(T)$ is equivalent to the Kalman rank condition
+> **Note: Why invertibility of $W(T)$ is equivalent to the Kalman rank condition**
 >
 >    If $\operatorname{rank}\mathcal{C}\lt n$ then, as shown earlier, there exists $q\neq0$ with $q^T A^k B=0$ for $k=0,\dots,n-1$. This implies $B^T e^{A^T\tau}q\equiv0$ and hence
 >    $$ q^T W(T) q = \int_0^T \|B^T e^{A^T\tau}q\|^2\,d\tau = 0, $$
@@ -280,3 +280,92 @@ Therefore, the matrix $\Theta^\star = [A,B]\in \mathbb{R}^{n\times (n+m)}$ uniqu
 
 
 ## 2. Nonlinear: NeuralODE and Neural SDE
+
+
+
+
+### References
+
+[1] An Introduction to Mathematical Optimal Control Theory, Evans https://math.berkeley.edu/~evans/control.course.pdf
+
+
+## Appendix
+
+### (A) Linear Time-Invariant SDEs are Gaussian Processes
+
+Let us consider the Stochastic LTI
+$$
+dX(t) = AX(t)dt + BdW(t).
+$$
+Given an initial state $X(0)$, the solution can be formally written as:
+$$
+X(t) = e^{At}X(0) + \int_0^t e^{A(t-s)}BdW(t) \tag{5}
+$$
+> This can be proven using Itô formula:
+> $$ \frac{d}{dt}e^{-At} = -A e^{-A(t)} \xrightarrow{\quad C(t):=e^{-At}\quad} dC(t) = -AC(t) dt $$
+> Applying Itô to the semimartingales $X(t)C(t)$:
+> $$ \begin{aligned} d(C(t)X(t)) &= \underbrace{dC(t)}_{-AC(t)dt}X(t) + C(t) dX(t) + \cancel{(dC(t))(dX(t))} \\ &= (-AC(t))Xdt + C(t)(AX(t)dt + BdW(t)) = C(t)BdW(t) \end{aligned} $$
+> So $d(e^{-At}X(t)) = e^{-At}BdW(t)$. And integrating,
+> $$ e^{-At}X(t) - X(0) = \int_0^t e^{-As}BdW(s) $$
+> And arranging the terms we arrive at (5).
+
+We know that $\int_0^t g(t)X(t) dt$ is Gaussian $\Leftrightarrow$ $X(t)$ is Gaussian for all deterministic $g(t)$. Therefore, it is sufficient to assume that the initial condition is Gaussian. 
+
+Let us calculate the mean and covariance of this process. Firstly, let us define $\Phi(t):= e^{At}$ to simplify the calculcations.
+
+#### 1. Mean
+
+We know from (5) that $X(t) = \Phi(t)X_0 + \int_0^t \Phi(t-s) BdW(s)$. Then,
+$$
+\mathbb{E}[X(t)] = \mathbb{E}[\Phi(t)X_0] + 0 = \Phi(t) \mathbb{E}[X_0].
+$$
+#### 2. Covariance
+
+Let $P(t)=\operatorname{Cov}(X(t))=E\big[(X(t)-m(t))(X(t)-m(t))^{T}\big]$. Substitute the expression above and expand:
+$$
+\begin{aligned}
+P(t) &= E\Big[\Phi(t)(X_0-E[X_0])(X_0-E[X_0])^{T}\Phi(t)^{T}\Big] \\
+&\quad + E\Big[ \Phi(t)(X_0-E[X_0])\big(\int_0^t\Phi(t-s)B dW(s)\big)^{T}\Big] \\
+&\quad + E\Big[\big(\int_0^t\Phi(t-s)B dW(s)\big)\big(\int_0^t\Phi(t-u)B dW(u)\big)^{T}\Big].
+\end{aligned}
+$$
+
+The first term is the propagated initial covariance.
+$$
+E\big[\Phi(t)(X_0-E[X_0])(X_0-E[X_0])^{T}\Phi(t)^{T}\big]  = \Phi(t)P(0)\Phi(t)^{T}.
+$$
+If $X_0$ is independent of $W(\cdot)$, then the stochastic integral has mean zero and is independent of $X_0$; hence the middle term is zero. 
+The last term can be simplified using the Itô isometry. Define $G_s=\Phi(t-s)B$. Then
+$$
+Y:=\int_0^t G_s dW(s).
+$$
+Itô isometry (or the Riemann-sum argument) gives
+$$
+E\big[Y Y^{T}\big] = \int_0^t G_s G_s^{T} ds    = \int_0^t \Phi(t-s) B B^{T} \Phi(t-s)^{T} ds.
+$$
+Combining the terms, we get the covariance formula:
+$$
+P(t)=\Phi(t)P(0)\Phi(t)^{T} + \int_{0}^{t}\Phi(t-s) B B^{T} \Phi(t-s)^{T} ds.
+$$
+Maybe the second terms seems familiar, and in fact, we have seen a very similar in (2). Equivalently, $P(t)$ satisfies the Lyapunov equation
+$$
+P'(t) = AP(t) + P(t) A^\top + BB^\top, \qquad P(0) = \operatorname{Cov}(X_0)
+$$
+This remark is important because in practice, computing the $P(t)$ using the ODE is way cheaper than computing the covariance for each component.
+
+For $t\ge s$, the covariance $\operatorname{Cov}(X(t), X(s))$ can be deduced from the previous expression. We can write $X(t)$ as an intermediate step
+$$
+X(t)=\Phi(t-s)X(s) + \int_{s}^{t}\Phi(t-u)B dW(u),
+$$
+so the second (future) integral is independent of the past $X(s)$ and has mean zero. Thus
+$$
+\boxed{\operatorname{Cov}(X(t)X(s)) = \Phi(t-s) P(s),\qquad t\ge s. }
+$$
+
+
+
+
+
+
+
+
