@@ -255,31 +255,61 @@ $$
 $$
 Let us calculate the minimum value of the residual for the optimal value. First define 
 $$
-    B = \int_0^T \dot{X}(t) \phi(t)^\top dt
+    H = \int_0^T \dot{X}(t) \phi(t)^\top dt
 $$
-So the optimizer is $\Theta^\star = BG^{-1}$. Now compute the costs at $\Theta^\star$. Start from
+So the optimizer is $\Theta^\star = HG^{-1}$. Now compute the costs at $\Theta^\star$. Start from
 $$
 \begin{aligned}
     J(\Theta) &= \int_0^T \|\dot X(t) -\Theta \Phi(t)\|_2^2 dt = \underbrace{\int_0^T \|\dot X(t)\|_2^2 dt}_{A} - 2\int_0^T \dot X(t) ^\top \Theta \phi(t)dt + \int_0^T \phi(t)^\top \Theta^\top \Theta \phi(t) dt \\
-    &= A - 2\operatorname{trace}(\Theta B^\top) + \operatorname{trace}(\Theta G\Theta^\top).
+    &= A - 2\operatorname{trace}(\Theta H^\top) + \operatorname{trace}(\Theta G\Theta^\top).
 \end{aligned}
 $$
-Evaluating at $\Theta^\star = BG^{-1}$: 
+Evaluating at $\Theta^\star = HG^{-1}$: 
 $$
-    J(\Theta^\star) = A - 2 \operatorname{trace}(BG^{-1}B^\top) + \operatorname{trace}(BG^{-1}G^\top) = A - \operatorname{trace}(BG^{-1}B^\top).
+    J(\Theta^\star) = A - 2 \operatorname{trace}(HG^{-1}H^\top) + \operatorname{trace}(HG^{-1}G^\top) = A - \operatorname{trace}(HG^{-1}H^\top).
 $$
 
 
 > **Proposition 1. (Minimizer of the least-squares problem)** \
-> Let $\phi(t) = [X(t), U(t)]^\top$ and $B:= \int_0^T \dot X(t) \phi(t)^\top dt$. If $G:=\int_0^T \phi(t)\phi(t)^\top dt$ is invertible, then there exists a unique minimizer of the least-squares problem
+> Let $\phi(t) = [X(t), U(t)]^\top$ and $H:= \int_0^T \dot X(t) \phi(t)^\top dt$. If $G:=\int_0^T \phi(t)\phi(t)^\top dt$ is invertible, then there exists a unique minimizer of the least-squares problem
 > $$  \Theta^\star :=\arg\min_\Theta \| \dot X(t) - \Theta \phi(t)\|_{L^2([0,T])}^2 $$
-> where $\Theta^\star =BG^{-1}$ and $J(\Theta^\star) = \|\dot X\|_{L^2([0,T])}^2 - \operatorname{trace}(BG^{-1}B^\top)$.
+> where $\Theta^\star =HG^{-1}$ and $J(\Theta^\star) = \|\dot X\|_{L^2([0,T])}^2 - \operatorname{trace}(HG^{-1}H^\top)$.
 
 Therefore, the matrix $\Theta^\star = [A,B]\in \mathbb{R}^{n\times (n+m)}$ uniquely characterizes both the dynamics and the control.
 
+Let us create a dataset generated using 3 different constant controls $u=-1,0,1$. And check if this is enough to infer the rest of the system.
+```python
+# Initial condition: [position, velocity]
+x0 = [torch.randn(20, 2) for _ in range(3)]
+u_values = [-1., 0., 1.]  # Possible control inputs
+controls = [(lambda t, x, v=vi: torch.full((x.shape[0], B.shape[1]), v)) for vi in u_values] # No control
+
+sdes = [LinearControlSDE(A, B, control_input=control_input, sigma=0.0) for control_input in controls]
+
+# Simulate multiple trajectories
+xs = [torchsde.sdeint(sde, x0i, ts, method="euler", dt_min=1e-2) for sde, x0i in zip(sdes, x0)]
+us = [control_input(ts, x0i.view(-1,2)).unsqueeze(0).repeat(200, 1, 1) for control_input, x0i in zip(controls, x0)]
+phi = torch.concat([torch.cat(xs, dim=1), torch.cat(us, dim=1)], dim=2).view(-1,3)
+x_prime = torch.concat([sde.f(0, xsi.view(-1, 2)).view(200, 20, 2) for sde, xsi in zip(sdes, xs)], dim=1).view(-1,2)
+```
+Now, we infer the values $H$ and $G$ from the dataset generated
+
+```python
+G = dt * torch.sum(phi[:, :, None] * phi[:, None, :], dim=0)
+H = dt * torch.sum(phi[:, None, :] * x_prime[:, :, None], dim=0)
+assert not torch.isclose(torch.linalg.det(G),torch.tensor([0.0])), "G is singular!"
+
+# Calculate the parameters
+theta = H @ torch.inverse(G)
+assert torch.allclose(theta, torch.cat([A, B], dim=1), atol=1e-4), "The parameters were not recovered accurately."
+```
+
+![](animation_dataset.gif)
+
+We have been able to recover the values of the system! However, in real-life we may encounter more real scenarios that not satisfy linearity. In the next section, we will introduce the tools necessary for nonlinear systems.
 
 
-## 2. Nonlinear: NeuralODE and Neural SDE
+## 2. Nonlinear Control: NeuralODE and Neural SDE
 
 
 
