@@ -1,8 +1,8 @@
 ---
 title: "G-Metric Spaces"
 date: 2025-10-30
-tags: ["machine learning", "control theory", "kernel methods"]
-categories: ["control theory", "machine learning"]
+tags: ["machine learning", "analysis", "kernel methods"]
+categories: ["analysis", "machine learning"]
 author: "Daniel López Montero"
 showToc: true
 draft: false
