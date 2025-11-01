@@ -67,15 +67,21 @@ $$
 
 However, most of these approaches make us of tensor products and therefore, lose the nice properties of Kernels (positive-definiteness, representer theorem, etc).
 
-## Self-attention as a Kernel Method
+## Self-attention and Kernel Method (Random Fourier Attention)
 
-Bochner’s theorem characterizes continuous, shift-invariant, positive definite kernels on $\mathbb{R}^d$ 
-> **Theorem (Bochner).** A continuous, shift-invariant kernel $\kappa(x,y)=\kappa(x-y)$ on $\mathbb{R}^d$ is positive definite if and only if it is the Fourier transform of a non-negative measure.
+
+Computing all $\kappa(Q_i, K_j)$ requires $\mathcal O(n^2)$ time for sequence length $n$, since we need to evaluate the kernel for all pairs $(i,j)$. **How can we reduce this cost?**
+
+Random Fourier Attention (RFA) [[7]](#references) provide a way to approximate shift-invariant kernels using random features that allow linear-time computation.
+
+Bochner’s theorem characterizes continuous, shift-invariant, positive definite kernels on $\mathbb{R}^d$ (the more general cases covers locally compact abelian groups, but we focus on $\mathbb{R}^d$ for simplicity): 
+> **Theorem (Bochner).** A continuous, shift-invariant kernel $\kappa(x,y)=\kappa(x-y)$ on $\mathbb{R}^d$ is positive definite iff it is the Fourier transform of a non-negative measure $\mu.$
+> $$ \kappa(z) = \int_{\Omega} e^{-i\langle z, \omega \rangle} d\mu(\omega) $$
 
 That is, there exists a non-negative measure $\mu$ such that:
 $$
 \begin{aligned}
-\kappa(x-y) &= \int_{\Omega} e^{i\langle x-y, \omega \rangle} d\mu(\omega) = \mathbb{E}_{\omega \sim \mu} \left[ e^{i\langle x-y, \omega \rangle}\right] \\
+\kappa(x-y) &= \int_{\Omega} e^{-i\langle x-y, \omega \rangle} d\mu(\omega) = \mathbb{E}_{\omega \sim \mu} \left[ e^{-i\langle x-y, \omega \rangle}\right] \\
 &= \mathbb{E}_{\omega \sim \mu} \left[ \cos(\langle x-y, \omega \rangle) \right] \\
 &=
  \mathbb{E}_{\omega \sim \mu} \left[ \begin{pmatrix}\cos(\langle x, \omega \rangle) \\ \sin(\langle x, \omega \rangle) \end{pmatrix}^\top \begin{pmatrix}\cos(\langle y, \omega \rangle) \\ \sin(\langle y, \omega \rangle) \end{pmatrix} \right]
@@ -95,19 +101,113 @@ $$
 $$
 where $\omega_1, \dots, \omega_N \stackrel{i.i.d.}{\sim} \mu$.
 
-We notice that $\kappa_{i,j}$ is a valid positive-definite kernel, therefore there exists a feature map $\phi$ such that:
-$$\kappa(x_i, x_j) = \langle \phi(x_i), \phi(x_j) \rangle$$
-Bochner's theorem gives us an explicit random feature map approximation:
+
+To make this *linear in $n$*, we obtained a *feature map* $\phi: \mathbb{R}^{d_k}\to\mathbb{R}^r$ such that
 $$
-\phi(x) = \frac{1}{\sqrt{N}} \sum_{k=1}^N \cos(\langle x, \omega_k \rangle)
+\kappa(Q_i, K_j) \approx \phi(Q_i)^\top \phi(K_j),
 $$
-where $\omega_k$ are random frequencies drawn from a distribution.
+with $r \ll n$.
+Then we can rewrite:
+$$
+\sum_j \kappa(Q_i, K_j)V_j \approx \sum_j \phi(Q_i)^\top \phi(K_j)V_j
+= \phi(Q_i)^\top \Big( \sum_j \phi(K_j)V_j \Big),
+$$
+which can be computed in $\mathcal O(nr)$ time instead of $\mathcal O(n^2)$.
+
+
+## Towards Higher-Order Attention with General Kernels
+
+To extend this to higher-order attention, we need to consider kernels that take multiple arguments, e.g. $\kappa(x,y,z)$ for triadic attention. A natural question arises: 
+
+> **Are there generalizations of Bochner’s theorem for multi-argument kernels?**
+
+The answer is yes, but first let introduce some concepts:
+
+Let $G$ be a (Hausdorff) locally compact abelian group with identity $e$, written multiplicatively. And, its Pontryagin dual $\widehat G$ is the LCA group of all continuous characters $\gamma:G\to\mathbb T=\{z\in\mathbb C:\lvert z\rvert=1\}$, with pointwise multiplication and the compact-open topology.
+
+In our case of interest, $G=\mathbb R^d$ with addition and $\widehat G=\mathbb R^d$ with characters $\chi_\gamma(x)=e^{i\langle x,\gamma\rangle}$.
+
+> **Definition (Stationary 3-ary kernel).**
+> A function $K:G^3\to\mathbb C$ is *stationary* if
+> $$ K(x+a,y+a,z+a)=K(x,y,z)\qquad(\forall,x,y,z,a\in G).$$
+> For such $K$ define its *lag form*
+> $$ k:G^2\to\mathbb C,\qquad k(u,v):=K(0,u,v).$$
+> Then necessarily $K(x,y,z) = k(y-x,z-x)$ for all $x,y,z\in G$.
+
+> **Definition (3-positive definiteness).**
+> A stationary kernel $K$ is *3-positive definite* if its lag form $k$ is (ordinary) positive definite on the product group $G^2$: for all $n$, all $(u_j,v_j)\in G^2$, and all $c_j\in\mathbb C$,
+> $$ \sum_{i,j=1}^n c_i\overline{c_j}k\big((u_i,v_i)-(u_j,v_j)\big)\ \ge 0 .$$
+
+Equivalently, with $K$: choose $x_j\in G$ arbitrarily and set $u_j=y_j-x_j,\ v_j=z_j-x_j$.
+
+
+> **Theorem (Bochner for 3-ary kernels).**
+Let $K:G^3\to\mathbb C$ be continuous, stationary, and 3-positive definite. Then there exists a unique finite positive Borel measure $\nu$ on $\widehat G^2$ such that
+$$
+\boxed{\quad K(x,y,z) = \int_{\widehat G^2} e^{i\langle y-x,\gamma_1\rangle} e^{i\langle z-x,\gamma_2\rangle} d\nu(\gamma_1,\gamma_2)\quad}
+$$
+for all $x,y,z\in G$. Moreover $\nu(\widehat G^2)=K(0,0,0)$.
+Equivalently, there exists a unique finite positive Borel measure $M$ on $\widehat G^3$ supported on the closed subgroup
+$$
+H:=\{(\gamma_1,\gamma_2,\gamma_3)\in \widehat G^3:\ \gamma_1+\gamma_2+\gamma_3=0\}
+$$
+such that
+$$
+\boxed{\quad
+K(x,y,z)=\int_{\widehat G^3}e^{i (x\cdot\gamma_1+ y\cdot\gamma_2+ z\cdot\gamma_3)}dM(\gamma_1,\gamma_2,\gamma_3)\quad}
+$$
+and $M$ is the pushforward of $\nu$ under the continuous group isomorphism
+$$
+T:\widehat G^2\to H,\qquad T(\gamma_1,\gamma_2)=(-\gamma_1-\gamma_2,\ \gamma_1,\ \gamma_2).
+$$  
+
+*Proof.*
+By stationarity, $K(x,y,z)=k(y-x,z-x)$ with a continuous lag form $k:G^2\to\mathbb C$. By 3-positive definiteness, $k$ is a continuous positive definite function on the LCA group $G^2$.
+
+**Step 1 (Bochner on the product group).**
+Bochner’s theorem on LCA groups (applied to the group $G^2$) yields a unique finite positive Borel measure $\nu$ on $\widehat G^2$ such that
+$$
+k(u,v)=\int_{\widehat G^2} e^{i\langle u,\gamma_1\rangle} e^{i\langle v,\gamma_2\rangle} d\nu(\gamma_1,\gamma_2)\qquad(\forall,u,v\in G).
+$$
+Therefore, for all $(x,y,z\in G)$,
+$$
+K(x,y,z)=k(y-x,z-x)
+=\int_{\widehat G^2} e^{i\langle y-x,\gamma_1\rangle} e^{i\langle z-x,\gamma_2\rangle} d\nu(\gamma_1,\gamma_2),
+$$
+which is the first displayed formula. Evaluating at ((x,y,z)=(0,0,0)) gives
+$$
+K(0,0,0)=k(0,0)=\int_{\widehat G^2}1\,d\nu=\nu(\widehat G^2).
+$$
+Uniqueness of $\nu$ is the uniqueness clause in Bochner’s theorem.
+
+**Step 2 (Three-frequency form and support constraint).**
+Define $T:\widehat G^2\to H\subset\widehat G^3$ by $T(\gamma_1,\gamma_2)=(-\gamma_1-\gamma_2,\gamma_1,\gamma_2)$. Let $M:=T_\#\nu$ (pushforward measure). Then for all $x,y,z\in G$,
+$$
+\begin{aligned}
+\int_{\widehat G^3}e^{i\langle x,\gamma_1\rangle}e^{i\langle y,\gamma_2\rangle}e^{i\langle z,\gamma_3\rangle}\,dM
+&=\int_{\widehat G^2}e^{i\langle x,-\gamma_1-\gamma_2\rangle}e^{i\langle y,\gamma_1\rangle}e^{i\langle z,\gamma_2\rangle}\,d\nu\\
+&=\int_{\widehat G^2}e^{i\langle y-x,\gamma_1\rangle}e^{i\langle z-x,\gamma_2\rangle}\,d\nu
+=K(x,y,z),
+\end{aligned}
+$$
+Thus the second formula holds. By construction $\operatorname{supp}M\subset H$. Uniqueness of $M$ follows from uniqueness of $\nu$ and the fact that $T$ is a topological group isomorphism onto $H$.
+
+**Step 3 (Converse).**
+Conversely, suppose $\nu$ is a finite positive measure on $\widehat G^2$ and set
+$$
+K(x,y,z):=\int_{\widehat G^2}e^{i\langle y-x,\gamma_1\rangle}e^{i\langle z-x,\gamma_2\rangle}\,d\nu.
+$$
+Then $K$ is continuous (dominated convergence), stationary (the integrand depends only on $y-x$ and $z-x$), and its lag form is
+$$
+k(u,v)=\int_{\widehat G^2}e^{i\langle u,\gamma_1\rangle}e^{i\langle v,\gamma_2\rangle}\,d\nu,
+$$
+which is positive definite on $G^2$ by Bochner’s theorem; hence $K$ is 3-positive definite in the sense of the definition. The mass identity $\nu(\widehat G^2)=K(0,0,0)$ is immediate.
+Likewise, starting from a measure $M$ supported on $H$ and defining $K$ by the three-frequency integral gives the first formula by pulling back along $T^{-1}$. $\blacksquare$
+
+
+
 
 I came across the concept of G-metric spaces, which generalize the notion of distance to triples of points.
-
-
-
-
 
 ## 1. Generalized Metric Spaces
 
@@ -301,3 +401,58 @@ It’s useful for relational reasoning, scene understanding, or multi-agent inte
 [5] Omranpour, Soroush, Guillaume Rabusseau, and Reihaneh Rabbany. "Higher Order Transformers: Efficient Attention Mechanism for Tensor Structured Data." arXiv preprint arXiv:2412.02919 (2024).
 
 [6] https://github.com/MoonshotAI/Kimi-Linear/blob/master/tech_report.pdf
+
+[7] Peng, Hao, Nikolaos Pappas, Dani Yogatama, Roy Schwartz, Noah A. Smith, and Lingpeng Kong. "Random feature attention." arXiv preprint arXiv:2103.02143 (2021).
+
+
+## Appendix
+
+### A. $n$-ary kernels and Bochner’s theorem
+
+
+Let $m\ge 2$ and $d\ge 1$. A kernel $K:G^m\to\mathbb{C}$ is *stationary* if
+$$
+K(x_1+a,\dots,x_m+a)=K(x_1,\dots,x_m)\qquad \forall a\in G.
+$$
+Define its *lag form*
+$$
+k:G^{m-1}\to\mathbb{C},\qquad
+k(\tau_1,\dots,\tau_{m-1}) := K(0,\tau_1,\dots,\tau_{m-1}),
+$$
+so that
+$$
+K(x_1,\dots,x_m)=k(x_2-x_1,\dots,x_m-x_1).
+$$
+
+We call $K$ *$m$-positive definite* if $k$ is (ordinary) positive definite on the product group
+$G^{m-1}$; i.e., for any $n$, any $u_i\in G^{m-1}$, any $c_i\in\mathbb{C}$,
+$$
+\sum_{i,j=1}^n c_i\overline{c_j},k(u_i-u_j)\ \ge 0.
+$$
+
+> **Theorem (Bochner for $m$-ary kernels).**
+If $K$ is continuous, stationary, and $m$-positive definite, then there exists a *unique* finite positive Borel measure $\nu$ on $\widehat G^{m-1}$ such that
+$$
+\boxed{\quad
+K(x_1,\dots,x_m)
+=\int_{G^{m-1}} \exp\Big(i\sum_{j=2}^m (x_j-x_1)\cdot \omega_{j-1}\Big)\, d\nu(\omega_1,\dots,\omega_{m-1})\quad}
+$$
+for all $x_1,\dots,x_m\in G$. Moreover,
+$$
+\nu\big(\widehat G^{m-1}\big)=K(0,\dots,0).
+$$
+Equivalently, there is a unique finite positive Borel measure $M$ on $\widehat G^{m}$ *supported on the hyperplane*
+$$
+M = \{ (\omega_1,\dots,\omega_m)\in \widehat G^{m}\ :\ \omega_1+\cdots+\omega_m=0\}
+$$
+such that
+$$
+\boxed{\quad
+K(x_1,\dots,x_m)=\int_{G^{m}} \exp\Big(i\sum_{j=1}^m x_j\cdot \omega_j\Big)\, dM(\omega_1,\dots,\omega_m)\quad}
+$$
+with $M$ the pushforward of $\nu$ under
+$$
+T:\widehat G^{m-1}\to\{\omega_1+\cdots+\omega_m=0\},\qquad
+T(\omega_1,\dots,\omega_{m-1})=\big(-\textstyle\sum_{r=1}^{m-1}\omega_r,\ \omega_1,\dots,\omega_{m-1}\big).
+$$
+
