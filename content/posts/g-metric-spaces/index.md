@@ -28,11 +28,11 @@ For a while I have been thinking about the generalization of self-attention mech
 ## Motivation: Self-Attention
 
 We are all familiar with the self-attention mechanism used in transformers:
-Given input vectors $x_i \in \mathbb{R}^d$, define:
+Given input vectors $x_i \in \mathbb{R}^{d_m}$, define:
 $$
 Q_i = W_Q x_i, \quad K_j = W_K x_j, \quad V_j = W_V x_j
 $$
-where $W_Q, W_K, W_V \in \mathbb{R}^{d_k \times d}$ are learned projection matrices.
+where $W_Q, W_K \in \mathbb{R}^{d_m \times d_a}, W_V \in \mathbb{R}^{d_m \times d_v}$ are learned projection matrices.
 
 Then the *attention* from token $i$ to token $j$ is:
 $$
@@ -50,6 +50,29 @@ $$
 $$
 And that is the reason why attention is $\mathcal{O}(n^2)$ in the number of tokens $n$. Moreover, you can interpret attention as a *kernel method*, where the kernel is given by the dot product between the projected vectors.
 
+
+This can be implemented as follows:
+```python
+n = 15  # number of tokens
+d_model, d_attn, d_value = 5, 4, 16 # dm, da, dv
+X = torch.randn(n, d_model)
+Wq = torch.randn(d_model, d_attn)
+Wk = torch.randn(d_model, d_attn)
+Wv = torch.randn(d_model, d_value)
+
+def self_attention(X, Wq, Wk, Wv, scale=1.0):
+    Q = X @ Wq * scale # [n, da]
+    K = X @ Wk * scale # [n, da]
+    V = X @ Wv # [n, dv]
+    scores = Q @ K.T # or torch.einsum('il,jl->ij', Q, K); [n,n]              
+    attn = torch.softmax(scores, axis=1) # [n,n]
+    Y = attn @ V # or torch.einsum('ij,jd->id', attn, V); [n, dv]
+    return Y
+
+Y = self_attention(X, Wq, Wk, Wv, scale=1.0/np.sqrt(d_attn))
+```
+
+The following picture shows an interesting summary of the different variations of the self-attention.
 ![alt text](attention.png)
 > *Figure: Variations of attention mechanisms that have been proposed recently [[6]](#references)*
 
@@ -65,7 +88,24 @@ $$
 $$
 
 
-However, most of these approaches make us of tensor products and therefore, lose the nice properties of Kernels (positive-definiteness, representer theorem, etc).
+However, most of these approaches make us of tensor products and therefore, lose the nice properties of Kernels (positive-definiteness, representer theorem, etc). And the following code summarizes the idea:
+```python
+Wk1 = torch.randn(d_model, d_attn)
+Wk2 = torch.randn(d_model, d_attn)
+
+def self_attention_3d(X, Wq, Wk1, Wk2, Wv):
+    Q = X @ Wq # [n, da]
+    K1 = X @ Wk1 # [n, da]
+    K2 = X @ Wk2 # [n, da]
+    V = X @ Wv # [n, dv]
+    scores = torch.einsum('il,jl,kl->ijk', Q, K1, K2) # [n, n, n]
+    attn = torch.softmax(scores.reshape(n, -1), dim=1).reshape(n, n, n) # [n, n, n]
+    Vjk = torch.cat([V.unsqueeze(1)+V.unsqueeze(0)], dim=0) # [n, n, dv]
+    Y = torch.einsum('ijk,jkd->id', attn, Vjk) # [n, dv]
+    return Y
+
+Y_3d = self_attention_3d(X, Wq, Wk1, Wk2, Wv)
+```
 
 ## Self-attention and Kernel Method (Random Fourier Attention)
 
@@ -99,10 +139,10 @@ Therefore, we can approximate (1) with a feature map:
 $$
 \phi(x) = \frac{1}{\sqrt{N}} [\sin(\omega_1^\top x),\dots, \sin(\omega_N^\top x), \cos(\omega_1^\top x),\dots, \cos(\omega_N^\top x)]^\top
 $$
-where $\omega_1, \dots, \omega_N \stackrel{i.i.d.}{\sim} \mu$.
+where $\omega_1, \dots, \omega_N \stackrel{i.i.d.}{\sim} \mu$. And, by the law of large numbers, the error goes to zero with a rate of $\mathcal O(1/\sqrt{N})$ as $N\to\infty$.
 
 
-To make this *linear in $n$*, we obtained a *feature map* $\phi: \mathbb{R}^{d_k}\to\mathbb{R}^r$ such that
+This cool trick make the problem *linear in $n$*, we obtained a *feature map* $\phi: \mathbb{R}^{d_k}\to\mathbb{R}^r$ such that
 $$
 \kappa(Q_i, K_j) \approx \phi(Q_i)^\top \phi(K_j),
 $$
@@ -114,6 +154,33 @@ $$
 $$
 which can be computed in $\mathcal O(nr)$ time instead of $\mathcal O(n^2)$.
 
+```python
+def rff_attention(X, Wq, Wk, Wv, sigma=1.0, N=1024, eps=1e-8):
+    Q = X @ Wq # [n, da]
+    K = X @ Wk # [n, da]
+    V = X @ Wv # [n, dv]
+    omega = torch.randn(d_attn, N) / sigma # [da, N]
+
+    def phi(T): 
+        TOm = T @ omega # [n, N]
+        return torch.cat([torch.cos(TOm), torch.sin(TOm)], -1) / N**0.5 # [n, 2N]
+
+    phiQ = phi(Q)  # [n, 2N]
+    phiK = phi(K)  # [n, 2N]
+    CK = torch.exp((K**2).sum(axis=1, keepdims=True) / (2 * sigma**2)) # [n, 1]
+    S = (phiK*CK).T @ V  # [2N, dv]
+    D = torch.sum(phiK * CK, axis=0, keepdim=True) # [1, 2N]
+    
+    denom = phiQ @ D.T  # [n, 1]
+    numer = phiQ @ S    # [n, dv]
+    return numer / (denom + eps)
+
+Y_rfa = rff_attention(X, Wq, Wk, Wv, sigma=np.sqrt(d_attn), N=64)
+```
+And interestingly, the error between real attention and RFA attention for $N=64$:
+
+![alt text](error_rfa.png)
+
 
 ## Towards Higher-Order Attention with General Kernels
 
@@ -123,93 +190,148 @@ To extend this to higher-order attention, we need to consider kernels that take 
 
 The answer is yes, but first let introduce some concepts:
 
-Let $G$ be a (Hausdorff) locally compact abelian group with identity $e$, written multiplicatively. And, its Pontryagin dual $\widehat G$ is the LCA group of all continuous characters $\gamma:G\to\mathbb T=\{z\in\mathbb C:\lvert z\rvert=1\}$, with pointwise multiplication and the compact-open topology.
 
-In our case of interest, $G=\mathbb R^d$ with addition and $\widehat G=\mathbb R^d$ with characters $\chi_\gamma(x)=e^{i\langle x,\gamma\rangle}$.
-
-> **Definition (Stationary 3-ary kernel).**
-> A function $K:G^3\to\mathbb C$ is *stationary* if
-> $$ K(x+a,y+a,z+a)=K(x,y,z)\qquad(\forall,x,y,z,a\in G).$$
-> For such $K$ define its *lag form*
-> $$ k:G^2\to\mathbb C,\qquad k(u,v):=K(0,u,v).$$
-> Then necessarily $K(x,y,z) = k(y-x,z-x)$ for all $x,y,z\in G$.
-
-> **Definition (3-positive definiteness).**
-> A stationary kernel $K$ is *3-positive definite* if its lag form $k$ is (ordinary) positive definite on the product group $G^2$: for all $n$, all $(u_j,v_j)\in G^2$, and all $c_j\in\mathbb C$,
-> $$ \sum_{i,j=1}^n c_i\overline{c_j}k\big((u_i,v_i)-(u_j,v_j)\big)\ \ge 0 .$$
-
-Equivalently, with $K$: choose $x_j\in G$ arbitrarily and set $u_j=y_j-x_j,\ v_j=z_j-x_j$.
-
-
-> **Theorem (Bochner for 3-ary kernels).**
-Let $K:G^3\to\mathbb C$ be continuous, stationary, and 3-positive definite. Then there exists a unique finite positive Borel measure $\nu$ on $\widehat G^2$ such that
-$$
-\boxed{\quad K(x,y,z) = \int_{\widehat G^2} e^{i\langle y-x,\gamma_1\rangle} e^{i\langle z-x,\gamma_2\rangle} d\nu(\gamma_1,\gamma_2)\quad}
-$$
-for all $x,y,z\in G$. Moreover $\nu(\widehat G^2)=K(0,0,0)$.
-Equivalently, there exists a unique finite positive Borel measure $M$ on $\widehat G^3$ supported on the closed subgroup
-$$
-H:=\{(\gamma_1,\gamma_2,\gamma_3)\in \widehat G^3:\ \gamma_1+\gamma_2+\gamma_3=0\}
-$$
-such that
-$$
-\boxed{\quad
-K(x,y,z)=\int_{\widehat G^3}e^{i (x\cdot\gamma_1+ y\cdot\gamma_2+ z\cdot\gamma_3)}dM(\gamma_1,\gamma_2,\gamma_3)\quad}
-$$
-and $M$ is the pushforward of $\nu$ under the continuous group isomorphism
-$$
-T:\widehat G^2\to H,\qquad T(\gamma_1,\gamma_2)=(-\gamma_1-\gamma_2,\ \gamma_1,\ \gamma_2).
-$$  
-
-*Proof.*
-By stationarity, $K(x,y,z)=k(y-x,z-x)$ with a continuous lag form $k:G^2\to\mathbb C$. By 3-positive definiteness, $k$ is a continuous positive definite function on the LCA group $G^2$.
-
-**Step 1 (Bochner on the product group).**
-Bochner’s theorem on LCA groups (applied to the group $G^2$) yields a unique finite positive Borel measure $\nu$ on $\widehat G^2$ such that
-$$
-k(u,v)=\int_{\widehat G^2} e^{i\langle u,\gamma_1\rangle} e^{i\langle v,\gamma_2\rangle} d\nu(\gamma_1,\gamma_2)\qquad(\forall,u,v\in G).
-$$
-Therefore, for all $(x,y,z\in G)$,
-$$
-K(x,y,z)=k(y-x,z-x)
-=\int_{\widehat G^2} e^{i\langle y-x,\gamma_1\rangle} e^{i\langle z-x,\gamma_2\rangle} d\nu(\gamma_1,\gamma_2),
-$$
-which is the first displayed formula. Evaluating at ((x,y,z)=(0,0,0)) gives
-$$
-K(0,0,0)=k(0,0)=\int_{\widehat G^2}1\,d\nu=\nu(\widehat G^2).
-$$
-Uniqueness of $\nu$ is the uniqueness clause in Bochner’s theorem.
-
-**Step 2 (Three-frequency form and support constraint).**
-Define $T:\widehat G^2\to H\subset\widehat G^3$ by $T(\gamma_1,\gamma_2)=(-\gamma_1-\gamma_2,\gamma_1,\gamma_2)$. Let $M:=T_\#\nu$ (pushforward measure). Then for all $x,y,z\in G$,
-$$
-\begin{aligned}
-\int_{\widehat G^3}e^{i\langle x,\gamma_1\rangle}e^{i\langle y,\gamma_2\rangle}e^{i\langle z,\gamma_3\rangle}\,dM
-&=\int_{\widehat G^2}e^{i\langle x,-\gamma_1-\gamma_2\rangle}e^{i\langle y,\gamma_1\rangle}e^{i\langle z,\gamma_2\rangle}\,d\nu\\
-&=\int_{\widehat G^2}e^{i\langle y-x,\gamma_1\rangle}e^{i\langle z-x,\gamma_2\rangle}\,d\nu
-=K(x,y,z),
-\end{aligned}
-$$
-Thus the second formula holds. By construction $\operatorname{supp}M\subset H$. Uniqueness of $M$ follows from uniqueness of $\nu$ and the fact that $T$ is a topological group isomorphism onto $H$.
-
-**Step 3 (Converse).**
-Conversely, suppose $\nu$ is a finite positive measure on $\widehat G^2$ and set
-$$
-K(x,y,z):=\int_{\widehat G^2}e^{i\langle y-x,\gamma_1\rangle}e^{i\langle z-x,\gamma_2\rangle}\,d\nu.
-$$
-Then $K$ is continuous (dominated convergence), stationary (the integrand depends only on $y-x$ and $z-x$), and its lag form is
-$$
-k(u,v)=\int_{\widehat G^2}e^{i\langle u,\gamma_1\rangle}e^{i\langle v,\gamma_2\rangle}\,d\nu,
-$$
-which is positive definite on $G^2$ by Bochner’s theorem; hence $K$ is 3-positive definite in the sense of the definition. The mass identity $\nu(\widehat G^2)=K(0,0,0)$ is immediate.
-Likewise, starting from a measure $M$ supported on $H$ and defining $K$ by the three-frequency integral gives the first formula by pulling back along $T^{-1}$. $\blacksquare$
+> **Definition.**
+> A function $K : (\mathbb{R}^d)^n \to \mathbb{C}$ is **positive semidefinite of order (n)** if for all integers $m \ge 1$, for all choices of points $x^{(1)}, \dots, x^{(m)} \in \mathbb{R}^d$, and for all complex coefficients $c_1, \dots, c_m$,
+> $$ \sum_{i_1, \dots, i_n = 1}^m c_{i_1} \overline{c_{i_n}} K\big(x^{(i_1)}, \dots, x^{(i_n)}\big) \ge 0.$$
 
 
 
+An the generalization of Bochner’s theorem for n-ary kernels [[8]](#references):
 
-I came across the concept of G-metric spaces, which generalize the notion of distance to triples of points.
+
+> **Theorem (Generalized Bochner Theorem).**
+If $K: (\mathbb{R}^d)^n \to \mathbb{C}$ is a continuous, stationary, n-positive definite kernel, then there exists a unique finite positive Borel measure $\mu$ on $(\mathbb{R}^d)^n$ such that for all $x_1,\dots,x_n\in \mathbb{R}^d$,
+>$$
+K(x_1,\dots,x_n) = \int e^{i(\sum_j \omega_j\cdot x_j)} d\mu(\omega_1,\dots,\omega_n), \quad \mu \text{ positive semidefinite on } (\mathbb{R}^d)^n
+$$
+
+Moreover, if $K(x_1+g,\dots,x_n+g)=K(x_1,\dots,x_n)$ for all $g\in \mathbb{R}^d$, then the representing measure $\mu$ is supported on 
+$$\left\{(\omega_1,\dots,\omega_n):\sum_{r=1}^n \omega_r=0\right\}.$$
+So, like in the 2d case, we can rewrite the kernel as a $(n-1)$-dimensional Fourier transform of its lag form:
+$$
+K(x_1, \dots, x_n) = k(x_2 - x_1, \dots, x_n - x_1)
+$$
+Let $T(\omega_1,\dots,\omega_{n-1}) = (-\sum_{r=1}^{n-1} \omega_r, \omega_1, \dots, \omega_{n-1})$. Then, $\mu=T_{\#}\nu$ is the pushforward of a unique finite positive Borel measure $\nu$ on $(\mathbb{R}^d)^{n-1}$ such that
+$$\begin{aligned}K(x_1,\dots,x_n) &= \int e^{i\sum_{j=1}^n x_j\cdot \omega_j} d\mu(\omega_1,\dots,\omega_n)\\&= \int e^{i\sum_{j=2}^n (x_j - x_1)\cdot \omega_{j-1}} d\nu(\omega_1,\dots,\omega_{n-1})\\
+&= k(x_2 - x_1, \dots, x_n - x_1).\end{aligned}\\$$
+
+
+**Example 1: IID Gaussian frequencies**
+   $$
+   K(x_1,\ldots,x_n)=\exp\Big(-\frac{1}{2\sigma^2}\sum_{j=1}^n \|x_j\|^2\Big).
+   $$
+   Moreover, in this case, $\omega_j \stackrel{\text{iid}}{\sim}\mathcal N(0,\sigma^{-2} I_d)$.
+
+We are interested in approximating the lagged kernel:
+$$
+k(\Delta_2,\dots,\Delta_n)
+=\exp\left(-\frac{1}{2\sigma^2}\sum_{j=2}^n |\Delta_j|^2\right)
+=\prod_{j=2}^n \exp\left(-\frac{|\Delta_j|^2}{2\sigma^2}\right).
+$$
+Its spectral measure (\nu) factorizes:
+$$
+\eta_{j-1}\ \stackrel{\text{i.i.d.}}{\sim}\ \mathcal N(0,\sigma^{-2}I_d),\qquad j=2,\dots,n.
+$$
+So we can use either construction above with $\eta^{(m)}_{j-1}\sim \mathcal N(0,\sigma^{-2}I_d)$. And the feature map is:
+$$\phi_j(x)=\frac{1}{\sqrt{N}} [\sin(\omega_1^\top x),\dots, \sin(\omega_N^\top x), \cos(\omega_1^\top x),\dots, \cos(\omega_N^\top x)]^\top$$
+
+
+
+```python
+n, d = 5, 50
+x = torch.randn(n, d)
+
+def k_mc(x, sigma=1.0, N=128):
+    n, d = x.shape
+    diffs = x[1:] - x[0] # [n-1, d]
+    omegas = torch.randn(n-1, d, N) / sigma
+
+    m = torch.einsum('ij,ijk->ik', diffs, omegas) # [n-1, N]
+    phi = torch.cat([torch.cos(m), torch.sin(m)], -1) / N**0.5 # [n-1, 2N]
+    return torch.mean(torch.prod(phi, dim=0))
+
+def k_exact(x, sigma=1.0):
+    diffs = x[1:] - x[0] # [n-1, d]
+    return torch.exp(-0.5 * sigma**2 * torch.sum(diffs**2))
+
+f = lambda : torch.norm(k_mc(x, sigma=1.0, N=16) - k_exact(x, sigma=1.0))
+errors = np.array([f().item() for _ in range(1000)])
+print(f"L2 Error mean: {errors.mean():.9f}", f"std: {errors.std():.9f}")
+```
+```console
+L2 Error mean: 0.000141528 std: 0.000105931
+```
+And the error is surprisingly small.
+
+**Example 2: Correlated Gaussian frequencies** Let $R\in\mathbb{R}^{n\times n}$ be any correlation matrix (symmetric PSD with ones on the diagonal). Then
+   $$
+   K(x_1,\ldots,x_n)
+   =\exp\Big(-\frac{1}{2\sigma^2}\sum_{j,k=1}^n \mathbf R_{jk}\, x_j\cdot x_k\Big),
+   $$
+   which couples different points via $\mathbf R$.
+
+## Nyström Method
+
+This method is based on the spectral decomposition of positive-definite kernels, known as Mercer’s theorem:
+
+> **Theorem (Mercer).** For every continuous symmetric and positive-definite kernel $K$, there exists an orthonormal basis of $L^2$ functions $\{\phi_i\}_{i=1}^\infty$ and non-negative eigenvalues $\{\lambda_i\}_{i=1}^\infty$ such that 
+$$
+K(x,y) = \sum_{i=1}^\infty \lambda_i \phi_i(x) \phi_i(y).
+$$
+
+We use the truncated expansion to $m$ and absorb eigenvalues:
+$$
+\psi_i(x)=\sqrt{\lambda_i}\,\phi_i(x).
+$$
+In practice we don't usually have a closed-form $(\lambda_i,\phi_i)$, so you obtain $\psi$ data-adaptively via **Nyström** with $m$ landmarks $Z=\{z_1,\dots,z_m\}$:
+
+- $W\in\mathbb{R}^{m\times m}$, $W_{ab}=\kappa(z_a,z_b)$
+- $k_Z(x)=[\kappa(x,z_1),\dots,\kappa(x,z_m)]^\top$
+- Feature map: $\displaystyle \Psi(x)=W^{-1/2} k_Z(x)\in\mathbb{R}^m$
+
+This realizes $\kappa(x,x')\approx \Psi(x)^\top\Psi(x')$ and is equivalent to a truncated Mercer form on the landmark subspace.
+
+One-off (per head) cost: compute $W^{-1/2}$ in $\mathcal O(m^3)$ offline; reuse it at train/inference.
+
+```python
+n, d = 100, 5 # Total data points and data dimension
+m = 20 # number of inducing points
+X = torch.randn(n, d)
+rbf = lambda X, Y: torch.exp(-0.5 * torch.cdist(X, Y)**2)
+
+# Nyström approximation
+Y = torch.randn(m, d)
+K_mm = rbf(Y, Y)
+eigvals, eigvecs = torch.linalg.eigh(K_mm)
+K_mm_inv_sqrt = eigvecs @ torch.diag(1/torch.sqrt(torch.clamp(eigvals, 1e-5))) @ eigvecs.T
+
+phi = K_mm_inv_sqrt @ rbf(X, Y).T  # [N, m]
+K_approx = phi.T @ phi
+K_exact = rbf(X, X)
+
+error = torch.linalg.norm(K_exact - K_approx, 'fro')/torch.linalg.norm(K_exact, 'fro')
+print(f"Relative error: {error:.4f}")
+```
+```console
+Relative error: 0.4351
+```
+
+### Generalization to n-ary kernels
+
+The Nyström method extends to n-ary kernels via a generalized Mercer theorem:
+
+> **Theorem (Generalized Mercer).** Let $K: (\mathbb{R}^d)^n \to \mathbb{C}$ be a continuous, symmetric, n-positive definite kernel. Then there exists an orthonormal basis of $L^2$ functions $\{\phi_i\}_{i=1}^\infty$ and non-negative eigenvalues $\{\lambda_i\}_{i=1}^\infty$ such that
+> $$
+K(x_1,\ldots,x_n) = \sum_{i=1}^\infty \lambda_i \phi_i(x_1) \cdots \phi_i(x_n), \qquad \lambda_i \ge 0.
+$$
+
+
+
 
 ## 1. Generalized Metric Spaces
+
+An alternative approach I came across is the concept of G-metric spaces, which generalize the notion of distance to triples of points.
 
 The concept of a metric space is fundamental in analysis and topology.
 
@@ -381,12 +503,6 @@ Here, the G-metric measures triadic coherence among the three embeddings, not ju
 This captures contextual or relational dependencies (e.g., how three tokens jointly influence meaning).
 It’s useful for relational reasoning, scene understanding, or multi-agent interactions, where relationships are inherently non-pairwise.
 
-## Related work
-
-- **Triplet Consistency and Metric Geometry in ML**: "Deep Metric Learning Beyond Pairwise Comparisons" (CVPR 2019)
-- **Gromov–Wasserstein Learning**: Peyré et al., Foundations of Computational Optimal Transport, 2019
-- **Hyperbolic / Non-Euclidean Embedding Learning**: Nickel & Kiela, Poincaré Embeddings for Hierarchical Representations (NeurIPS 2017)
-- **Higher-Order Geometric Learning**: “Neural Hypergraph Learning” (AAAI 2021)
 
 ## References
 
@@ -404,55 +520,5 @@ It’s useful for relational reasoning, scene understanding, or multi-agent inte
 
 [7] Peng, Hao, Nikolaos Pappas, Dani Yogatama, Roy Schwartz, Noah A. Smith, and Lingpeng Kong. "Random feature attention." arXiv preprint arXiv:2103.02143 (2021).
 
-
-## Appendix
-
-### A. $n$-ary kernels and Bochner’s theorem
-
-
-Let $m\ge 2$ and $d\ge 1$. A kernel $K:G^m\to\mathbb{C}$ is *stationary* if
-$$
-K(x_1+a,\dots,x_m+a)=K(x_1,\dots,x_m)\qquad \forall a\in G.
-$$
-Define its *lag form*
-$$
-k:G^{m-1}\to\mathbb{C},\qquad
-k(\tau_1,\dots,\tau_{m-1}) := K(0,\tau_1,\dots,\tau_{m-1}),
-$$
-so that
-$$
-K(x_1,\dots,x_m)=k(x_2-x_1,\dots,x_m-x_1).
-$$
-
-We call $K$ *$m$-positive definite* if $k$ is (ordinary) positive definite on the product group
-$G^{m-1}$; i.e., for any $n$, any $u_i\in G^{m-1}$, any $c_i\in\mathbb{C}$,
-$$
-\sum_{i,j=1}^n c_i\overline{c_j},k(u_i-u_j)\ \ge 0.
-$$
-
-> **Theorem (Bochner for $m$-ary kernels).**
-If $K$ is continuous, stationary, and $m$-positive definite, then there exists a *unique* finite positive Borel measure $\nu$ on $\widehat G^{m-1}$ such that
-$$
-\boxed{\quad
-K(x_1,\dots,x_m)
-=\int_{G^{m-1}} \exp\Big(i\sum_{j=2}^m (x_j-x_1)\cdot \omega_{j-1}\Big)\, d\nu(\omega_1,\dots,\omega_{m-1})\quad}
-$$
-for all $x_1,\dots,x_m\in G$. Moreover,
-$$
-\nu\big(\widehat G^{m-1}\big)=K(0,\dots,0).
-$$
-Equivalently, there is a unique finite positive Borel measure $M$ on $\widehat G^{m}$ *supported on the hyperplane*
-$$
-M = \{ (\omega_1,\dots,\omega_m)\in \widehat G^{m}\ :\ \omega_1+\cdots+\omega_m=0\}
-$$
-such that
-$$
-\boxed{\quad
-K(x_1,\dots,x_m)=\int_{G^{m}} \exp\Big(i\sum_{j=1}^m x_j\cdot \omega_j\Big)\, dM(\omega_1,\dots,\omega_m)\quad}
-$$
-with $M$ the pushforward of $\nu$ under
-$$
-T:\widehat G^{m-1}\to\{\omega_1+\cdots+\omega_m=0\},\qquad
-T(\omega_1,\dots,\omega_{m-1})=\big(-\textstyle\sum_{r=1}^{m-1}\omega_r,\ \omega_1,\dots,\omega_{m-1}\big).
-$$
+[8] Berg, Christian, Jens Peter Reus Christensen, and Paul Ressel. Harmonic analysis on semigroups: theory of positive definite and related functions. Vol. 100. New York: Springer, 1984.
 
