@@ -1,12 +1,12 @@
 ---
 title: "Self-Attention, Kernel Methods and G-Metric Spaces"
 date: 2025-10-30
-tags: ["machine learning", "analysis", "kernel methods"]
-categories: ["analysis", "machine learning"]
+tags: ["machine learning", "analysis", "kernel methods", "attention mechanisms", "g-metric spaces"]
+categories: ["kernel methods", "machine learning"]
 author: "Daniel López Montero"
 showToc: true
 draft: false
-description: "An introduction to Higher-Order Attention and G-metric spaces, their properties, and potential applications in machine learning."
+description: "An introduction to Higher-Order Attention, Kernel Methods, and G-Metric Spaces."
 ShowWordCount: false
 ShowReadingTime: true
 comments: true
@@ -20,11 +20,10 @@ editPost:
 
 ![alt text](image.png)
 
-For a while, I’ve been thinking about generalizing self-attention mechanisms. Most attention mechanisms today are based on pairwise similarities (dot products) between query and key vectors. However, higher-order relationships (involving triples or tuples of elements) could capture richer interactions. I then found that several people are already exploring this idea under the name “higher-order attention” [[5]](#references).
+For some time, I’ve been thinking about how to generalize self-attention mechanisms. Most existing attention mechanisms rely on pairwise similarities (dot products) between query and key vectors. However, higher-order relationships (involving triples or tuples of elements) could capture richer interactions. I then found that several people are already exploring this idea under the name “higher-order attention” [[5]](#references).
 
-In this post, I want to give my point of view on this topic, connecting it with kernel methods and generalized metric spaces.
-
-
+However, this approach comes with a performance cost. Traditional self-attention has a complexity of O(n^2), while higher-order attention is even more computationally expensive.
+In this post, I’d like to share my perspective on this topic, connecting it with kernel methods and generalized metric spaces.
 
 
 ## 1. Motivation: Self-Attention
@@ -266,7 +265,11 @@ print(f"L2 Error mean: {errors.mean():.9f}", f"std: {errors.std():.9f}")
 ```console
 L2 Error mean: 0.000141528 std: 0.000105931
 ```
-The error is surprisingly small.
+
+
+![alt text](image-2.png)
+
+The error is surprisingly small because the kernel factorizes into a product of simpler kernels.
 
 **Example 2: Correlated Gaussian frequencies.** Let $R\in\mathbb{R}^{n\times n}$ be any correlation matrix (symmetric PSD with ones on the diagonal). Then
    $$
