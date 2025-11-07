@@ -22,7 +22,7 @@ editPost:
 
 For a while, I’ve been thinking about generalizing self-attention mechanisms. Most attention mechanisms today are based on pairwise similarities (dot products) between query and key vectors. However, higher-order relationships (involving triples or tuples of elements) could capture richer interactions. I then found that several people are already exploring this idea under the name “higher-order attention” [[5]](#references).
 
-I wanted to give my point of view on this topic, connecting it with kernel methods and generalized metric spaces (G-metric spaces). 
+In this post, I want to give my point of view on this topic, connecting it with kernel methods and generalized metric spaces.
 
 
 
@@ -237,8 +237,8 @@ Its spectral measure $\nu$ factorizes:
 $$
 \eta_{j-1}\ \stackrel{\text{i.i.d.}}{\sim}\ \mathcal N(0,\sigma^{-2}I_d),\qquad j=2,\dots,n.
 $$
-So we can use either construction above with $\eta^{(m)}_{j-1}\sim \mathcal N(0,\sigma^{-2}I_d)$. And the feature map is
-$$\phi_j(x)=\frac{1}{\sqrt{N}} [\sin(\omega_1^\top x),\dots, \sin(\omega_N^\top x), \cos(\omega_1^\top x),\dots, \cos(\omega_N^\top x)]^\top$$
+So we can use either construction above with $\eta_{j-1}\sim \mathcal N(0,\sigma^{-2}I_d)$. And the feature map is
+$$\phi_j(x)=\frac{1}{\sqrt{N}} [\sin(\eta_1^\top x),\dots, \sin(\eta_N^\top x), \cos(\eta_1^\top x),\dots, \cos(\eta_N^\top x)]^\top$$
 
 
 
@@ -321,7 +321,7 @@ print(f"Relative error: {error:.4f}")
 Relative error: 0.4351
 ```
 
-### 2.4 Generalization to Higher-order kernels
+### 2.4 Nyström Method for Higher-order kernels
 
 The Nyström method extends to n-ary kernels via a generalized Mercer theorem:
 
