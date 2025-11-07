@@ -21,6 +21,20 @@
       <description>An introduction to Higher-Order Attention and G-metric spaces, their properties, and potential applications in machine learning.</description>
     </item>
     <item>
+      <title>Fusion Energy Simulation: Tokamak</title>
+      <link>http://localhost:1313/posts/torax/</link>
+      <pubDate>Tue, 28 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/torax/</guid>
+      <description>A generalization of metric spaces.</description>
+    </item>
+    <item>
+      <title>Control Theory</title>
+      <link>http://localhost:1313/posts/control-theory/</link>
+      <pubDate>Fri, 17 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/control-theory/</guid>
+      <description>A concise introduction to controllability for linear time-invariant systems: Kalman rank condition, the controllability Gramian, and the minimum-energy control.</description>
+    </item>
+    <item>
       <title>Gaussian Processes</title>
       <link>http://localhost:1313/posts/gaussian-processes/</link>
       <pubDate>Thu, 09 Oct 2025 00:00:00 +0000</pubDate>

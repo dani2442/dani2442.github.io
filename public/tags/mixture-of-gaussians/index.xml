@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Mixture of Gaussians on dani2442&#39;s Blog</title>
     <link>http://localhost:1313/tags/mixture-of-gaussians/</link>
     <description>Recent content in Mixture of Gaussians on dani2442&#39;s Blog</description>
-    <generator>Hugo</generator>
+    <image>
+      <title>dani2442&#39;s Blog</title>
+      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo -- 0.152.2</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 17 Oct 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/mixture-of-gaussians/index.xml" rel="self" type="application/rss+xml" />
@@ -13,7 +18,7 @@
       <link>http://localhost:1313/posts/mixture-gaussian-processes/</link>
       <pubDate>Fri, 17 Oct 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/mixture-gaussian-processes/</guid>
-      <description>&lt;p&gt;The cumulative density function of the Temporal Mixtures of Gaussians proposed by &lt;a href=&#34;#references&#34;&gt;[1]&lt;/a&gt; is given by&#xA;&lt;/p&gt;&#xA;$$&#xA;    F(x,t) = P(\mathbf{X}_t \leq x) = \int_{\prod_{i=1}^d (-\infty, x_i]} \sum_{s=1}^K \mathbf{a}_s(t) \varphi(r | \mathbf m_s, \mathbf\Sigma_s ) dr, \quad\quad\quad x\in \mathbb{R}^n, t\in \mathbb{R}&#xA;$$&lt;p&gt;&#xA;where $\varphi$ is the probability density function of the normal distribution and $\mathbf{a}_s(t)$ is given by the evolution of NeuralODE. Then the probability density function of this process is obtained by differentiating with respect to $x$ and we obtain&#xA;&lt;/p&gt;</description>
+      <description>A concise introduction to controllability for linear time-invariant systems: Kalman rank condition, the controllability Gramian, and the minimum-energy control.</description>
     </item>
   </channel>
 </rss>
