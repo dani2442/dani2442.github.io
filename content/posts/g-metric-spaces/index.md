@@ -192,25 +192,23 @@ The answer is yes, but first let introduce some concepts:
 
 
 > **Definition.**
-> A function $K : (\mathbb{R}^d)^n \to \mathbb{C}$ is **positive semidefinite of order (n)** if for all integers $m \ge 1$, for all choices of points $x^{(1)}, \dots, x^{(m)} \in \mathbb{R}^d$, and for all complex coefficients $c_1, \dots, c_m$,
-> $$ \sum_{i_1, \dots, i_n = 1}^m c_{i_1} \overline{c_{i_n}} K\big(x^{(i_1)}, \dots, x^{(i_n)}\big) \ge 0.$$
+> A function $f : (\mathbb{R}^d)^n \to \mathbb{C}$ is **positive semidefinite of order $\mathbf n$** if for all integers $m \ge 1$, for all choices of points $x^{(1)}_i, \dots, x^{(m)}_i \subseteq \mathbb{R}^d$ for $i=1,\dots, n$; and for all complex coefficients $c_1, \dots, c_m$,
+> $$ \sum_{i,j}^m c_{i} \overline{c_{j}} f\big(x^{(i)}_{1}-x^{(j)}_{1}, \dots, x^{(i)}_n-x^{(j)}_n\big) \ge 0.$$
 
 
 
-An the generalization of Bochner’s theorem for n-ary kernels [[8]](#references):
+An the generalization of Bochner’s theorem for n-ary functions [[8]](#references):
 
 
 > **Theorem (Generalized Bochner Theorem).**
-If $K: (\mathbb{R}^d)^n \to \mathbb{C}$ is a continuous, stationary, n-positive definite kernel, then there exists a unique finite positive Borel measure $\mu$ on $(\mathbb{R}^d)^n$ such that for all $x_1,\dots,x_n\in \mathbb{R}^d$,
+If $f: (\mathbb{R}^d)^n \to \mathbb{C}$ is a continuous, stationary, n-positive definite function, then there exists a unique finite positive Borel measure $\mu$ on $(\mathbb{R}^d)^n$ such that for all $x_1,\dots,x_n\in \mathbb{R}^d$,
 >$$
-K(x_1,\dots,x_n) = \int e^{i(\sum_j \omega_j\cdot x_j)} d\mu(\omega_1,\dots,\omega_n), \quad \mu \text{ positive semidefinite on } (\mathbb{R}^d)^n
+f(x_1,\dots,x_n) = \int e^{i(\sum_j \omega_j\cdot x_j)} d\mu(\omega_1,\dots,\omega_n), \quad \mu \text{ positive measure}
 $$
 
-Moreover, if $K(x_1+g,\dots,x_n+g)=K(x_1,\dots,x_n)$ for all $g\in \mathbb{R}^d$, then the representing measure $\mu$ is supported on 
-$$\left\{(\omega_1,\dots,\omega_n):\sum_{r=1}^n \omega_r=0\right\}.$$
 So, like in the 2d case, we can rewrite the kernel as a $(n-1)$-dimensional Fourier transform of its lag form:
 $$
-K(x_1, \dots, x_n) = k(x_2 - x_1, \dots, x_n - x_1)
+K(x_1, \dots, x_n) = f(x_2 - x_1, \dots, x_n - x_1)
 $$
 Let $T(\omega_1,\dots,\omega_{n-1}) = (-\sum_{r=1}^{n-1} \omega_r, \omega_1, \dots, \omega_{n-1})$. Then, $\mu=T_{\#}\nu$ is the pushforward of a unique finite positive Borel measure $\nu$ on $(\mathbb{R}^d)^{n-1}$ such that
 $$\begin{aligned}K(x_1,\dots,x_n) &= \int e^{i\sum_{j=1}^n x_j\cdot \omega_j} d\mu(\omega_1,\dots,\omega_n)\\&= \int e^{i\sum_{j=2}^n (x_j - x_1)\cdot \omega_{j-1}} d\nu(\omega_1,\dots,\omega_{n-1})\\
@@ -229,7 +227,7 @@ k(\Delta_2,\dots,\Delta_n)
 =\exp\left(-\frac{1}{2\sigma^2}\sum_{j=2}^n |\Delta_j|^2\right)
 =\prod_{j=2}^n \exp\left(-\frac{|\Delta_j|^2}{2\sigma^2}\right).
 $$
-Its spectral measure (\nu) factorizes:
+Its spectral measure $\nu$ factorizes:
 $$
 \eta_{j-1}\ \stackrel{\text{i.i.d.}}{\sim}\ \mathcal N(0,\sigma^{-2}I_d),\qquad j=2,\dots,n.
 $$
@@ -275,7 +273,7 @@ And the error is surprisingly small.
 
 This method is based on the spectral decomposition of positive-definite kernels, known as Mercer’s theorem:
 
-> **Theorem (Mercer).** For every continuous symmetric and positive-definite kernel $K$, there exists an orthonormal basis of $L^2$ functions $\{\phi_i\}_{i=1}^\infty$ and non-negative eigenvalues $\{\lambda_i\}_{i=1}^\infty$ such that 
+> **Theorem (Mercer).** For every continuous symmetric and positive-definite kernel $K$ on a compact $X$, there exists an orthonormal basis of $L^2$ functions $\{\phi_i\}_{i=1}^\infty$ and non-negative eigenvalues $\{\lambda_i\}_{i=1}^\infty$ such that 
 $$
 K(x,y) = \sum_{i=1}^\infty \lambda_i \phi_i(x) \phi_i(y).
 $$
@@ -321,12 +319,59 @@ Relative error: 0.4351
 
 The Nyström method extends to n-ary kernels via a generalized Mercer theorem:
 
-> **Theorem (Generalized Mercer).** Let $K: (\mathbb{R}^d)^n \to \mathbb{C}$ be a continuous, symmetric, n-positive definite kernel. Then there exists an orthonormal basis of $L^2$ functions $\{\phi_i\}_{i=1}^\infty$ and non-negative eigenvalues $\{\lambda_i\}_{i=1}^\infty$ such that
-> $$
-K(x_1,\ldots,x_n) = \sum_{i=1}^\infty \lambda_i \phi_i(x_1) \cdots \phi_i(x_n), \qquad \lambda_i \ge 0.
+> **Theorem (Generalized Mercer).** Let $f: (\mathbb{R}^d)^n \to \mathbb{C}$ be a continuous, symmetric, n-positive definite function. Then there exists an orthonormal basis of $L^2$ functions $\{\phi_i\}_{i=1}^\infty$ and non-negative eigenvalues $\{\lambda_i\}_{i=1}^\infty$ such that
+> $$ f(x_1,\ldots,x_n) = \sum_{i=1}^\infty \lambda_i \phi_i(x_1) \cdots \phi_i(x_n), \qquad \lambda_i \ge 0.$$
+
+Pick $m$ landmarks $Z={z_1,\dots,z_m}$ and build the core tensor
+$$
+W_{abc}=K(z_a,z_b,z_c)\in\mathbb{R}^{m\times m\times m}.
 $$
 
+Do a symmetric CP factorization $\operatorname{rank}(R)$:
+$$
+W\approx\sum_{r=1}^R s_r,u_r\otimes u_r\otimes u_r,\qquad s_r\ge 0,u_r\in\mathbb{R}^m.
+$$
+Absorb weights: $\Psi_Z[:,r] \coloneqq s_r^{1/3}u_r\in\mathbb{R}^m$.
+This gives, on landmarks,
+$$
+K(z_a,z_b,z_c)\approx\sum_{r=1}^R \Psi_Z[a,r]\Psi_Z[b,r]\Psi_Z[c,r].
+$$
 
+To extend off-landmarks, note that for any $x$,
+$$
+Q(x)_{bc} \coloneqq K(x,z_b,z_c)\in\mathbb{R}^{m\times m}
+\quad\Rightarrow\quad
+\operatorname{vec}Q(x) \approx \sum_{r=1}^R \psi_r(x)\big(\Psi_Z[:,r]\otimes \Psi_Z[:,r]\big).
+$$
+Let $B\in\mathbb{R}^{m^2\times R}$ have columns $b_r=\Psi_Z[:,r]\otimes \Psi_Z[:,r]$.
+Then we apply the same procedure as before.
+
+```python
+n, d = 100, 5 # Total data points and data dimension
+m = 10 # number of inducing points
+X = torch.randn(n, d)
+
+def K3(X, Y, Z):
+    dXY = torch.cdist(X, Y).square().unsqueeze(2)  # [x, y, 1]
+    dYZ = torch.cdist(Y, Z).square().unsqueeze(0)  # [1, y, z]
+    dZX = torch.cdist(X, Z).square().unsqueeze(1)  # [x, 1, z]
+    return torch.exp(-0.5 * (dXY + dYZ + dZX))
+
+# Nyström approximation
+C = torch.randn(m, d)
+K_mm = K3(C, C, C)  # [m, m, m]
+U, S, Vh = torch.linalg.svd(K_mm.view(m, m*m))
+K_mm_inv_sqrt = U @ F.pad(torch.diag_embed(1/torch.sqrt(S.clamp_min(1e-5))), (0, m*m - m)) @ Vh
+
+phi = K3(X, C, C).view(n, m*m) @ K_mm_inv_sqrt.T   # [N, m]
+K_approx = torch.einsum('ir, jr, kr->ijk', phi, phi, phi)
+K_exact = K3(X, X, X)
+
+error = torch.linalg.norm(K_exact - K_approx)
+print(f"Relative error: {error:.4f}")
+```
+
+![alt text](image-1.png)
 
 
 ## 1. Generalized Metric Spaces
