@@ -312,192 +312,68 @@ We have been able to recover the values of the system! However, in real-life we 
 ## 2. Nonlinear Control: Pontryagin Maximum Principle
 
 
-Let $U\subset \mathbb R^m$ be nonempty and compact. Consider
-
-$$
-\begin{cases}
-\dot x(t)=f\bigl(t,x(t),u(t)\bigr),\qquad u(\cdot)\in\mathcal U:={\text{measurable }[0,T]\to U},\\
-x(0)=x_0\in\mathbb R^n,\\
-J(u):=\Phi\bigl(x(T)\bigr)+\displaystyle\int_0^T L\bigl(t,x(t),u(t)\bigr)\,dt\ .
-\end{cases}
+Consider the *Bolza problem* of optimal control which corresponds to the sum of an integral term and a terminal term as
+$$\tag{1}
+\begin{aligned}
+\min_{u(\cdot)} &J(u):= h(x(T), T)+\int_0^T \ell(x(t),u(t), t)\,dt,\\
+\text{s.t. } &\dot x(t)=f\bigl(x(t),u(t),t\bigr),\quad x(0)=x_0.
+\end{aligned}
 $$
 
-Assume:
+Before reviewing the Pontryagin Maximum Principle (PMP), we introduce the variational approach which seeks a minimum of the cost with the dynamics as constraints. 
 
-- $f,L$ are continuous in $(t,x,u)$, locally Lipschitz in $x$ uniformly in $(t,u)$, and of linear growth in (x).
-- $\Phi$ is $C^1$ and $f,L$ are $C^1$ in $x$ (almost everywhere in $t$).
+> **Theorem (Euler-Lagrange Equations).** Consider the minimization problem (1). Suppose $f$ is Lipschitz in $x$ uniformly in $u,t$ and that $u$ is differentiable. Assume that $u^\star$ is a minimizer for the problem, and let $x^\star$ denotes the corresponding trajectory. Then, there exists a function $p^\star \in C^1([0,T], \mathbb{R}^n)$ such that the triple $(x^\star, u^\star, p^\star)$ satisfies the Euler-Lagrange equations:
+$$
+\begin{aligned}
+\dot x^\star_t &= f(x_t^\star, u_t^\star), & x^\star(0)=x_0\\
+\dot p^\star(t) &= \ell_x(x_t^\star, u_t^\star) -(p_t^\star)^\top f_x(x_t^\star, u_t^\star), &p_T^\star = -h_x(x_T^\star)\\
+0 &= f_b(x_t^\star, u_t^\star)^\top p_t^\star - \ell_u(x_t^\star, u_t^\star).
+\end{aligned}
+$$
+*Proof.* Define the Lagrangian
+$$
+\mathcal L(x, u, p) = h(x(T)) + \int_0^T \ell(x_t, u_t)dt + \int_0^T p_t^\top(\dot x_t  f(x_t, u_t))dt.
+$$
+associated to the minimization problem (1). Then the first variation of the Lagrangian provide necessary conditions for optimality:
+$$
+\mathcal{L}_p(x^\star, u^\star, p^\star) = 0, \quad \mathcal{L}_x(x^\star, \beta^\star, p^\star) = 0, \quad \mathcal{L}_u(x^\star, u^\star, p^\star) = 0.
+$$
+Then, the function
+$$
+\begin{aligned}
+\frac{d}{dt}\Big|_{\epsilon=0} \mathcal{L}(x^\star, u^\star + \epsilon \delta v, p^\star) &= \int_0^T v_t^\top \ell_u(x_t^\star, u_t^\star) dt - \int_0^T v_t^\top f_u(x_t^\star, u_t^\star)^\top p_t^\star dt\\
+&= \int_0^T v_t^\top \Big(\ell_u(x_t^\star, u_t^\star) - f_u(x_t^\star, u_t^\star)^\top p_t^\star\Big) dt.
+\end{aligned}
+$$
+If this is zero for every variation $v$, we get the third condition. Similarly, 
+$$
+\begin{aligned}
+\frac{d}{d\epsilon}\Big|_{\epsilon=0} \mathcal{L}(x^\star + \epsilon \delta v, u^\star, p^\star) &= v_T^\top h_x(x_T^\star) + \int_0^T v_t^\top \ell_x(x_t^\star, u_t^\star) dt + \int_0^T p_t^{\star\top} \Big(\dot v_t - f_x(x_t^\star, u_t^\star)v_t\Big) dt\\
+&= v_T^\top \Big(h_x(x_T^\star) - p_T^\star\Big) + \int_0^T v_t^\top \Big(\ell_x(x_t^\star, u_t^\star) - \dot p_t^\star - f_x(x_t^\star, u_t^\star)^\top p_t^\star\Big) dt.
+\end{aligned}
+$$
+As the integrand is continuous the above immediately implies the second condition. Finally, 
+$$
+\begin{aligned}
+\frac{d}{d\epsilon}\Big|_{\epsilon=0} \mathcal{L}(x^\star, u^\star, p^\star + \epsilon \delta v) &= \int_0^T \delta v_t^\top \Big(\dot x_t^\star - f(x_t^\star, u_t^\star)\Big) dt.
+\end{aligned}
+$$
+which implies the first condition.
 
-Let $u^\ast\in\mathcal U$ be an optimal control and $x^\ast$ its trajectory. Define the Hamiltonian
-$$
-H(t,x,p,u):=p^\top f(t,x,u)-\lambda_0 L(t,x,u),
-$$
-with a scalar multiplier $\lambda_0\ge 0$.
+
 
 > **Theorem. Pontryagin Maximum Principle (PMP).**
-> There exist $(\lambda_0\ge 0)$ and an absolutely continuous adjoint $(p:[0,T]\to\mathbb R^n)$, not both $(\lambda_0,p)\equiv 0$, such that:
->
-> 1. (**Adjoint equation**) for a.e. $(t\in[0,T])$,
->   $$ \dot p(t)=-\partial_x H\bigl(t,x^\ast(t),p(t),u^\ast(t)\bigr)
-   = -\bigl[\partial_x f(t,x^\ast(t),u^\ast(t))\bigr]^\top p(t)+\lambda_0 \partial_x L(t,x^\ast(t),u^\ast(t)).   $$
->
-> 2. (**Transversality**) at $t=T$,
->   $$  p(T)=\lambda_0 \nabla \Phi\bigl(x^\ast(T)\bigr). $$
->
-> 3. (**Maximum condition**) for a.e. $(t\in[0,T])$,
->   $$  H\bigl(t,x^\ast(t),p(t),u^\ast(t)\bigr)=\max_{u\in U} H\bigl(t,x^\ast(t),p(t),u\bigr).  $$
-
-
-
-*Proof.* We proceed in four steps.
-
-**Step 1 — Reduction to a Mayer problem**
-
-Introduce an extra state (z) by
+> It is convinient to introduce the Hamiltonian function $H: \mathbb{R}^n \times \mathbb{R}^m \times \mathbb{R}^n$ associated to the optimal control problem (1) as
+> $$ H(x,u,p) = p^\top f(x,u) - \ell(x,u).$$
+> Thus, the Euler-Lagrange equations can be rewritten as
 $$
-\dot z(t)=L\bigl(t,x(t),u(t)\bigr),\quad z(0)=0.
+\begin{aligned}
+\dot x_t^\star &= H_p(x_t^\star, u_t^\star, p_t^\star), & x^\star(0)=x_0\\
+\dot p_t^\star &= -H_x(x_t^\star, u_t^\star, p_t^\star), &p_T^\star = -h_x(x_T^\star)\\
+0 &= H_u(x_t^\star, u_t^\star, p_t^\star).
 $$
-Then $z(T)=\int_0^T L(t,x(t),u(t))\,dt$ and
-$$
-J(u)=\Phi\bigl(x(T)\bigr)+z(T)=:\Psi\bigl(x(T),z(T)\bigr),\qquad \Psi(x,z)=\Phi(x)+z.
-$$
-Define the augmented state $y=(x,z)\in\mathbb R^{n+1}$ and dynamics
-$$
-\dot y(t)=F\bigl(t,y(t),u(t)\bigr):=\begin{pmatrix} f(t,x,u) \\ L(t,x,u) \end{pmatrix}.
-$$
-The Bolza problem is now a Mayer problem: minimize $\Psi(y(T))$ with fixed $y(0)=(x_0,0)$.
-
-It suffices to prove the PMP for this Mayer problem with terminal cost only; the Bolza statement then follows by identifying the last component of the adjoint and setting $\lambda_0$ appropriately.
-
-**Step 2 — Needle variations and first-order state variation**
-
-Fix $t_0\in[0,T)$ a Lebesgue point of $u^\ast$ and of the maps $t\mapsto \partial_x F(t,y^\ast(t),u^\ast(t))$. For $v\in U$ and small $\varepsilon>0$ with $t_0+\varepsilon\le T$, define the needle control
-$$
-u^{\varepsilon}(t)=
-\begin{cases}
-v,& t\in[t_0,t_0+\varepsilon),\\
-u^\ast(t),& \text{otherwise.}
-\end{cases}
-$$
-Let $(y^\varepsilon)$ be the corresponding trajectory and $(\delta y^\varepsilon(t):=y^\varepsilon(t)-y^\ast(t))$.
-
-Standard variation estimates (Gronwall + local Lipschitz of (F)) imply
-$$
-\frac{\delta y^\varepsilon(t_0+\varepsilon)-0}{\varepsilon}\ \longrightarrow\ F\bigl(t_0,y^\ast(t_0),v\bigr)-F\bigl(t_0,y^\ast(t_0),u^\ast(t_0)\bigr)\quad \text{as }\varepsilon\downarrow 0.
-$$
-For $t>t_0+\varepsilon$, $(\delta y^\varepsilon)$ solves
-$$
-\dot{\delta y}^\varepsilon(t)=A(t),\delta y^\varepsilon(t)+o(|\delta y^\varepsilon(t)|),\qquad
-A(t):=\partial_y F\bigl(t,y^\ast(t),u^\ast(t)\bigr),
-$$
-with initial “impulse” at $t_0$ given above. Passing to the limit yields the **first-order state variation** $(w(\cdot))$ solving the linear variational equation
-$$
-\dot w(t)=A(t)w(t),\quad t>t_0;\qquad
-w(t_0^+)=F\bigl(t_0,y^\ast(t_0),v\bigr)-F\bigl(t_0,y^\ast(t_0),u^\ast(t_0)\bigr).
-$$
-Thus,
-$$
-\lim_{\varepsilon\downarrow 0}\frac{y^\varepsilon(T)-y^\ast(T)}{\varepsilon}= \Phi_{t_0}(v):= \Phi_{T,t_0}\bigl(F(t_0,y^\ast(t_0),v)-F(t_0,y^\ast(t_0),u^\ast(t_0))\bigr),
-$$
-where $(\Phi_{T,t_0})$ is the transition map of the linear system $(\dot w=A(t)w)$ from $(t_0)$ to $(T)$ (i.e., $(\Phi_{T,t_0})$ is the fundamental matrix evaluated between $(t_0)$ and $(T)$).
-
-**Step 3 — First variation of the Mayer objective and a separating hyperplane**
-
-Optimality of $(u^\ast)$ implies for each such needle variation
-$$
-\Psi\bigl(y^\varepsilon(T)\bigr)-\Psi\bigl(y^\ast(T)\bigr)\ \ge\ 0.
-$$
-Using the differentiability of $(\Psi)$ and the expansion from Step 2,
-$$
-0\ \le\ \lim_{\varepsilon\downarrow 0}\frac{\Psi(y^\varepsilon(T))-\Psi(y^\ast(T))}{\varepsilon}
-\ =\ \nabla\Psi\bigl(y^\ast(T)\bigr)^\top\Phi_{T,t_0}\bigl(\Delta F(t_0;v)\bigr),
-$$
-where $(\Delta F(t_0;v):=F(t_0,y^\ast(t_0),v)-F(t_0,y^\ast(t_0),u^\ast(t_0)))$.
-
-Define for fixed $t_0$ the set
-$$
-\mathcal C(t_0):=\left\{ \Phi_{T,t_0}\bigl(F(t_0,y^\ast(t_0),v)-F(t_0,y^\ast(t_0),u^\ast(t_0))\bigr) : v\in U \right\}\subset\mathbb R^{n+1}.
-$$
-The inequality above states that the linear functional $w\mapsto \nabla\Psi(y^\ast(T))^\top w$ is nonnegative on $\mathcal C(t_0)\cup{0}$.
-
-By compactness of $U$ and continuity of $F$, the set $\mathcal C(t_0)$ is compact. Consider its convex hull $\mathrm{co}\,\mathcal C(t_0)$, also compact and containing $0$. If the functional were *strictly negative* at some element, the minimum over the compact convex set would be negative; optimality rules this out. Thus $0$ minimizes $w\mapsto \nabla\Psi(y^\ast(T))^\top w$ over $\mathrm{co},\mathcal C(t_0)$.
-
-By the supporting hyperplane theorem, there exists a nonzero vector $q(t_0)\in\mathbb R^{n+1}$ (a *multiplier at time $t_0$*) such that
-$$
-q(t_0)^\top \Phi_{T,t_0}\bigl(F(t_0,y^\ast(t_0),v)-F(t_0,y^\ast(t_0),u^\ast(t_0))\bigr)\ \le\ 0,\quad \forall v\in U,
-$$
-and $q(t_0)$ can be chosen *parallel* to $\nabla\Psi(y^\ast(T))$, i.e., $q(t_0)=\lambda_0,\nabla\Psi(y^\ast(T))$ for some $\lambda_0\ge 0$. If $\nabla\Psi(y^\ast(T))=0$, the separation still yields a nonzero $q(t_0)$; this is the abnormal case with $\lambda_0=0$.
-
-**Step 4 — Construction of the adjoint by back-propagation**
-
-Define the *adjoint* on $[0,T]$ by
-$$
-p_y(t):=\Phi_{T,t}^\top, q(t) \quad\text{with}\quad q(t)\equiv q(t_0)\ \ \text{(constant in this step)}.
-$$
-Then $p_y$ is absolutely continuous, satisfies
-$$
-\dot p_y(t)=-\Bigl[\partial_y F\bigl(t,y^\ast(t),u^\ast(t)\bigr)\Bigr]^\top p_y(t)\quad \text{a.e.,}
-$$
-and terminal condition $p_y(T)=q(t_0)$.
-
-Using the inequality from Step 3 and the definition of $p_y$,
-$$
-p_y(t):=\Phi_{T,t}^\top, q(t) \quad\text{with}\quad q(t)\equiv q(t_0)\ \ \text{(constant in this step)}.
-$$
-Then $p_y$ is absolutely continuous, satisfies
-$$
-\dot p_y(t)=-\Bigl[\partial_y F\bigl(t,y^\ast(t),u^\ast(t)\bigr)\Bigr]^\top p_y(t)\quad \text{a.e.,}
-$$
-and terminal condition $p_y(T)=q(t_0)$.
-
-Using the inequality from Step 3 and the definition of $p_y$,
-$$
-p_y(t):=\Phi_{T,t}^\top, q(t) \quad\text{with}\quad q(t)\equiv q(t_0)\ \ \text{(constant in this step)}.
-$$
-Then $p_y$ is absolutely continuous, satisfies
-$$
-\dot p_y(t)=-\Bigl[\partial_y F\bigl(t,y^\ast(t),u^\ast(t)\bigr)\Bigr]^\top p_y(t)\quad \text{a.e.,}
-$$
-and terminal condition $p_y(T)=q(t_0)$.
-
-Using the inequality from Step 3 and the definition of $p_y$,
-$$
-0\ \ge\ q(t_0)^\top \Phi_{T,t_0}\bigl(F(t_0,y^\ast(t_0),v)-F(t_0,y^\ast(t_0),u^\ast(t_0))\bigr)
-= p_y(t_0)^\top \bigl(F(t_0,y^\ast(t_0),v)-F(t_0,y^\ast(t_0),u^\ast(t_0))\bigr).
-$$
-Since this holds for a.e. $t_0$ (Lebesgue points), we obtain the *pointwise maximum condition for the Mayer system*:
-$$
-p_y(t)^\top F\bigl(t,y^\ast(t),u^\ast(t)\bigr)
-=\max_{v\in U} p_y(t)^\top F\bigl(t,y^\ast(t),v\bigr)\quad\text{for a.e. }t\in[0,T].
-$$
-
-Now write $p_y=(p_x,p_z)$ conformably with $y=(x,z)$ and $F=(f,L)$. The adjoint dynamics split as
-$$
-\dot p_x(t)=-\bigl[\partial_x f(t,x^\ast(t),u^\ast(t))\bigr]^\top p_x(t)-\bigl[\partial_x L(t,x^\ast(t),u^\ast(t))\bigr]^\top p_z(t),\qquad
-\dot p_z(t)=0,
-$$
-so $p_z$ is constant. The terminal condition
-$$
-p_y(T)=q(t_0)=\lambda_0,\nabla\Psi\bigl(y^\ast(T)\bigr)=\lambda_0,\bigl(\nabla\Phi(x^\ast(T)),,1\bigr)
-$$
-gives $p_z(T)=\lambda_0$, hence $p_z(t)\equiv \lambda_0\ge 0$. Therefore
-$$
-\dot p_x(t)=-\bigl[\partial_x f\bigr]^\top p_x(t)-\lambda_0,\partial_x L(t,x^\ast(t),u^\ast(t)),\qquad
-p_x(T)=\lambda_0,\nabla\Phi\bigl(x^\ast(T)\bigr).
-$$
-Finally, the Mayer-maximum condition reads
-$$
-p_x(t)^\top f\bigl(t,x^\ast(t),u^\ast(t)\bigr)+p_z^\top L\bigl(t,x^\ast(t),u^\ast(t)\bigr)
-=\max_{v\in U}\Bigl[p_x(t)^\top f\bigl(t,x^\ast(t),v\bigr)+p_z^\top L\bigl(t,x^\ast(t),v\bigr)\Bigr].
-$$
-Setting $p:=p_x$ and recalling $p_z=\lambda_0$, this is exactly
-$$
-H\bigl(t,x^\ast(t),p(t),u^\ast(t)\bigr)=\max_{v\in U} H\bigl(t,x^\ast(t),p(t),v\bigr),
-$$
-with $H(t,x,p,u):=p^\top f(t,x,u)-\lambda_0 L(t,x,u)$.
-
-This proves the adjoint equation, transversality $p(T)=\lambda_0\nabla\Phi(x^\ast(T))$, and the maximum condition. Nontriviality $(\lambda_0,p)\not\equiv 0$ follows from the separation step: if both were zero, the supporting functional would be trivial and would not separate, contradicting optimality of the first variation unless $\mathcal C(t_0)={0}$ for a.e. $t_0$, which would force $f$ to be independent of $u$ along $x^\ast$ (a degenerate case).
-
-
+In addition, the optimal control $u^\star$ satisfies the
+$$  H\bigl(t,x^\ast(t),p(t),u^\ast(t)\bigr)=\max_{u\in U} H\bigl(t,x^\ast(t),p(t),u\bigr).  $$
 
 
 
