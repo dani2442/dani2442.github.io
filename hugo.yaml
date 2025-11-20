@@ -27,11 +27,11 @@ params:
   defaultTheme: auto # dark, light
   disableThemeToggle: false
 
-  ShowReadingTime: true
+  ShowReadingTime: false
   ShowShareButtons: true
   ShowPostNavLinks: true
   ShowBreadCrumbs: true
-  ShowWordCount: true
+  ShowWordCount: false
   ShowRssButtonInSectionTermList: true
   UseHugoToc: true
   disableSpecial1stPost: false
@@ -127,18 +127,26 @@ params:
     keys: ["title", "permalink", "summary", "content"]
 menu:
   main:
+    - identifier: Blog
+      name: blog
+      url: /
+      weight: 10
+    - identifier: Events
+      name: events
+      url: /events/
+      weight: 15
     - identifier: archives
       name: archives
       url: /archives/
-      weight: 10
-    - identifier: categories
-      name: categories
-      url: /categories/
       weight: 20
-    - identifier: tags
-      name: tags
-      url: /tags/
-      weight: 30
+    # - identifier: categories
+    #   name: categories
+    #   url: /categories/
+    #   weight: 30
+    - identifier: about
+      name: about
+      url: /about/
+      weight: 40
     
     # - identifier: web page
     #   name: dprogrammer.org

@@ -11,8 +11,15 @@
     </image>
     <generator>Hugo -- 0.152.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 30 Oct 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 20 Nov 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Talk at Workshop in Palermo (Italy)</title>
+      <link>http://localhost:1313/events/2025_11_20_erice/</link>
+      <pubDate>Thu, 20 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/events/2025_11_20_erice/</guid>
+      <description>Workshop: &amp;#39;The Mathematics of Scientific Machine Learning and Digital Twins&amp;#39;</description>
+    </item>
     <item>
       <title>Self-Attention, Kernel Methods and G-Metric Spaces</title>
       <link>http://localhost:1313/posts/higher-order-attention/</link>
@@ -110,6 +117,13 @@
       <pubDate>Thu, 11 Jul 2024 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/bifurcation-theory/</guid>
       <description>Introduction to Bifurcation Theory from simple eigenvalues.</description>
+    </item>
+    <item>
+      <title>About</title>
+      <link>http://localhost:1313/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/about/</guid>
+      <description>&lt;p&gt;Hi, this is Daniel López Montero. I will upload notes, projects and some thoughts on topics I am interested in. I am a PhD student of Mathematics researching in Machine Learning, and like to program, read and play football, basketball and padel in my spare time.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
