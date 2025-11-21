@@ -18,6 +18,10 @@ editPost:
     appendFilePath: true # to append file path to Edit link
 ---
 
+![alt text](tokamak.png)
+*Source: [[2]](#references)*
+
+
 TORAX solves coupled 1D PDEs in normalized toroidal flux coordinates, $\hat \rho$, with $0 \leq \hat \rho \leq 1.$
 
 ![alt text](equations.png)
@@ -83,38 +87,60 @@ $$
 
 > Derivation of the Poloidal Flux Diffusion Equation
 
-We derive the poloidal flux diffusion equation, describing the temporal evolution of the poloidal flux under the assumption of static background flux surfaces. We follow \cite{Hinton1976} and \cite{Pereverzev2002}.
-
+We derive the poloidal flux diffusion equation, describing the temporal evolution of the poloidal flux under the assumption of static background flux surfaces. We follow [[2]](#references)
 *Preliminaries*. We use the useful relation
 $$
-\langle \nabla \cdot \mathbf{F} \rangle =
-\frac{\partial}{\partial V}
-\oint \mathbf{F} \cdot \frac{\nabla V}{|\nabla V|} R d\phi d\ell_p
-= \frac{\partial}{\partial V} \langle \mathbf{F} \cdot \nabla V \rangle
-\tag{C.1}
+\begin{align*}
+\langle \nabla \cdot \mathbf{F} \rangle &= \frac{\partial}{\partial V}\int (\nabla \cdot \mathbf{F}) dV = \frac{\partial}{\partial V} \int (\nabla \cdot \mathbf{F}) Rd\phi d\ell_p \frac{d\psi}{|\nabla\psi|} \\
+&= \frac{\partial }{\partial V} \oint  \mathbf{F} \cdot \frac{\nabla V}{|\nabla V|} Rd\phi d\ell_p  \frac{d\psi}{|\nabla\psi|} \\
+&= \frac{\partial }{\partial V}2\pi \oint \mathbf{F} \cdot \nabla V \frac{\partial \psi}{\partial V} \frac{Rd\ell_p}{|\nabla\psi|} \\
+&= \frac{\partial}{\partial V} \langle \mathbf{F} \cdot \nabla V\rangle
+\end{align*}
 $$
+Here, we used that the average of $\nabla \cdot \mathbf{F}$ over a flux surface can be represented by the derivative with respect to the enclosed volume $V$ of the volume integral of $\nabla \cdot \mathbf{F}$. Then we change to flux coordinates
+$$
+dV = Rd\phi d\ell_p \frac{d\psi}{|\nabla\psi|}
+$$
+where $\phi$ is the toroidal angle and $\ell_p$ the poloidal length along the flux surface.
+Then we use Gauss divergence theorem to convert volume to surface integral,
+$$
+\int_V (\nabla \cdot \mathbf{F}) dV = \oint_{\partial V} \mathbf{F} \cdot \mathbf{n} dS = \oint_{\partial V} \mathbf{F} \cdot \frac{\nabla V}{|\nabla V|}dS
+$$
+Because $\phi$ is symmetric (axis) then the integral over $\phi$ gives a factor $2\pi$. Finally, the differential surface area of the flux surface is
+$$dS = 2\pi R d\ell_p$$
+Next, by the chain rule, we have
+$$
+|\nabla V| = \frac{\partial V}{\partial \psi} |\nabla \psi|
+$$
+Thus,
+$$
+\langle\mathbf{F} \cdot \nabla V\rangle = \int_V (\mathbf{F}\cdot \nabla V) dV = \oint \frac{(\mathbf{F}\cdot V) dS}{|\nabla V|} = \oint (\mathbf{F}\cdot \nabla \psi) \frac{\partial \psi}{\partial V} \frac{dS}{|\nabla \psi|}
+$$
+And this finishes the proof of the relation.
+
 
 Consider a surface of constant poloidal flux whose boundary moves with velocity $\mathbf{u}_\psi$. For this surface:
 $$
 \frac{\partial \psi}{\partial t} + \mathbf{u}_\psi \cdot \nabla \psi = 0
-\tag{C.2}
 $$
 
-For a scalar field $F(t, \mathbf{x})$, define $H(t) = \int_V F\,dV$, where $V$ is the volume enclosed by $\psi = \text{const}$ moving with $\mathbf{u}_\psi$. Then
+For a scalar field $F(t, \mathbf{x})$, define $H(t) = \int_V F\,dV$, where $V$ is the volume enclosed by $\psi = \text{const}$ moving with $\mathbf{u}_\psi$. By the Reynolds Transport Theorem, we have
 $$
-\frac{\partial H}{\partial t}\bigg|_{\psi=\text{const}} =
+\begin{align*}
+\frac{\partial H}{\partial t}\bigg|_{\psi=\text{const}} &=
+\overbrace{\int_V \frac{\partial F}{\partial t} dV}^{\text{change inside volume}}+\overbrace{\oint_S F \mathbf{u}_\psi \cdot \mathbf{dS}_\psi}^{\text{change due to moving boundary}}\\
+&=
 \int_V \frac{\partial F}{\partial t} dV +
 \oint_S F \mathbf{u}_\psi \cdot \frac{\nabla \psi}{|\nabla \psi|} dS
-\tag{C.3}
+\end{align*}
 $$
 
-The time rate of change of toroidal flux $\Phi$ enclosed by $\psi = \text{const}$ is:
+Using this equality, the time rate of change of toroidal flux $\Phi$ enclosed by $\psi = \text{const}$ is:
 $$
 \begin{aligned}
 \frac{\partial \Phi}{\partial t}\bigg|_{\psi=\text{const}}
 &= \frac{1}{2\pi} \frac{\partial}{\partial t} \int_V \mathbf{B}\cdot\nabla\phi\, dV \nonumber \\
 &= \frac{1}{2\pi} \int_V \frac{\partial \mathbf{B}}{\partial t}\cdot\nabla\phi\, dV + \frac{1}{2\pi} \oint_S (\mathbf{B}\cdot\nabla\phi)(\mathbf{u}_\psi\cdot\nabla\psi) \frac{dS}{|\nabla\psi|}
-\tag{C.4}
 \end{aligned}
 $$
 
