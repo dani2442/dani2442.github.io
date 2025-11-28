@@ -121,7 +121,7 @@ And this finishes the proof of the relation.
 
 Consider a surface of constant poloidal flux whose boundary moves with velocity $\mathbf{u}_\psi$. For this surface:
 $$
-\frac{\partial \psi}{\partial t} + \mathbf{u}_\psi \cdot \nabla \psi = 0
+\frac{\partial \psi}{\partial t} + \mathbf{u}_\psi \cdot \nabla \psi = 0 \tag{A.1}
 $$
 
 For a scalar field $F(t, \mathbf{x})$, define $H(t) = \int_V F\,dV$, where $V$ is the volume enclosed by $\psi = \text{const}$ moving with $\mathbf{u}_\psi$. By the Reynolds Transport Theorem, we have
@@ -135,85 +135,85 @@ $$
 \end{align*}
 $$
 
-Using this equality, the time rate of change of toroidal flux $\Phi$ enclosed by $\psi = \text{const}$ is:
+Using this equality, the time rate of change of toroidal flux $\Phi$ enclosed by $\psi = \text{const}$, i.e., $F=\mathbf{B}\cdot\nabla\phi$ and $\Phi(t)=\int_V \mathbf{B}\cdot\nabla\phi\, dV$, is:
 $$
 \begin{aligned}
 \frac{\partial \Phi}{\partial t}\bigg|_{\psi=\text{const}}
 &= \frac{1}{2\pi} \frac{\partial}{\partial t} \int_V \mathbf{B}\cdot\nabla\phi\, dV \nonumber \\
 &= \frac{1}{2\pi} \int_V \frac{\partial \mathbf{B}}{\partial t}\cdot\nabla\phi\, dV + \frac{1}{2\pi} \oint_S (\mathbf{B}\cdot\nabla\phi)(\mathbf{u}_\psi\cdot\nabla\psi) \frac{dS}{|\nabla\psi|}
-\end{aligned}
+\end{aligned}\tag{A.2}
 $$
 
-> Poloidal electric field.
+> 1. Poloidal electric field.
 
-Using Faraday’s law $\partial_t \mathbf{B} = -\nabla\times\mathbf{E}$:
+Using Faraday’s law $\partial_t \mathbf{B} = -\nabla\times\mathbf{E}$, we can rewrite the first volume integral (A.2) as:
 $$
 \begin{aligned}
 \int_V \frac{\partial \mathbf{B}}{\partial t}\cdot\nabla\phi\, dV
 &= -\int_V (\nabla\times\mathbf{E})\cdot\nabla\phi\, dV
 = -\int_V \nabla\cdot(\mathbf{E}\times\nabla\phi)\, dV \nonumber\\
+&= -\oint_S (\mathbf{E}\times \nabla \phi)\frac{\nabla\psi}{|\nabla \psi|}dS \tag{Gauss}\\
 &= -\oint_S \mathbf{E}\cdot(\nabla\phi\times\nabla\psi)\, \frac{dS}{|\nabla\psi|}
 = -2\pi \oint_S \mathbf{E}\cdot\mathbf{B}_p \frac{dS}{|\nabla\psi|}
-\tag{C.5}
 \end{aligned}
 $$
 
-> Toroidal electric field.
+> 2. Toroidal electric field.
 
-From Ampère’s law:
+We can rewrite the second integral of (A.2) using Ampère’s law:
 $$
 \begin{aligned}
 \nabla\psi\cdot\frac{\partial\mathbf{B}}{\partial t}
 &= -\nabla\psi\cdot(\nabla\times\mathbf{E})
-= \nabla\cdot(\nabla\psi\times\nabla\phi\, R E_\phi)
-= -\nabla\cdot(2\pi \mathbf{B}_p R E_\phi)
-\tag{C.6}
+= \nabla\cdot(\nabla\psi\times\nabla \mathbf{E})- \underbrace{ \mathbf{E}\cdot(\nabla\times \nabla\psi)}_{=0}\\
+&= \nabla \cdot (\nabla \psi \times \nabla \phi R E_\phi) 
+=-\nabla\cdot(2\pi \mathbf{B}_p R E_\phi)
 \end{aligned}
 $$
-Thus,
+Using that $\mathbf{B} \cdot \nabla \psi = 0$, we have
 $$
-\frac{\partial \psi}{\partial t} = 2\pi R E_\phi
-\tag{C.7}
+0 = \partial_t (\mathbf{B} \cdot \nabla \psi) = \partial_t \mathbf{B} \cdot \nabla \psi + \mathbf{B} \cdot \nabla (\partial_t \psi)
 $$
-and, using \eqref{C.2},
+Then,
 $$
-\mathbf{u}_\psi \cdot \nabla\psi = -2\pi R E_\phi
-\tag{C.8}
+\begin{aligned}
+\mathbf{B} \cdot \nabla (\partial_t \psi) &= -\partial_t \mathbf{B} \cdot \nabla \psi = \nabla\cdot(2\pi \mathbf{B}_p R E_\phi) \\
+&= \mathbf{B}_b \cdot \nabla (2\pi R E_\phi) + 2\pi R E_\phi \underbrace{\nabla \cdot \mathbf{B}_p}_{=0}\\
+&= \mathbf{B} \cdot \nabla (2\pi R E_\phi)
+\end{aligned}
 $$
-
-Combining \eqref{C.5}–\eqref{C.8} gives:
+Thus, using previous equation and (A.1):
+$$
+\mathbf{B} \cdot \nabla (\partial_t \psi) = 2\pi R E_\phi = -\mathbf{u}_\psi \cdot \nabla\psi
+$$
+Combining previous results into (A.2):
 $$
 \begin{aligned}
 \frac{\partial \Phi}{\partial t}\bigg|_{\psi=\text{const}}
 &= -\oint_S (\mathbf{E}\cdot\mathbf{B}_p + B_\phi E_\phi) \frac{dS}{|\nabla\psi|}
 = -\oint_S \mathbf{E}\cdot\mathbf{B} \frac{dS}{|\nabla\psi|}
 = -\frac{\partial V}{\partial\psi}\langle \mathbf{E}\cdot\mathbf{B}\rangle
-\tag{C.11}
 \end{aligned}
 $$
 
-> Rate of change of poloidal flux.
+> 3. Rate of change of poloidal flux.
 
 $$
 \begin{aligned}
-\frac{\partial\psi}{\partial t}\bigg|_{\Phi=\text{const}}
-&= \frac{\partial\psi}{\partial V}\frac{\partial V}{\partial\Phi}\frac{\partial\Phi}{\partial t}\bigg|_{\psi=\text{const}} \tag{C.12a}\\
-\frac{\partial\psi}{\partial t}\bigg|_{\rho}
-&+ \frac{\partial\psi}{\partial\rho}\frac{\partial\rho}{\partial t}\bigg|_{\Phi}= -\frac{\partial V}{\partial\Phi}\langle \mathbf{E}\cdot\mathbf{B}\rangle
-\end{aligned}
-$$
-
-Using equilibrium relations, this becomes
-$$
-\frac{\partial\psi}{\partial t}\bigg|_{\rho} - \rho\frac{\dot{B}_0}{2B_0}\frac{\partial\psi}{\partial\rho}
+&\frac{\partial\psi}{\partial t}\bigg|_{\Phi=\text{const}}
+= \frac{\partial\psi}{\partial V}\frac{\partial V}{\partial\Phi}\frac{\partial\Phi}{\partial t}\bigg|_{\psi=\text{const}} \\
+&\frac{\partial\psi}{\partial t}\bigg|_{\rho}
++ \frac{\partial\psi}{\partial\rho}\frac{\partial\rho}{\partial t}\bigg|_{\Phi}= -\frac{\partial V}{\partial\Phi}\langle \mathbf{E}\cdot\mathbf{B}\rangle\\
+&\frac{\partial\psi}{\partial t}\bigg|_{\rho} - \rho\frac{\dot{B}_0}{2B_0}\frac{\partial\psi}{\partial\rho}
 = -2\pi R_0^2 \frac{\langle \mathbf{E}\cdot\mathbf{B}\rangle}{T\langle R_0^2/R^2\rangle}
+\end{aligned}
 $$
 
 Define the equivalent cylindrical fields:
 $$
 \begin{aligned}
-B_{p0} &= \frac{1}{2\pi R_0} \frac{\partial\psi}{\partial\rho} \tag{C.13}\\
-E_0 &= R_0 \frac{\langle \mathbf{E}\cdot\mathbf{B}\rangle}{T\langle R_0^2/R^2\rangle}\tag{C.14}
+B_{po} &= \frac{1}{2\pi R_0} \frac{\partial\psi}{\partial\rho} \\
+E_o &= R_0 \frac{\langle \mathbf{E}\cdot\mathbf{B}\rangle}{T\langle R_0^2/R^2\rangle}
 \end{aligned}
 $$
 Then, for $\dot{B}_0=0$:
@@ -222,22 +222,21 @@ $$
 \tag{C.15}
 $$
 
-> Ohm’s law.
-
+> 4. Ohm’s law.
+We can write the flux-surface-averaged Ohm’s law as:
 $$
 \langle \mathbf{j}\cdot\mathbf{B}\rangle = \sigma_\parallel \langle \mathbf{E}\cdot\mathbf{B}\rangle + \langle \mathbf{j}_{ni}\cdot\mathbf{B}\rangle
-\tag{C.16}
 $$
-where $\mathbf{j}_{ni} = \mathbf{j}_{bs} + \mathbf{j}_{cd}$.
-
-Thus,
+where $\mathbf{j}_{ni} = \mathbf{j}_{bs} + \mathbf{j}_{cd}$ is the non-inductive current density, which includes the bootstrap current density $\mathbf{j}_{bs}$ and the external current drive density $\mathbf{j}_{cd}$. Equivalently
 $$
+\sigma_\parallel \frac{\langle \mathbf{E}\cdot\mathbf{B}\rangle}{B_0} = \frac{\langle \mathbf{j}\cdot\mathbf{B}\rangle}{B_0} - \frac{\langle \mathbf{j}_{bs}\cdot\mathbf{B}\rangle}{B_0} - \frac{\langle \mathbf{j}_{cd}\cdot\mathbf{B}\rangle}{B_0}
+\quad \Leftrightarrow \quad
 \sigma_\parallel E_\parallel = j_\parallel - j_{bs} - j_{cd}
-\tag{C.18}
 $$
 
-> Parallel current.
+> 5. Parallel current.
 
+Finally, we rewrite the parallel current $j_\parallel = \frac{\langle \mathbf{j}\cdot\mathbf{B}\rangle}{B_0}$ in terms of the poloidal flux $\psi$:
 $$
 \begin{aligned}
 \frac{\langle \mathbf{j}\cdot\mathbf{B}\rangle}{B_0}
