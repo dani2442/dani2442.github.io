@@ -219,7 +219,6 @@ $$
 Then, for $\dot{B}_0=0$:
 $$
 \frac{\partial B_{p0}}{\partial t} = -\frac{\partial E_0}{\partial\rho}
-\tag{C.15}
 $$
 
 > 4. Ohm’s law.
