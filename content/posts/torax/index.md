@@ -94,7 +94,7 @@ $$
 \langle \nabla \cdot \mathbf{F} \rangle &= \frac{\partial}{\partial V}\int (\nabla \cdot \mathbf{F}) dV = \frac{\partial}{\partial V} \int (\nabla \cdot \mathbf{F}) Rd\phi d\ell_p \frac{d\psi}{|\nabla\psi|} \\
 &= \frac{\partial }{\partial V} \oint  \mathbf{F} \cdot \frac{\nabla V}{|\nabla V|} Rd\phi d\ell_p  \frac{d\psi}{|\nabla\psi|} \\
 &= \frac{\partial }{\partial V}2\pi \oint \mathbf{F} \cdot \nabla V \frac{\partial \psi}{\partial V} \frac{Rd\ell_p}{|\nabla\psi|} \\
-&= \frac{\partial}{\partial V} \langle \mathbf{F} \cdot \nabla V\rangle
+&= \frac{\partial}{\partial V} \langle \mathbf{F} \cdot \nabla V\rangle \tag{A.0}
 \end{align*}
 $$
 Here, we used that the average of $\nabla \cdot \mathbf{F}$ over a flux surface can be represented by the derivative with respect to the enclosed volume $V$ of the volume integral of $\nabla \cdot \mathbf{F}$. Then we change to flux coordinates
@@ -203,7 +203,7 @@ $$
 &\frac{\partial\psi}{\partial t}\bigg|_{\Phi=\text{const}}
 = \frac{\partial\psi}{\partial V}\frac{\partial V}{\partial\Phi}\frac{\partial\Phi}{\partial t}\bigg|_{\psi=\text{const}} \\
 &\frac{\partial\psi}{\partial t}\bigg|_{\rho}
-+ \frac{\partial\psi}{\partial\rho}\frac{\partial\rho}{\partial t}\bigg|_{\Phi}= -\frac{\partial V}{\partial\Phi}\langle \mathbf{E}\cdot\mathbf{B}\rangle\\
++ \frac{\partial\psi}{\partial\rho}\frac{\partial\rho}{\partial t}\bigg|_{\Phi}= -\frac{\partial V}{\partial\Phi}\langle \mathbf{E}\cdot\mathbf{B}\rangle \tag{A.3}\\
 &\frac{\partial\psi}{\partial t}\bigg|_{\rho} - \rho\frac{\dot{B}_0}{2B_0}\frac{\partial\psi}{\partial\rho}
 = -2\pi R_0^2 \frac{\langle \mathbf{E}\cdot\mathbf{B}\rangle}{T\langle R_0^2/R^2\rangle}
 \end{aligned}
@@ -230,7 +230,7 @@ where $\mathbf{j}_{ni} = \mathbf{j}_{bs} + \mathbf{j}_{cd}$ is the non-inductive
 $$
 \sigma_\parallel \frac{\langle \mathbf{E}\cdot\mathbf{B}\rangle}{B_0} = \frac{\langle \mathbf{j}\cdot\mathbf{B}\rangle}{B_0} - \frac{\langle \mathbf{j}_{bs}\cdot\mathbf{B}\rangle}{B_0} - \frac{\langle \mathbf{j}_{cd}\cdot\mathbf{B}\rangle}{B_0}
 \quad \Leftrightarrow \quad
-\sigma_\parallel E_\parallel = j_\parallel - j_{bs} - j_{cd}
+\sigma_\parallel E_\parallel = j_\parallel - j_{bs} - j_{cd}\tag{A.4}
 $$
 
 > 5. Parallel current.
@@ -239,28 +239,39 @@ Finally, we rewrite the parallel current $j_\parallel = \frac{\langle \mathbf{j}
 $$
 \begin{aligned}
 \frac{\langle \mathbf{j}\cdot\mathbf{B}\rangle}{B_0}
-&= \frac{2\pi R_0 J^2}{\mu_0 V'} \frac{\partial}{\partial\rho}
-\left(\frac{G^2}{J}\frac{\partial\psi}{\partial\rho}\right)
-\tag{C.19}
+&= \frac{T}{2\pi \mu_0 B_0}\langle \nabla\cdot (\nabla \psi/R^2)\rangle + \frac{1}{2\pi \mu_0 B_0}\langle \nabla T \cdot \nabla \psi /R^2\rangle\\
+&=\frac{1}{2\pi \mu_0 B_0}\left(\frac{4\pi^2 T}{V'} \frac{\partial}{\partial \rho}\left(G^2\frac{\partial\psi}{\partial \rho}\right) + \frac{4\pi^2}{V'}\frac{V'}{4\pi^2} \left\langle \frac{(\nabla \rho)^2}{R^2}\right\rangle \frac{\partial T}{\partial \rho}\frac{\partial \psi}{\partial \rho}\right)\\
+&=\frac{2\pi R_0 J^2}{\mu_0 V'}\left(\frac{1}{J} \frac{\partial}{\partial \rho}\left(G^2 \frac{\partial \psi}{\partial \rho}\right) + \frac{G^2}{J^2}\frac{\partial J}{\partial \rho}\frac{\partial \psi}{\partial \rho}\right)
+\\
+&=\frac{2\pi R_0 J^2}{\mu_0 V'} \frac{\partial}{\partial\rho}
+\left(\frac{G^2}{J}\frac{\partial\psi}{\partial\rho}\right)\tag{A.5}
 \end{aligned}
 $$
+
+The key step is converting flux-surface averages of divergences into 1D (radial) derivatives:
+$$
+\left\langle \nabla\cdot \mathbf{F}\right\rangle = \frac{1}{V'}\frac{\partial}{\partial\rho}\left(V'\left\langle \mathbf{F}\cdot\nabla\rho\right\rangle\right),\qquad V'\equiv\frac{\partial V}{\partial\rho}.
+$$
+Taking $\mathbf{F}=\nabla\psi/R^2$ and using $\psi=\psi(\rho)$ gives $\nabla\psi=(\partial\psi/\partial\rho)\nabla\rho$ and hence
+$\mathbf{F}\cdot\nabla\rho=((\nabla\rho)^2/R^2)(\partial\psi/\partial\rho)$.
+Also, since $T=T(\rho)$,
+$\langle \nabla T\cdot\nabla\psi/R^2\rangle = \langle (\nabla\rho)^2/R^2\rangle(\partial T/\partial\rho)(\partial\psi/\partial\rho)$.
+Defining $G^2\equiv \frac{V'}{4\pi^2}\left\langle \frac{(\nabla\rho)^2}{R^2} \right\rangle$ packages the terms and the product rule yields the final compact form.
 with
 $$
 J = \frac{T}{R_0 B_0}, \quad
 G^2 = \frac{V'}{4\pi^2}\left\langle \frac{(\nabla\rho)^2}{R^2} \right\rangle, \quad
 V' = \frac{\partial V}{\partial\rho}
-\tag{C.20}
 $$
 
 > The poloidal flux diffusion equation.
-Combining (C.17), (C.19), and (C.12c):
+Combining (A.3), (A.4) and (A.5):
 $$
 \sigma_\parallel \left(
 \frac{\partial\psi}{\partial t} + \rho\frac{\dot{B}_0}{2B_0}\frac{\partial\psi}{\partial\rho}
 \right)
 = \frac{R_0 J^2}{\mu_0 \rho}\frac{\partial}{\partial\rho}
 \left(\frac{G^2}{J}\frac{\partial\psi}{\partial\rho}\right)- \frac{V'}{2\pi\rho}(j_{bs} + j_{cd})
-\tag{C.21}
 $$
 
 > Derivation of the Particle Transport Equation
