@@ -6,7 +6,7 @@ categories: ["control theory", "machine learning"]
 author: "Daniel López Montero"
 showToc: true
 draft: true
-description: "A generalization of metric spaces."
+description: "A short tour of TORAX’s 1D tokamak transport PDEs."
 ShowWordCount: false
 ShowReadingTime: true
 comments: true
@@ -58,7 +58,7 @@ TORAX solves coupled 1D PDEs in normalized toroidal flux coordinates, $\hat \rho
 | $ \langle \cdot \rangle $ | Flux-surface average | — |
 
 **Boundary Conditions:**
-The boundary conditions are as follows. All equations have a zero-derivative boundary condition at $\hat{\rho} = 0$. 
+The boundary conditions are as follows. All equations have a zero-derivative (Neumann) boundary condition at $\hat{\rho} = 0$. 
 The $T_i$, $T_e$, $n_e$ equations have fixed boundary conditions at $\hat{\rho} = 1$, which are user-defined. 
 The $\psi$ equation has a Neumann (derivative) boundary condition at $\hat{\rho} = 1$, 
 which sets the total plasma current through the relation:
@@ -66,13 +66,104 @@ which sets the total plasma current through the relation:
 $$
 I_p = 
 \left[
-\frac{\partial \psi}{\partial \rho} 
-\frac{g_2 g_3}{\rho} 
+\frac{\partial \psi}{\partial \hat{\rho}} 
+\frac{g_2 g_3}{\hat{\rho}} 
 \frac{R_0 J}{16 \pi^4 \mu_0}
 \right]_{LCFS}
 $$
 
+The equations are derived from the transport equations in toroidal geometry under the assumption of static background flux surfaces.
 
+
+
+## Ion and Electron Heat Transport Equations
+
+TORAX evolves the ion and electron temperatures via the 1D heat transport PDEs (see [[1]](#references)):
+
+
+$$
+\boxed{\;
+\begin{aligned}
+\frac{3}{2} V'^{-5/3}
+\left( 
+\frac{\partial}{\partial t}
+- \frac{\dot{\Phi}_b}{2\Phi_b} 
+\hat{\rho}\frac{\partial}{\partial \hat{\rho}}
+\right)
+\left[ 
+V'^{5/3} n_i {{T_i}}
+\right]
+&=
+\frac{1}{V'} 
+\frac{\partial}{\partial \hat{\rho}}
+\left[
+\chi_i n_i 
+\frac{g_1}{V'} 
+\frac{\partial {T_i}}{\partial \hat{\rho}}
+- g_0 q_i^{\text{conv}} {T_i}
+\right]
++ Q_i \\
+\frac{3}{2} V'^{-5/3}
+\left( 
+\frac{\partial}{\partial t}
+- \frac{\dot{\Phi}_b}{2\Phi_b} 
+\hat{\rho}\frac{\partial}{\partial \hat{\rho}}
+\right)
+\left[ 
+V'^{5/3} {n_e} {T_e}
+\right]
+&=
+\frac{1}{V'} 
+\frac{\partial}{\partial \hat{\rho}}
+\left[
+\chi_e {n_e} 
+\frac{g_1}{V'} 
+\frac{\partial {T_e}}{\partial \hat{\rho}}
+- g_0 q_e^{\text{conv}} {T_e}
+\right]
++ Q_e 
+\end{aligned}\;}
+$$
+
+## Electron Particle Transport Equation
+
+TORAX evolves the electron density via the 1D particle transport PDE (see [[1]](#references)):
+$$
+\boxed{\;
+\left(\frac{\partial}{\partial t}-\frac{\dot\Phi_b}{2\Phi_b}\hat\rho\frac{\partial}{\partial \hat\rho}\right)(n_eV')
+=
+\frac{\partial}{\partial \hat\rho}\Big[
+D_e n_e \frac{g_1}{V'} \frac{\partial n_e}{\partial \hat\rho}
+-
+g_0 V_e n_e
+\Big]
++V'S_n.\;}
+$$
+
+A detailed derivation (flux-surface averaging + moving-grid term from $\dot\Phi_b$) is sketched in the [Appendix](#appendix).
+
+
+## Current Diffusion Equation 
+TORAX evolves the poloidal flux via the 1D current diffusion PDE (see [[1]](#references)):
+$$
+\boxed{\;
+\frac{16 \pi^2 \sigma_{\parallel}\mu_0 \hat\rho\, \Phi_b^2}{F^2}
+\left(
+\frac{\partial \psi}{\partial t}
+- \frac{\hat\rho\, \dot{\Phi}_b}{2 \Phi_b} 
+\frac{\partial \psi}{\partial \hat\rho}
+\right)
+=
+\frac{\partial}{\partial \hat\rho}
+\left(
+\frac{g_2 g_3}{\hat\rho} 
+\frac{\partial \psi}{\partial \hat\rho}
+\right)
+- \frac{8 \pi^2 V' \mu_0 \Phi_b}{F^2}
+\langle \mathbf{B} \cdot \mathbf{j}_{ni} \rangle\;}
+$$
+
+A more detailed derivation of the underlying flux-surface-averaged form is given in [[2]](#references) (and sketched in the [Appendix](#appendix)).
 ## References
 
 [1] Citrin, Jonathan, Ian Goodfellow, Akhil Raju, Jeremy Chen, Jonas Degrave, Craig Donner, Federico Felici et al. "TORAX: A fast and differentiable tokamak transport simulator in JAX." arXiv preprint arXiv:2406.06718 (2024).
@@ -81,43 +172,52 @@ $$
 
 [3] https://deepmind.google/discover/blog/bringing-ai-to-the-next-generation-of-fusion-energy/
 
+[4] Hinton, F. L. and R. D. Hazeltine (1976). “Theory of plasma transport in toroidal confinement systems.” In: Rev. Mod. Phys. 48.2, pp. 239–308. doi: 10.1103/RevModPhys. 48.239.
+
 ## Appendix
 
 ### (A) Derivation of the 1D Transport Equations
 
 > Derivation of the Poloidal Flux Diffusion Equation
 
-We derive the poloidal flux diffusion equation, describing the temporal evolution of the poloidal flux under the assumption of static background flux surfaces. We follow [[2]](#references)
-*Preliminaries*. We use the useful relation
-$$
-\begin{align*}
-\langle \nabla \cdot \mathbf{F} \rangle &= \frac{\partial}{\partial V}\int (\nabla \cdot \mathbf{F}) dV = \frac{\partial}{\partial V} \int (\nabla \cdot \mathbf{F}) Rd\phi d\ell_p \frac{d\psi}{|\nabla\psi|} \\
-&= \frac{\partial }{\partial V} \oint  \mathbf{F} \cdot \frac{\nabla V}{|\nabla V|} Rd\phi d\ell_p  \frac{d\psi}{|\nabla\psi|} \\
-&= \frac{\partial }{\partial V}2\pi \oint \mathbf{F} \cdot \nabla V \frac{\partial \psi}{\partial V} \frac{Rd\ell_p}{|\nabla\psi|} \\
-&= \frac{\partial}{\partial V} \langle \mathbf{F} \cdot \nabla V\rangle \tag{A.0}
-\end{align*}
-$$
-Here, we used that the average of $\nabla \cdot \mathbf{F}$ over a flux surface can be represented by the derivative with respect to the enclosed volume $V$ of the volume integral of $\nabla \cdot \mathbf{F}$. Then we change to flux coordinates
-$$
-dV = Rd\phi d\ell_p \frac{d\psi}{|\nabla\psi|}
-$$
-where $\phi$ is the toroidal angle and $\ell_p$ the poloidal length along the flux surface.
-Then we use Gauss divergence theorem to convert volume to surface integral,
-$$
-\int_V (\nabla \cdot \mathbf{F}) dV = \oint_{\partial V} \mathbf{F} \cdot \mathbf{n} dS = \oint_{\partial V} \mathbf{F} \cdot \frac{\nabla V}{|\nabla V|}dS
-$$
-Because $\phi$ is symmetric (axis) then the integral over $\phi$ gives a factor $2\pi$. Finally, the differential surface area of the flux surface is
-$$dS = 2\pi R d\ell_p$$
-Next, by the chain rule, we have
-$$
-|\nabla V| = \frac{\partial V}{\partial \psi} |\nabla \psi|
-$$
-Thus,
-$$
-\langle\mathbf{F} \cdot \nabla V\rangle = \int_V (\mathbf{F}\cdot \nabla V) dV = \oint \frac{(\mathbf{F}\cdot V) dS}{|\nabla V|} = \oint (\mathbf{F}\cdot \nabla \psi) \frac{\partial \psi}{\partial V} \frac{dS}{|\nabla \psi|}
-$$
-And this finishes the proof of the relation.
+We give a compact sketch of the main identities and coordinate changes used by TORAX; for a full derivation of the current diffusion equation see [[2]](#references).
 
+#### A.1 Flux-Surface Averaging Identities
+
+Let $\psi$ label nested flux surfaces and $V(\psi)$ be the volume enclosed by a given surface. Define the flux-surface average of a scalar $A$ by
+$$
+\langle A\rangle(\psi)
+\;\equiv\;
+\frac{1}{V_\psi'}\oint_{\psi=\mathrm{const}}\frac{A}{|\nabla\psi|}\,dS,
+\qquad
+V_\psi' \equiv \frac{\partial V}{\partial \psi}
+=\oint_{\psi=\mathrm{const}}\frac{1}{|\nabla\psi|}\,dS. \tag{A.0}
+$$
+Applying the divergence theorem to the thin shell between $\psi$ and $\psi+d\psi$ yields, for any vector field $\mathbf{F}$,
+$$
+\left\langle \nabla\cdot \mathbf{F}\right\rangle
+= \frac{1}{V_\psi'}\frac{\partial}{\partial\psi}\left(V_\psi'\left\langle \mathbf{F}\cdot\nabla\psi\right\rangle\right). \tag{A.0b}
+$$
+
+#### A.2 Moving-Grid Term From $\dot\Phi_b$
+
+TORAX uses $\hat\rho=\sqrt{\Phi(\psi)/\Phi_b(t)}$. Holding the physical toroidal flux label $\Phi$ fixed implies
+$$
+0=\left.\frac{\partial}{\partial t}\right|_{\Phi}\left(\hat\rho^2\Phi_b\right)
+= 2\hat\rho\,\Phi_b\left.\frac{\partial \hat\rho}{\partial t}\right|_{\Phi}+\hat\rho^2\dot\Phi_b,
+$$
+so
+$$
+\left.\frac{\partial \hat\rho}{\partial t}\right|_{\Phi}
+=-\frac{\dot\Phi_b}{2\Phi_b}\hat\rho. \tag{A.0c}
+$$
+For any profile $f(\hat\rho,t)$, the chain rule gives the operator used throughout TORAX:
+$$
+\left.\frac{\partial f}{\partial t}\right|_{\Phi}
+=
+\left.\frac{\partial f}{\partial t}\right|_{\hat\rho}
+-\frac{\dot\Phi_b}{2\Phi_b}\hat\rho\frac{\partial f}{\partial \hat\rho}. \tag{A.0d}
+$$
 
 Consider a surface of constant poloidal flux whose boundary moves with velocity $\mathbf{u}_\psi$. For this surface:
 $$
@@ -128,11 +228,11 @@ For a scalar field $F(t, \mathbf{x})$, define $H(t) = \int_V F\,dV$, where $V$ i
 $$
 \begin{align*}
 \frac{\partial H}{\partial t}\bigg|_{\psi=\text{const}} &=
-\overbrace{\int_V \frac{\partial F}{\partial t} dV}^{\text{change inside volume}}+\overbrace{\oint_S F \mathbf{u}_\psi \cdot \mathbf{dS}_\psi}^{\text{change due to moving boundary}}\\
+\overbrace{\int_V \frac{\partial F}{\partial t} dV}^{\text{change inside volume}}+\overbrace{\oint_S F\, \mathbf{u}_\psi \cdot \mathbf{n}\, dS}^{\text{change due to moving boundary}}\\
 &=
 \int_V \frac{\partial F}{\partial t} dV +
 \oint_S F \mathbf{u}_\psi \cdot \frac{\nabla \psi}{|\nabla \psi|} dS
-\end{align*}
+\end{align*}\tag{A.1b}
 $$
 
 Using this equality, the time rate of change of toroidal flux $\Phi$ enclosed by $\psi = \text{const}$, i.e., $F=\mathbf{B}\cdot\nabla\phi$ and $\Phi(t)=\int_V \mathbf{B}\cdot\nabla\phi\, dV$, is:
@@ -146,7 +246,7 @@ $$
 
 > 1. Poloidal electric field.
 
-Using Faraday’s law $\partial_t \mathbf{B} = -\nabla\times\mathbf{E}$, we can rewrite the first volume integral (A.2) as:
+Using Faraday's law $\partial_t \mathbf{B} = -\nabla\times\mathbf{E}$, we can rewrite the first volume integral (A.2) as:
 $$
 \begin{aligned}
 \int_V \frac{\partial \mathbf{B}}{\partial t}\cdot\nabla\phi\, dV
@@ -157,156 +257,52 @@ $$
 = -2\pi \oint_S \mathbf{E}\cdot\mathbf{B}_p \frac{dS}{|\nabla\psi|}
 \end{aligned}
 $$
+where $\mathbf{B}_p \equiv \frac{1}{2\pi}\nabla\phi\times\nabla\psi$ is the poloidal magnetic field.
 
 > 2. Toroidal electric field.
 
-We can rewrite the second integral of (A.2) using Ampère’s law:
+The boundary-motion term in (A.2) can be expressed in terms of the toroidal electric field. Following [[2]](#references), one uses the kinematic relation
 $$
-\begin{aligned}
-\nabla\psi\cdot\frac{\partial\mathbf{B}}{\partial t}
-&= -\nabla\psi\cdot(\nabla\times\mathbf{E})
-= \nabla\cdot(\nabla\psi\times\nabla \mathbf{E})- \underbrace{ \mathbf{E}\cdot(\nabla\times \nabla\psi)}_{=0}\\
-&= \nabla \cdot (\nabla \psi \times \nabla \phi R E_\phi) 
-=-\nabla\cdot(2\pi \mathbf{B}_p R E_\phi)
-\end{aligned}
+\mathbf{u}_\psi\cdot\nabla\psi = -2\pi R E_\phi, \tag{A.2b}
 $$
-Using that $\mathbf{B} \cdot \nabla \psi = 0$, we have
+together with $\mathbf{B}\cdot\nabla\phi = B_\phi/R$, to obtain
 $$
-0 = \partial_t (\mathbf{B} \cdot \nabla \psi) = \partial_t \mathbf{B} \cdot \nabla \psi + \mathbf{B} \cdot \nabla (\partial_t \psi)
+\frac{1}{2\pi}\oint_S (\mathbf{B}\cdot\nabla\phi)(\mathbf{u}_\psi\cdot\nabla\psi)\frac{dS}{|\nabla\psi|}
+= -\oint_S B_\phi E_\phi\,\frac{dS}{|\nabla\psi|}.
 $$
-Then,
-$$
-\begin{aligned}
-\mathbf{B} \cdot \nabla (\partial_t \psi) &= -\partial_t \mathbf{B} \cdot \nabla \psi = \nabla\cdot(2\pi \mathbf{B}_p R E_\phi) \\
-&= \mathbf{B}_b \cdot \nabla (2\pi R E_\phi) + 2\pi R E_\phi \underbrace{\nabla \cdot \mathbf{B}_p}_{=0}\\
-&= \mathbf{B} \cdot \nabla (2\pi R E_\phi)
-\end{aligned}
-$$
-Thus, using previous equation and (A.1):
-$$
-\mathbf{B} \cdot \nabla (\partial_t \psi) = 2\pi R E_\phi = -\mathbf{u}_\psi \cdot \nabla\psi
-$$
-Combining previous results into (A.2):
+Combining this with step 1 yields
 $$
 \begin{aligned}
 \frac{\partial \Phi}{\partial t}\bigg|_{\psi=\text{const}}
-&= -\oint_S (\mathbf{E}\cdot\mathbf{B}_p + B_\phi E_\phi) \frac{dS}{|\nabla\psi|}
-= -\oint_S \mathbf{E}\cdot\mathbf{B} \frac{dS}{|\nabla\psi|}
-= -\frac{\partial V}{\partial\psi}\langle \mathbf{E}\cdot\mathbf{B}\rangle
-\end{aligned}
+&= -\oint_S (\mathbf{E}\cdot\mathbf{B}_p + B_\phi E_\phi)\,\frac{dS}{|\nabla\psi|}
+= -\oint_S \mathbf{E}\cdot\mathbf{B}\,\frac{dS}{|\nabla\psi|}
+= -\frac{\partial V}{\partial\psi}\langle \mathbf{E}\cdot\mathbf{B}\rangle.
+\end{aligned}\tag{A.2c}
 $$
 
-> 3. Rate of change of poloidal flux.
+> 3. Closing the 1D current diffusion equation.
 
-$$
-\begin{aligned}
-&\frac{\partial\psi}{\partial t}\bigg|_{\Phi=\text{const}}
-= \frac{\partial\psi}{\partial V}\frac{\partial V}{\partial\Phi}\frac{\partial\Phi}{\partial t}\bigg|_{\psi=\text{const}} \\
-&\frac{\partial\psi}{\partial t}\bigg|_{\rho}
-+ \frac{\partial\psi}{\partial\rho}\frac{\partial\rho}{\partial t}\bigg|_{\Phi}= -\frac{\partial V}{\partial\Phi}\langle \mathbf{E}\cdot\mathbf{B}\rangle \tag{A.3}\\
-&\frac{\partial\psi}{\partial t}\bigg|_{\rho} - \rho\frac{\dot{B}_0}{2B_0}\frac{\partial\psi}{\partial\rho}
-= -2\pi R_0^2 \frac{\langle \mathbf{E}\cdot\mathbf{B}\rangle}{T\langle R_0^2/R^2\rangle}
-\end{aligned}
-$$
+Equation (A.2c) relates the evolution of toroidal flux to the flux-surface-averaged parallel electric field via $\langle \mathbf{E}\cdot\mathbf{B}\rangle$. To obtain a closed 1D PDE for $\psi$ (and the normalized form used by TORAX), one combines:
+- A parallel Ohm's law closure, which relates $\langle \mathbf{E}\cdot\mathbf{B}\rangle$ to $j_\parallel$ and non-inductive current drive via $\sigma_\parallel$.
+- Ampere's law + flux-surface averaging, which expresses $j_\parallel$ as a radial diffusion operator acting on $\psi$, with geometry packaged into $g_2$ and $g_3$.
+- The moving-grid identity (A.0d), which converts time derivatives at fixed toroidal flux label $\Phi$ into derivatives at fixed $\hat\rho$ when $\Phi_b(t)$ changes.
 
-Define the equivalent cylindrical fields:
-$$
-\begin{aligned}
-B_{po} &= \frac{1}{2\pi R_0} \frac{\partial\psi}{\partial\rho} \\
-E_o &= R_0 \frac{\langle \mathbf{E}\cdot\mathbf{B}\rangle}{T\langle R_0^2/R^2\rangle}
-\end{aligned}
-$$
-Then, for $\dot{B}_0=0$:
-$$
-\frac{\partial B_{p0}}{\partial t} = -\frac{\partial E_0}{\partial\rho}
-$$
-
-> 4. Ohm’s law.
-We can write the flux-surface-averaged Ohm’s law as:
-$$
-\langle \mathbf{j}\cdot\mathbf{B}\rangle = \sigma_\parallel \langle \mathbf{E}\cdot\mathbf{B}\rangle + \langle \mathbf{j}_{ni}\cdot\mathbf{B}\rangle
-$$
-where $\mathbf{j}_{ni} = \mathbf{j}_{bs} + \mathbf{j}_{cd}$ is the non-inductive current density, which includes the bootstrap current density $\mathbf{j}_{bs}$ and the external current drive density $\mathbf{j}_{cd}$. Equivalently
-$$
-\sigma_\parallel \frac{\langle \mathbf{E}\cdot\mathbf{B}\rangle}{B_0} = \frac{\langle \mathbf{j}\cdot\mathbf{B}\rangle}{B_0} - \frac{\langle \mathbf{j}_{bs}\cdot\mathbf{B}\rangle}{B_0} - \frac{\langle \mathbf{j}_{cd}\cdot\mathbf{B}\rangle}{B_0}
-\quad \Leftrightarrow \quad
-\sigma_\parallel E_\parallel = j_\parallel - j_{bs} - j_{cd}\tag{A.4}
-$$
-
-> 5. Parallel current.
-
-Finally, we rewrite the parallel current $j_\parallel = \frac{\langle \mathbf{j}\cdot\mathbf{B}\rangle}{B_0}$ in terms of the poloidal flux $\psi$:
-$$
-\begin{aligned}
-\frac{\langle \mathbf{j}\cdot\mathbf{B}\rangle}{B_0}
-&= \frac{T}{2\pi \mu_0 B_0}\langle \nabla\cdot (\nabla \psi/R^2)\rangle + \frac{1}{2\pi \mu_0 B_0}\langle \nabla T \cdot \nabla \psi /R^2\rangle\\
-&=\frac{1}{2\pi \mu_0 B_0}\left(\frac{4\pi^2 T}{V'} \frac{\partial}{\partial \rho}\left(G^2\frac{\partial\psi}{\partial \rho}\right) + \frac{4\pi^2}{V'}\frac{V'}{4\pi^2} \left\langle \frac{(\nabla \rho)^2}{R^2}\right\rangle \frac{\partial T}{\partial \rho}\frac{\partial \psi}{\partial \rho}\right)\\
-&=\frac{2\pi R_0 J^2}{\mu_0 V'}\left(\frac{1}{J} \frac{\partial}{\partial \rho}\left(G^2 \frac{\partial \psi}{\partial \rho}\right) + \frac{G^2}{J^2}\frac{\partial J}{\partial \rho}\frac{\partial \psi}{\partial \rho}\right)
-\\
-&=\frac{2\pi R_0 J^2}{\mu_0 V'} \frac{\partial}{\partial\rho}
-\left(\frac{G^2}{J}\frac{\partial\psi}{\partial\rho}\right)\tag{A.5}
-\end{aligned}
-$$
-
-The key step is converting flux-surface averages of divergences into 1D (radial) derivatives:
-$$
-\left\langle \nabla\cdot \mathbf{F}\right\rangle = \frac{1}{V'}\frac{\partial}{\partial\rho}\left(V'\left\langle \mathbf{F}\cdot\nabla\rho\right\rangle\right),\qquad V'\equiv\frac{\partial V}{\partial\rho}.
-$$
-Taking $\mathbf{F}=\nabla\psi/R^2$ and using $\psi=\psi(\rho)$ gives $\nabla\psi=(\partial\psi/\partial\rho)\nabla\rho$ and hence
-$\mathbf{F}\cdot\nabla\rho=((\nabla\rho)^2/R^2)(\partial\psi/\partial\rho)$.
-Also, since $T=T(\rho)$,
-$\langle \nabla T\cdot\nabla\psi/R^2\rangle = \langle (\nabla\rho)^2/R^2\rangle(\partial T/\partial\rho)(\partial\psi/\partial\rho)$.
-Defining $G^2\equiv \frac{V'}{4\pi^2}\left\langle \frac{(\nabla\rho)^2}{R^2} \right\rangle$ packages the terms and the product rule yields the final compact form.
-with
-$$
-J = \frac{T}{R_0 B_0}, \quad
-G^2 = \frac{V'}{4\pi^2}\left\langle \frac{(\nabla\rho)^2}{R^2} \right\rangle, \quad
-V' = \frac{\partial V}{\partial\rho}
-$$
-
-> The poloidal flux diffusion equation.
-Combining (A.3), (A.4) and (A.5):
-$$
-\sigma_\parallel \left(
-\frac{\partial\psi}{\partial t} + \rho\frac{\dot{B}_0}{2B_0}\frac{\partial\psi}{\partial\rho}
-\right)
-= \frac{R_0 J^2}{\mu_0 \rho}\frac{\partial}{\partial\rho}
-\left(\frac{G^2}{J}\frac{\partial\psi}{\partial\rho}\right)- \frac{V'}{2\pi\rho}(j_{bs} + j_{cd})
-$$
+The resulting normalized form is the TORAX current diffusion equation shown in the main text.
 
 > Derivation of the Particle Transport Equation
 
-For a species $\alpha$:
+For an arbitrary plasma species $\alpha$, let $n_\alpha$ be the density and $s_\alpha$ a particle source. Start from the continuity equation:
 $$
-\frac{\partial n_\alpha}{\partial t} + \nabla\cdot(n_\alpha \mathbf{u}_\alpha) = s_\alpha
-\tag{C.22}
+\frac{\partial n_\alpha}{\partial t}+\nabla\cdot(n_\alpha \mathbf{u}_\alpha)=s_\alpha.
 $$
-
-Integrating over the volume enclosed by a flux surface:
+Flux-surface averaging (using the divergence identity (A.0b) and writing $V'=dV/d\hat\rho$) yields the 1D conservation law at fixed toroidal-flux label $\Phi$:
 $$
-\int \frac{\partial n_\alpha}{\partial t} dV +  \oint n_\alpha \mathbf{u}_\alpha\cdot\frac{\nabla\Phi}{|\nabla\Phi|} dS = \int s_\alpha dV
-\tag{C.23}
+\left.\frac{\partial}{\partial t}\right|_{\Phi}\left(n_\alpha V'\right)
+= -\frac{\partial \Gamma_\alpha}{\partial \hat\rho}+V'S_\alpha,
 $$
-
-Using Eq.~(C.3):
+where $S_\alpha\equiv\langle s_\alpha\rangle$ and $\Gamma_\alpha$ is the flux-surface-averaged radial particle flux (the term generated by $\langle\nabla\cdot(n_\alpha\mathbf{u}_\alpha)\rangle$ via (A.0b)).
+Finally, converting the time derivative from fixed $\Phi$ to fixed $\hat\rho$ using (A.0d) gives the TORAX moving-grid operator:
 $$
-\frac{\partial}{\partial t}\bigg|_\Phi \int n_\alpha dV + \oint n_\alpha (\mathbf{u}_\alpha - \mathbf{u}_\Phi)\cdot\frac{\nabla\rho}{|\nabla\rho|} dS
-= \int s_\alpha dV
-\tag{C.24}
+\left(\frac{\partial}{\partial t}-\frac{\dot\Phi_b}{2\Phi_b}\hat\rho\frac{\partial}{\partial \hat\rho}\right)\left(n_\alpha V'\right)
+= -\frac{\partial \Gamma_\alpha}{\partial \hat\rho}+V'S_\alpha.
 $$
-
-Using flux surface averaging:
-$$
-\frac{\partial}{\partial t}\bigg|_\Phi \left[ \langle n_\alpha\rangle V' \right] + \frac{\partial}{\partial\rho}\left[ V'\langle n_\alpha(\mathbf{u}_\alpha - \mathbf{u}_\Phi)\cdot\nabla\rho\rangle \right]
-= \langle s_\alpha\rangle V'
-\tag{C.26}
-$$
-
-Finally, at constant $\rho$:
-$$
-\frac{1}{V'}\left(\frac{\partial}{\partial t} + \frac{\dot{B}_0}{2B_0}\rho\frac{\partial}{\partial\rho}\right)
-(\langle n_\alpha\rangle V') + \frac{1}{V'}\frac{\partial\Gamma_\alpha}{\partial\rho}
-= S_\alpha
-\tag{C.27}
-$$
-where $\Gamma_\alpha$ is the particle flux and $S_\alpha$ the source term.
