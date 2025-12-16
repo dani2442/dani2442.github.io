@@ -139,10 +139,10 @@ menu:
       name: archives
       url: /archives/
       weight: 20
-    # - identifier: categories
-    #   name: categories
-    #   url: /categories/
-    #   weight: 30
+    - identifier: essays
+      name: essays
+      url: /essays/
+      weight: 30
     - identifier: about
       name: about
       url: /about/
