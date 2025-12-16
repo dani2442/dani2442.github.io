@@ -62,6 +62,9 @@
     <loc>http://localhost:1313/tags/mixture-of-gaussians/</loc>
     <lastmod>2025-10-17T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>http://localhost:1313/essays/</loc>
+    <lastmod>2025-10-16T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/tags/metrics/</loc>
     <lastmod>2025-10-16T00:00:00+00:00</lastmod>
   </url><url>
@@ -71,7 +74,13 @@
     <loc>http://localhost:1313/categories/philosophy/</loc>
     <lastmod>2025-10-16T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/metrics/</loc>
+    <loc>http://localhost:1313/essays/metrics/</loc>
+    <lastmod>2025-10-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/essays/oversupply/death_by_oversupply/</loc>
+    <lastmod>2025-10-16T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/essays/space-piracy/space_piracy/</loc>
     <lastmod>2025-10-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/gaussian-processes/</loc>
