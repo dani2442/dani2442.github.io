@@ -16,3 +16,7 @@ editPost:
     Text: "Suggest Changes" # edit text
     appendFilePath: true # to append file path to Edit link
 ---
+
+If the space industry continues to develop as expected, it's only a matter of time before space piracy becomes a real concept. All these expensive satellites and data centers orbiting look very juicy and largely unprotected!
+
+![Space Piracy](space_piracy.png)
