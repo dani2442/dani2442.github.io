@@ -18,6 +18,14 @@ editPost:
     appendFilePath: true # to append file path to Edit link
 ---
 
+
+![alt text](particles.gif)
+
+
+I think there are 3 major milestones remaining for humanity and one of them is *clean and abundant energy*. Fusion energy has the potential to provide a nearly limitless source of clean energy by replicating the processes that power the sun. However, achieving controlled fusion reactions on Earth has proven to be a formidable and very challenging task.
+
+Recently, I saw thatDeepMind has made significant strides in this area by developing advanced AI models to optimize the control of tokamak reactors [[3]](#references). I read the associated paper and code and I wanted to summarize what I learned about the underlying mathematics and code behind the scenes.
+
 ![alt text](tokamak.png)
 *Source: [[2]](#references)*
 
