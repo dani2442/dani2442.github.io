@@ -26,18 +26,34 @@ I think there are 3 major milestones remaining for humanity and one of them is *
 
 Recently, I saw thatDeepMind has made significant strides in this area by developing advanced AI models to optimize the control of tokamak reactors [[3]](#references). I read the associated paper and code and I wanted to summarize what I learned about the underlying mathematics and code behind the scenes.
 
+The idea is to simulate plasma inside a tokamak reactor (a toroidal chamber or doughnut-shaped device). The equations governing the behavior of the plasma are 4 Heat/Diffufions-based equations (Parabolic PDEs) in 1D. 
+
+$$ \frac{\partial u}{\partial t} = \nabla \cdot (D \nabla u) + \text{Sources} $$
+
+The interesting thing is we use toroidal flux coordinates, which simplifies the complex 3D geometry of the tokamak into a 1D radial coordinate system based on magnetic flux surfaces.
+
+
 ![alt text](tokamak.png)
 *Source: [[2]](#references)*
 
+## Introduction
 
-TORAX solves coupled 1D PDEs in normalized toroidal flux coordinates, $\hat \rho$, with $0 \leq \hat \rho \leq 1.$
+
+
+We have 4 PDE equations and 5 variables in normalized toroidal flux coordinates, $\hat \rho$, with $0 \leq \hat \rho \leq 1$. The important quantities being modeled are:
+
+*   **${\color{red}{T_i}}, {\color{orange}{T_e}}$**: Ion and Electron **Temperatures** (Energy per particle). High temperature is required for fusion.
+*   **${\color{brown}{n_i}}, {\color{blue}{n_e}}$**: Ion and Electron **Densities** (Particles per cubic meter). However, we do not model ion density explicitly, it is computed from electron density assuming quasi-neutrality.
+*   **${\color{teal}{\psi}}$**: **Poloidal Magnetic Flux**. This describes the magnetic field structure and stability.
 
 ![alt text](equations.png)
+
+Here we summarize the variables and parameters used in the equations:
 
 | Symbol | Description | Units / Notes |
 |:-------|:-------------|:--------------|
 | $ {\color{red}{T_i}}, {\color{orange}{T_e}} $ | Ion and electron temperatures | keV or eV |
-| $ n_i, {\color{blue}{n_e}} $ | Ion and electron densities | m⁻³ |
+| $ {\color{brown}{n_i}}, {\color{blue}{n_e}} $ | Ion and electron densities | m⁻³ |
 | $ {\color{teal}{\psi}} $ | Poloidal magnetic flux | Wb (Weber) |
 | $ \Phi(\psi) $ | Toroidal magnetic flux enclosed by the magnetic poloidal flux surface | Wb |
 | $ \Phi_b $ | Toroidal flux enclosed by the plasma boundary (last-closed-flux surface) | Wb |
@@ -61,9 +77,10 @@ TORAX solves coupled 1D PDEs in normalized toroidal flux coordinates, $\hat \rho
 | $ S_n $ | Total electron particle source | 1/s or m⁻³·s⁻¹ |
 | $ \mathbf{j}_{ni} $ | Non-inductive current density (bootstrap + external drive) | A/m² |
 | $ I_p $ | Total plasma current | A |
-| $ J $ | Total toroidal plasma current density | A/m² |
+| $ J $ | Jacobian determinant or related geometric factor (see text) | — |
 | $ R_0 $ | Major radius at magnetic axis | m |
 | $ \langle \cdot \rangle $ | Flux-surface average | — |
+
 
 **Boundary Conditions:**
 The boundary conditions are as follows. All equations have a zero-derivative boundary condition at $\hat{\rho} = 0$ (Von-Neumann). 
@@ -111,7 +128,7 @@ Using
 $$
 q_\alpha+\frac{5}{2}T_\alpha\Gamma_\alpha
 \quad\equiv\quad
--\Big(\chi_\alpha n_\alpha \frac{g_1}{V'}\frac{\partial T_\alpha}{\partial\hat\rho}\ -\ g_0,q_\alpha^{\mathrm{conv}},T_\alpha\Big),
+-\Big(\chi_\alpha n_\alpha \frac{g_1}{V'}\frac{\partial T_\alpha}{\partial\hat\rho}\ -\ g_0 q_\alpha^{\mathrm{conv}} T_\alpha\Big),
 $$
 we get to the final form of the ion and electron heat transport equations.
 
@@ -121,42 +138,30 @@ $$
 \begin{aligned}
 \frac{3}{2} V'^{-5/3}
 \left( 
-\frac{\partial}{\partial t}
-- \frac{\dot{\Phi}_b}{2\Phi_b} 
+\frac{\partial}{\partial t} - \frac{\dot{\Phi}_b}{2\Phi_b} 
 \frac{\partial}{\partial \hat{\rho}}
 \right)
 \left[ 
 V'^{5/3} n_i {{T_i}}
-\right]
-&=
+\right] &=
 \frac{1}{V'} 
 \frac{\partial}{\partial \hat{\rho}}
-\left[
-\chi_i n_i 
-\frac{g_1}{V'} 
-\frac{\partial {T_i}}{\partial \hat{\rho}}
-- g_0 q_i^{\text{conv}} {T_i}
-\right]
-+ Q_i \\
+\left[ \chi_i n_i \frac{g_1}{V'} 
+\frac{\partial {T_i}}{\partial \hat{\rho}} - g_0 q_i^{\text{conv}} {T_i}
+\right] + Q_i \\
 \frac{3}{2} V'^{-5/3}
-\left( 
-\frac{\partial}{\partial t}
-- \frac{\dot{\Phi}_b}{2\Phi_b} 
-\frac{\partial}{\partial \hat{\rho}}
+\left(  \frac{\partial}{\partial t} - \frac{\dot{\Phi}_b}{2\Phi_b} \frac{\partial}{\partial \hat{\rho}}
 \right)
 \left[ 
 V'^{5/3} {n_e} {T_e}
-\right]
-&=
+\right] &=
 \frac{1}{V'} 
 \frac{\partial}{\partial \hat{\rho}}
 \left[
 \chi_e {n_e} 
 \frac{g_1}{V'} 
-\frac{\partial {T_e}}{\partial \hat{\rho}}
-- g_0 q_e^{\text{conv}} {T_e}
-\right]
-+ Q_e 
+\frac{\partial {T_e}}{\partial \hat{\rho}} - g_0 q_e^{\text{conv}} {T_e}
+\right] + Q_e 
 \end{aligned}\;}
 $$
 
@@ -171,45 +176,35 @@ $$
 Here $s_\alpha$ is a localized particle source. By writing the above equation inside a toroidal flux surface we obtain
 $$
 \left(\frac{\partial}{\partial t} + \frac{\dot{B}_0}{2B_0}\rho\frac{\partial}{\partial\rho}\right)
-(\langle n_\alpha\rangle V') = -\frac{\partial\Gamma_\alpha}{\partial\rho}
-+ V'S_\alpha.\tag{1}
+(\langle n_\alpha\rangle V') = -\frac{\partial\Gamma_\alpha}{\partial\rho} + V'S_\alpha.\tag{1}
 $$
 
 A detailed derivation of the transport equations is provided in the [Appendix](#appendix).
 
 We denote $\alpha=e$ (by the electron species) and denoting $\langle n_e \rangle \equiv n_e$. Using the specific form of the *flux-surface averaged radial particle flux*
 $$
-\Gamma_e=
-- D_e n_e \frac{g_1}{V'}\frac{\partial n_e}{\partial \rho}+
+\Gamma_e=- D_e n_e \frac{g_1}{V'}\frac{\partial n_e}{\partial \rho}+
 g_0 V_e n_e.
 $$
 
 Then
 $$
--\frac{\partial \Gamma_e}{\partial \rho}=
-\frac{\partial}{\partial \rho}\Big[
-D_e n_e\frac{g_1}{V'}\frac{\partial n_e}{\partial \rho}-
-g_0 V_e n_e
-\Big].
+-\frac{\partial \Gamma_e}{\partial \rho}= \frac{\partial}{\partial \rho}\Big[ D_e n_e\frac{g_1}{V'}\frac{\partial n_e}{\partial \rho}-
+g_0 V_e n_e\Big].
 $$
 
 Plugging (1), we get:
 $$
-\Big(\frac{\partial}{\partial t}+\frac{\dot B_0}{2B_0},\rho\frac{\partial}{\partial \rho}\Big)(n_eV')
-=
-\frac{\partial}{\partial \rho}\Big[
-D_e n_e\frac{g_1}{V'}\frac{\partial n_e}{\partial \rho}-
-g_0 V_e n_e
-\Big]
-+V'S_n .
+\Big(\frac{\partial}{\partial t}+\frac{\dot B_0}{2B_0}\rho\frac{\partial}{\partial \rho}\Big)(n_eV') = \frac{\partial}{\partial \rho}\Big[ D_e n_e\frac{g_1}{V'}\frac{\partial n_e}{\partial \rho}-
+g_0 V_e n_e \Big] +V'S_n .
 $$
+
 Rewritting the grid-motion term using the *toroidal flux* $\Phi_b$ and a normalized radius $\hat\rho$. Using $\hat\rho^2 = \frac{\Phi}{\Phi_b(t)}$,
 so if $\Phi_b$ changes in time, by a chain-rule term:
+
 $$
-\left.\frac{\partial}{\partial t}\right|_{\hat\rho}
-=
-\left.\frac{\partial}{\partial t}\right|_{\Phi}
--\frac{\dot\Phi_b}{2\Phi_b}\hat\rho\frac{\partial}{\partial \hat\rho}.
+\left.\frac{\partial}{\partial t}\right|_{\hat\rho}=
+\left.\frac{\partial}{\partial t}\right|_{\Phi} +\frac{\dot\Phi_b}{2\Phi_b}\hat\rho\frac{\partial}{\partial \hat\rho}.
 $$
 
 That is exactly the operator appearing in the final equation:
@@ -221,32 +216,25 @@ $$
 Putting the pieces together gives:
 $$
 \boxed{\;
-\Big(\frac{\partial}{\partial t}-\frac{\dot\Phi_b}{2\Phi_b}\hat\rho\frac{\partial}{\partial \hat\rho}\Big)(n_eV')
-=
-\frac{\partial}{\partial \hat\rho}\Big[
-D_e n_e \frac{g_1}{V'} \frac{\partial n_e}{\partial \hat\rho}
--
-g_0 V_e n_e
-\Big]
-+V'S_n.\;}
+\Big(\frac{\partial}{\partial t}-\frac{\dot\Phi_b}{2\Phi_b}\hat\rho\frac{\partial}{\partial \hat\rho}\Big)(n_eV') =
+\frac{\partial}{\partial \hat\rho}\Big[ D_e n_e \frac{g_1}{V'} \frac{\partial n_e}{\partial \hat\rho}-g_0 V_e n_e\Big]+V'S_n.\;}
 $$
 
 
-## 1.3 Current Diffusion Equation 
+## 1.3 Current Diffusion Equation.
+
 In [Appendix](#appendix), we derived the 1D equation for the evolution of the poloidal flux $\psi$:
+
 $$
 \sigma_\parallel \left(
 \frac{\partial\psi}{\partial t} + \rho\frac{\dot{B}_0}{2B_0}\frac{\partial\psi}{\partial\rho}
-\right)
-= \frac{R_0 J^2}{\mu_0 \rho}\frac{\partial}{\partial\rho}
+\right)= \frac{R_0 J^2}{\mu_0 \rho}\frac{\partial}{\partial\rho}
 \left(\frac{G^2}{J}\frac{\partial\psi}{\partial\rho}\right)- \frac{V'}{2\pi\rho}(j_{bs} + j_{cd})
 $$
 Using the change of variables to $\hat\rho$ and $\Phi_b$, we get, as before, that:
 $$
-\left(\frac{\partial \psi}{\partial t}\right)_{\Phi}
-=
-\left(\frac{\partial \psi}{\partial t}\right)_{\hat\rho}
--\frac{\dot{\hat\Phi}_b}{2\hat\Phi_b}\hat\rho
+\left(\frac{\partial \psi}{\partial t}\right)_{\Phi}=
+\left(\frac{\partial \psi}{\partial t}\right)_{\hat\rho}-\frac{\dot{\hat\Phi}_b}{2\hat\Phi_b}\hat\rho
 \frac{\partial \psi}{\partial \hat\rho}.
 $$
 The diffusion term is
@@ -254,8 +242,8 @@ $$
 \frac{R_0J^2}{\mu_0\rho}\frac{\partial}{\partial\rho}
 \left(\frac{G_2}{J}\frac{\partial\psi}{\partial\rho}\right),
 \qquad
-J=\frac{T}{R_0B_0},\quad
-G_2=\frac{V'}{4\pi^2}\Big\langle\frac{(\nabla\rho)^2}{R^2}\Big\rangle^{-1}.
+J=\frac{F}{R_0B_0},\quad
+G_2=\frac{V'}{4\pi^2}\Big\langle\frac{(\nabla\rho)^2}{R^2}\Big\rangle.
 $$
 Transport-code forms typically package all those geometric combinations into something like
 $$
@@ -265,21 +253,34 @@ where $g_2=\langle (\nabla V)^2/R^2\rangle$ and $g_3=\langle 1/R^2\rangle$. Ther
 $$
 \boxed{\;
 \frac{16 \pi^2 \sigma_{\parallel}}{\mu_0} 
-\frac{\rho^2 \dot{\Phi}_b^2}{F^2}
+\frac{\hat\rho^2 \dot{\Phi}_b^2}{F^2}
 \left(
-\frac{\partial \psi}{\partial t}
-- \frac{\rho \dot{\Phi}_b}{2 \Phi_b} 
-\frac{\partial \psi}{\partial \rho}
-\right)
-=
-\frac{\partial}{\partial \rho}
+\frac{\partial \psi}{\partial t} - \frac{\hat\rho \dot{\Phi}_b}{2 \Phi_b} 
+\frac{\partial \psi}{\partial \hat\rho}
+\right) =
+\frac{\partial}{\partial \hat\rho}
 \left(
-\frac{g_2 g_3}{\rho} 
-\frac{\partial \psi}{\partial \rho}
-\right)
-- \frac{8 \pi^2 V' \mu_0 \Phi_b}{F^2}
+\frac{g_2 g_3}{\hat\rho} 
+\frac{\partial \psi}{\partial \hat\rho}
+\right) - \frac{8 \pi^2 V' \mu_0 \Phi_b}{F^2}
 \langle \mathbf{B} \cdot \mathbf{j}_{ni} \rangle\;}
 $$
+
+
+## Code Implementation (Torax)
+
+```python
+torax_config = torax.build_torax_config_from_file('examples/iterhybrid_rampup.py') # load Iter hybrid config
+torax_config.update_fields({
+    "numerics.fixed_dt": 1.0,
+    "numerics.t_final": 100.0, 
+})
+data_tree, state_history = torax.run_simulation(torax_config)
+data_tree.to_netcdf('iter.nc')
+```
+
+
+![](axial_layers.gif)
 ## References
 
 [1] Citrin, Jonathan, Ian Goodfellow, Akhil Raju, Jeremy Chen, Jonas Degrave, Craig Donner, Federico Felici et al. "TORAX: A fast and differentiable tokamak transport simulator in JAX." arXiv preprint arXiv:2406.06718 (2024).
@@ -347,9 +348,7 @@ $$
 Using this equality, the time rate of change of toroidal flux $\Phi$ enclosed by $\psi = \text{const}$, i.e., $F=\mathbf{B}\cdot\nabla\phi$ and $\Phi(t)=\int_V \mathbf{B}\cdot\nabla\phi\, dV$, is:
 $$
 \begin{aligned}
-\frac{\partial \Phi}{\partial t}\bigg|_{\psi=\text{const}}
-&= \frac{1}{2\pi} \frac{\partial}{\partial t} \int_V \mathbf{B}\cdot\nabla\phi\, dV \nonumber \\
-&= \frac{1}{2\pi} \int_V \frac{\partial \mathbf{B}}{\partial t}\cdot\nabla\phi\, dV + \frac{1}{2\pi} \oint_S (\mathbf{B}\cdot\nabla\phi)(\mathbf{u}_\psi\cdot\nabla\psi) \frac{dS}{|\nabla\psi|}
+\frac{\partial \Phi}{\partial t}\bigg|_{\psi=\text{const}} &= \frac{1}{2\pi} \frac{\partial}{\partial t} \int_V \mathbf{B}\cdot\nabla\phi\, dV \nonumber \\ &= \frac{1}{2\pi} \int_V \frac{\partial \mathbf{B}}{\partial t}\cdot\nabla\phi\, dV + \frac{1}{2\pi} \oint_S (\mathbf{B}\cdot\nabla\phi)(\mathbf{u}_\psi\cdot\nabla\psi) \frac{dS}{|\nabla\psi|}
 \end{aligned}\tag{A.2}
 $$
 
@@ -411,10 +410,9 @@ $$
 \begin{aligned}
 &\frac{\partial\psi}{\partial t}\bigg|_{\Phi=\text{const}}
 = \frac{\partial\psi}{\partial V}\frac{\partial V}{\partial\Phi}\frac{\partial\Phi}{\partial t}\bigg|_{\psi=\text{const}} \\
-&\frac{\partial\psi}{\partial t}\bigg|_{\rho}
-+ \frac{\partial\psi}{\partial\rho}\frac{\partial\rho}{\partial t}\bigg|_{\Phi}= -\frac{\partial V}{\partial\Phi}\langle \mathbf{E}\cdot\mathbf{B}\rangle \tag{A.3}\\
+&\frac{\partial\psi}{\partial t}\bigg|_{\rho} + \frac{\partial\psi}{\partial\rho}\frac{\partial\rho}{\partial t}\bigg|_{\Phi}= -\frac{\partial V}{\partial\Phi}\langle \mathbf{E}\cdot\mathbf{B}\rangle \tag{A.3}\\
 &\frac{\partial\psi}{\partial t}\bigg|_{\rho} - \rho\frac{\dot{B}_0}{2B_0}\frac{\partial\psi}{\partial\rho}
-= -2\pi R_0^2 \frac{\langle \mathbf{E}\cdot\mathbf{B}\rangle}{T\langle R_0^2/R^2\rangle}
+= -2\pi R_0^2 \frac{\langle \mathbf{E}\cdot\mathbf{B}\rangle}{F\langle R_0^2/R^2\rangle}
 \end{aligned}
 $$
 
@@ -422,7 +420,7 @@ Define the equivalent cylindrical fields:
 $$
 \begin{aligned}
 B_{po} &= \frac{1}{2\pi R_0} \frac{\partial\psi}{\partial\rho} \\
-E_o &= R_0 \frac{\langle \mathbf{E}\cdot\mathbf{B}\rangle}{T\langle R_0^2/R^2\rangle}
+E_o &= R_0 \frac{\langle \mathbf{E}\cdot\mathbf{B}\rangle}{F\langle R_0^2/R^2\rangle}
 \end{aligned}
 $$
 Then, for $\dot{B}_0=0$:
@@ -468,7 +466,7 @@ $\langle \nabla T\cdot\nabla\psi/R^2\rangle = \langle (\nabla\rho)^2/R^2\rangle(
 Defining $G^2\equiv \frac{V'}{4\pi^2}\left\langle \frac{(\nabla\rho)^2}{R^2} \right\rangle$ packages the terms and the product rule yields the final compact form.
 with
 $$
-J = \frac{T}{R_0 B_0}, \quad
+J = \frac{F}{R_0 B_0}, \quad
 G^2 = \frac{V'}{4\pi^2}\left\langle \frac{(\nabla\rho)^2}{R^2} \right\rangle, \quad
 V' = \frac{\partial V}{\partial\rho}
 $$
