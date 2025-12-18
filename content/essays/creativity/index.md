@@ -17,7 +17,7 @@ editPost:
     appendFilePath: true
 ---
 
-We all know the slogan "knowledge is power". I want to argue for an opposite idea:
+We all know the slogan "knowledge is power", in this essay I want to argue for the opposite:
 
 > **too much knowledge can hinder creativity**
 
