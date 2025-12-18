@@ -17,15 +17,15 @@ editPost:
     appendFilePath: true
 ---
 
-We all know the slogan "knowledge is power", in this essay I want to argue for the opposite:
+We all know the slogan "knowledge is power". In this essay, I want to argue for the opposite:
 
 > **too much knowledge can hinder creativity**
 
-Not because learning is bad, quite the opposite, but because what you already know quietly narrows what you consider plausible. In the age of AI, where solutions are increasingly cheap, this matters: the bottleneck shifts from "finding an answer" to "finding an original direction".
+Not because learning is bad, but because what you already know quietly narrows what you consider plausible. In the age of AI, where solutions are increasingly cheap, this matters: the bottleneck shifts from "finding an answer" to "finding an original direction".
 
 ## So... should we stay ignorant?
 
-Creativity needs ingredients: skills, taste, vocabulary, technique, references. But there's a trade-off between **exploration** (searching broadly) and **exploitation** (reusing what already works) [[2]](#references). Expertise pulls you toward exploitation; AI makes exploitation nearly frictionless.
+Creativity needs ingredients: skills, taste, vocabulary, technique, references. But there's a trade-off between **exploration** (searching broadly) and **exploitation** (reusing what already works) [[2]](#references). Expertise pulls you toward exploitation and AI makes exploitation nearly frictionless.
 
 The failure mode looks like this:
 
@@ -36,12 +36,12 @@ The failure mode looks like this:
 This is related to several well-studied phenomena:
 
 - **Curse of knowledge**: once you know something, it becomes hard to imagine not knowing it - changing how you explain, teach, and even think [[3]](#references).
-- **Einstellung effect / mental set**: familiar methods block better ones [[4]](#references).
+- **Einstellung effect**: familiar methods block better ones [[4]](#references).
 - **Functional fixedness / design fixation**: example solutions "anchor" your imagination and reduce novelty [[5, 6]](#references).
 
 ## A simple picture of the trap
 
-Assume the circles represent the "nearby" ideas you can easily access. Person B has more knowledge, but that also means more well-worn paths, so exploring outside the circles feels less reward-cost effective.
+Assume the circles represent the "nearby" ideas you can easily access. Person B has more knowledge, but that also means more well-worn paths, so exploring outside the circles feels less cost-effective.
 
 ![A sketch of exploration vs. fixation](image.png)
 
@@ -54,9 +54,9 @@ Richard Hamming was one of the first to point this out in "You and Your Research
 > **- Hamming:** It depends upon the field. I will say this about it. There was a fellow at Bell Labs, a very, very, smart guy. He was always in the library; he read everything. If you wanted references, you went to him and he gave you all kinds of references. But in the middle of forming these theories, I formed a proposition: there would be no effect named after him in the long run. He is now retired from Bell Labs and is an Adjunct Professor. He was very valuable; I'm not questioning that. He wrote some very good Physical Review articles; but there's no effect named after him because he read too much. If you read all the time what other people have done you will think the way they thought. If you want to think new thoughts that are different, then do what a lot of creative people do - get the problem reasonably clear and then refuse to look at any answers until you've thought the problem through carefully how you would do it, how you could slightly change the problem to be the correct one. So yes, you need to keep up. You need to keep up more to find out what the problems are than to read to find the solutions. The reading is necessary to know what is going on and what is possible. But reading to get the solutions does not seem to be the way to do great research. So I'll give you two answers. You read; but it is not the amount, it is the way you read that counts.
 
 
-Another interesting extension of the already known Arthur C. Clarke quote might be:
+Another interesting extension of the well-known Arthur C. Clarke quote might be:
 
-> "If an elderly but distinguished scientist [or AI] says that something is possible, he is almost certainly right; but if he says that it is impossible, he is very probably wrong."\
+> "If an ~~elderly but distinguished scientist~~ LLM says that something is possible, he is almost certainly right; but if he says that it is impossible, he is very probably wrong."\
 > — Arthur C. Clarke.
 
 
@@ -74,8 +74,7 @@ These quotes can be read as an argument for **protecting the unknown**: leaving 
 
 > **AI is not the enemy; premature convergence is.**
 
-Research on human-AI ideation is still young, but it is already clear that how you use these tools matters: they can act like a fast "example generator", which is helpful for coverage but risky for fixation if you consult them too early [[8, 9]](#references).
-
+Research on human-AI ideation is still young, but it is already clear that how you use these tools matters [[8, 9]](#references).
 One practical workflow I have seen recommended is:
 
 1. **Write your "pre-AI" draft**: your best explanation, outline, or sketch from memory.
@@ -104,5 +103,3 @@ One practical workflow I have seen recommended is:
 [8] Kim, H. K., Roknaldin, A., Nayak, S., Zhang, X., Yang, M., Twyman, M., Hwang, A. H.-C., & Lu, S. C.-Y. (2024). ChatGPT and Me: Collaborative Creativity in a Group Brainstorming with Generative AI. https://doi.org/10.18260/1-2--48457
 
 [9] "Augmented Brainstorming with AI" - Research Approach for Identifying Design Criteria for Improved Collaborative Idea Generation Between Humans and AI. (2023). https://doi.org/10.3233/FAIA230113
-
-[10] Colton, S., & Wiggins, G. A. (2012). Computational Creativity: The Final Frontier? https://doi.org/10.3233/978-1-61499-098-7-21
