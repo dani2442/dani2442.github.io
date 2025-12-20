@@ -11,8 +11,15 @@
     </image>
     <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 30 Oct 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 20 Dec 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Fusion Energy Simulation: Tokamak</title>
+      <link>http://localhost:1313/posts/torax/</link>
+      <pubDate>Sat, 20 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/torax/</guid>
+      <description>Notes on Tokamak transport PDEs.</description>
+    </item>
     <item>
       <title>Self-Attention, Kernel Methods and G-Metric Spaces</title>
       <link>http://localhost:1313/posts/higher-order-attention/</link>
@@ -21,11 +28,11 @@
       <description>An introduction to Higher-Order Attention, Kernel Methods, and G-Metric Spaces.</description>
     </item>
     <item>
-      <title>Fusion Energy Simulation: Tokamak</title>
-      <link>http://localhost:1313/posts/torax/</link>
+      <title>Generalization Theory</title>
+      <link>http://localhost:1313/posts/generalization/</link>
       <pubDate>Tue, 28 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/torax/</guid>
-      <description>Notes on TORAX’s 1D tokamak transport PDEs in flux coordinates.</description>
+      <guid>http://localhost:1313/posts/generalization/</guid>
+      <description>Generalization bounds and theory for machine learning models.</description>
     </item>
     <item>
       <title>Control Theory</title>
