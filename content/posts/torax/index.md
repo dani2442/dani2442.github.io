@@ -1,12 +1,12 @@
 ---
 title: "Fusion Energy Simulation: Tokamak"
 date: 2025-10-28
-tags: ["machine learning", "control theory", "kernel methods"]
+tags: ["machine learning", "control theory", "physics", "fusion energy"]
 categories: ["control theory", "machine learning"]
 author: "Daniel López Montero"
 showToc: true
-draft: true
-description: "Notes on TORAX’s 1D tokamak transport PDEs in flux coordinates."
+draft: false
+description: "Notes on Tokamak transport PDEs."
 ShowWordCount: false
 ShowReadingTime: true
 comments: true
@@ -24,9 +24,9 @@ editPost:
 
 I think there are 3 major milestones remaining for humanity and one of them is *clean and abundant energy*. Fusion energy has the potential to provide a nearly limitless source of clean energy by replicating the processes that power the sun. However, achieving controlled fusion reactions on Earth has proven to be a formidable and very challenging task.
 
-Recently, I saw that DeepMind has made significant strides in this area by using RL to optimize the control of tokamak reactors [[3]](#references). I read the associated paper and code and I wanted to summarize what I learned about the underlying mathematics and code behind the scenes.
+Recently, I saw that DeepMind has made significant strides in this area by using RL to optimize the control of tokamak reactors [[3]](#references). I read their paper and I wanted to summarize what I learned: physical laws, how to derive the equations, and the numerical methods used to solve them.
 
-The idea is to simulate plasma inside a tokamak reactor (a toroidal chamber or doughnut-shaped device). The equations governing the behavior of the plasma are 4 Heat/Diffufions-based equations (Parabolic PDEs) in 1D. 
+The idea is to simulate plasma inside a tokamak reactor (a toroidal chamber or doughnut-shaped device). The equations governing the behavior of the plasma are 4 Heat/Diffufions-based equations in 1D. 
 
 $$ \frac{\partial u}{\partial t} = \nabla \cdot (D \nabla u) + \text{Sources} $$
 
@@ -116,7 +116,7 @@ $$
 (\langle n_\alpha\rangle V') = -\frac{\partial\Gamma_\alpha}{\partial\rho} + V'S_\alpha.\tag{1}
 $$
 
-A detailed derivation of the transport equations is provided in the [Appendix](#appendix).
+A detailed derivation of the transport equations is provided in the [Appendix](#appendix-derivation-of-the-1d-transport-equations).
 
 We denote $\alpha=e$ (by the electron species) and denoting $\langle n_e \rangle \equiv n_e$. Using the specific form of the *flux-surface averaged radial particle flux*
 $$
@@ -136,7 +136,7 @@ $$
 g_0 V_e n_e \Big] +V'S_n .
 $$
 
-Rewritting the grid-motion term using the *toroidal flux* $\Phi_b$ and a normalized radius $\hat\rho$. Using $\hat\rho^2 = \frac{\Phi}{\Phi_b(t)}$,
+Rewriting the grid-motion term using the *toroidal flux* $\Phi_b$ and a normalized radius $\hat\rho$. Using $\hat\rho^2 = \frac{\Phi}{\Phi_b(t)}$,
 so if $\Phi_b$ changes in time, by a chain-rule term:
 
 $$
@@ -160,7 +160,7 @@ $$
 
 ## 1.2 Current Diffusion Equation.
 
-In [Appendix](#appendix), we derived the 1D equation for the evolution of the poloidal flux $\psi$ using Ohm's law and Faraday's law:
+In [Appendix](#appendix-derivation-of-the-1d-transport-equations), we derived the 1D equation for the evolution of the poloidal flux $\psi$ using Ohm's law and Faraday's law:
 
 $$
 \sigma_\parallel \left(
@@ -278,7 +278,7 @@ In [[1]](#references), the authors use a finite-volume method to discretize the 
 The 1D spatial domain, $0 \leq \hat{\rho} \leq 1$, is divided into a
 uniform grid of $N$ cells, each with a width of
 $d \hat{\rho} = 1/N$.  The cell centers are denoted by
-$\hat{\rho}_i$, where $0 = 1, 2,..., N-1$, and the $N+1$ cell
+$\hat{\rho}_i$, where $i = 1, 2,..., N-1$, and the $N+1$ cell
 faces are located at $\hat{\rho}_{i\pm1/2}$. Both $\hat{\rho}=0$ and
 $\hat{\rho}=1$ are on the face grid.
 
@@ -364,7 +364,7 @@ matrix and boundary condition vectors for the PDE diffusion term.
 TORAX uses the theta method for time discretization, and employs several options
 for solving the discretized PDE system. These are described below.
 
-The `theta method` is a weighted average between the explicit and implicit Euler
+The `θ-method` is a weighted average between the explicit and implicit Euler
 methods. For a generic ODE of the form:
 
 $$  \frac{dx}{dt} = F(x, t) $$
@@ -504,11 +504,12 @@ torax_config.update_fields({
 })
 dt, state_history = torax.run_simulation(torax_config)
 ```
-
+And after some post-processing, you can generate plots like the following:
 
 ![](axial_layers.gif)
 *Figure: Axial view of plasma inside a tokamak during a simulation.*
 
+The most important quantities are the ones related to fusion power density, which can be plotted as follows:
 ```python
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
 
@@ -542,9 +543,7 @@ plt.show()
 [4] Hinton, F. L. and R. D. Hazeltine (1976). “Theory of plasma transport in toroidal confinement systems.” In: Rev. Mod. Phys. 48.2, pp. 239–308. doi: 10.1103/RevModPhys. 48.239.
 
 
-## Appendix
-
-### (A) Derivation of the 1D Transport Equations
+## Appendix: Derivation of the 1D Transport Equations
 
 > Derivation of the Poloidal Flux Diffusion Equation
 

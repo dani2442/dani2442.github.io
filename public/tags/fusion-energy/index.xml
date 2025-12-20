@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Fusion Energy on dani2442&#39;s Blog</title>
+    <link>http://localhost:1313/tags/fusion-energy/</link>
+    <description>Recent content in Fusion Energy on dani2442&#39;s Blog</description>
+    <image>
+      <title>dani2442&#39;s Blog</title>
+      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo -- 0.150.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 28 Oct 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/fusion-energy/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Fusion Energy Simulation: Tokamak</title>
+      <link>http://localhost:1313/posts/torax/</link>
+      <pubDate>Tue, 28 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/torax/</guid>
+      <description>Notes on Tokamak transport PDEs.</description>
+    </item>
+  </channel>
+</rss>
