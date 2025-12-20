@@ -22,15 +22,18 @@ editPost:
 ![alt text](particles.gif)
 
 
-I think there are 3 major milestones remaining for humanity and one of them is *clean and abundant energy*. Fusion energy has the potential to provide a nearly limitless source of clean energy by replicating the processes that power the sun. However, achieving controlled fusion reactions on Earth has proven to be a formidable and very challenging task.
+I think there are 3 major milestones remaining for humanity, and one of them is clean and abundant energy. Fusion energy has the potential to provide a nearly limitless source of clean energy by replicating the processes that power the sun. However, achieving controlled fusion reactions on Earth has proven to be a formidable and very challenging task.
 
-Recently, I saw that DeepMind has made significant strides in this area by using RL to optimize the control of tokamak reactors [[3]](#references). I read their paper and I wanted to summarize what I learned: physical laws, how to derive the equations, and the numerical methods used to solve them.
+The most well-known fusion prototype is the tokamak, which uses a magnetic field to confine the plasma within a toroidal chamber (doughnut-shaped).
 
-The idea is to simulate plasma inside a tokamak reactor (a toroidal chamber or doughnut-shaped device). The equations governing the behavior of the plasma are 4 Heat/Diffufions-based equations in 1D. 
+Recently, I saw that DeepMind has made significant strides in this area by using RL to optimize the control of tokamak reactors [[3]](#references). I read their paper, and I wanted to summarize what I learned: physical laws, how to derive the equations, and the numerical methods used to solve them.
+
+The equations used to model the plasma are Diffusion/Heat PDEs of this type:
+
 
 $$ \frac{\partial u}{\partial t} = \nabla \cdot (D \nabla u) + \text{Sources} $$
 
-The interesting thing is that by using toroidal flux coordinates, the complex 3D geometry of the tokamak is simplified into a 1D radial coordinate system based on magnetic flux surfaces.
+The interesting thing is that by using toroidal flux coordinates, the complex 3D geometry of the tokamak can be simplified into a 1D radial coordinate system.
 
 
 ![alt text](tokamak.png)

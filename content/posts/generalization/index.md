@@ -1,6 +1,6 @@
 ---
 title: "Generalization Theory"
-date: 2025-10-28
+date: 2026-01-02
 tags: ["machine learning", "probability"]
 categories: ["probability", "machine learning"]
 author: "Daniel López Montero"

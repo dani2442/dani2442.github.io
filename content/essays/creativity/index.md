@@ -1,6 +1,6 @@
 ---
 title: "Creativity in the Age of AI: The curse of knowledge"
-date: 2025-10-16
+date: 2025-12-22
 tags: ["ai", "creativity", "cognition"]
 categories: ["miscellaneous", "machine learning", "philosophy"]
 author: "Daniel López Montero"
