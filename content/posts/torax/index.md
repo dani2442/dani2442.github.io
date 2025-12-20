@@ -1,6 +1,6 @@
 ---
 title: "Fusion Energy Simulation: Tokamak"
-date: 2025-10-28
+date: 2025-12-20
 tags: ["machine learning", "control theory", "physics", "fusion energy"]
 categories: ["control theory", "machine learning"]
 author: "Daniel López Montero"
