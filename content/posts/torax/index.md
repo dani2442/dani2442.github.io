@@ -24,13 +24,13 @@ editPost:
 
 I think there are 3 major milestones remaining for humanity and one of them is *clean and abundant energy*. Fusion energy has the potential to provide a nearly limitless source of clean energy by replicating the processes that power the sun. However, achieving controlled fusion reactions on Earth has proven to be a formidable and very challenging task.
 
-Recently, I saw thatDeepMind has made significant strides in this area by developing advanced AI models to optimize the control of tokamak reactors [[3]](#references). I read the associated paper and code and I wanted to summarize what I learned about the underlying mathematics and code behind the scenes.
+Recently, I saw that DeepMind has made significant strides in this area by using RL to optimize the control of tokamak reactors [[3]](#references). I read the associated paper and code and I wanted to summarize what I learned about the underlying mathematics and code behind the scenes.
 
 The idea is to simulate plasma inside a tokamak reactor (a toroidal chamber or doughnut-shaped device). The equations governing the behavior of the plasma are 4 Heat/Diffufions-based equations (Parabolic PDEs) in 1D. 
 
 $$ \frac{\partial u}{\partial t} = \nabla \cdot (D \nabla u) + \text{Sources} $$
 
-The interesting thing is we use toroidal flux coordinates, which simplifies the complex 3D geometry of the tokamak into a 1D radial coordinate system based on magnetic flux surfaces.
+The interesting thing is that by using toroidal flux coordinates, the complex 3D geometry of the tokamak is simplified into a 1D radial coordinate system based on magnetic flux surfaces.
 
 
 ![alt text](tokamak.png)
@@ -96,14 +96,117 @@ I_p =
 \frac{R_0 J}{16 \pi^4 \mu_0}
 \right]_{LCFS}
 $$
-
+where $LCFS$ stands for Last Closed Flux Surface (i.e. $\hat{\rho} = 1$).
 The equations are derived from the transport equations in toroidal geometry under the assumption of static background flux surfaces [[2]](#references).
 
 
 
-## 1.1 Ion and Electron Heat Transport Equations
 
-In a similar manner as the particle transport equation, an equation for energy transport can be derived [[4]](#references). 
+## 1.1 Electron Particle Transport Equation
+
+For an arbitrary plasma species $\alpha$, which may refer to electrons, main or impurity ion species, or fusion-born $\alpha$ particles, let $n_\alpha$ be the local particle density of the species and
+$\mathbf{u}_\alpha$ be the local velocity of the particles. The continuity equation for this species is stated
+as
+$$
+\frac{\partial n_\alpha}{\partial t} + \nabla \cdot (n_\alpha \mathbf{u}_\alpha) = s_\alpha 
+$$
+Here $s_\alpha$ is a localized particle source. By writing the above equation inside a toroidal flux surface we obtain
+$$
+\left(\frac{\partial}{\partial t} + \frac{\dot{B}_0}{2B_0}\rho\frac{\partial}{\partial\rho}\right)
+(\langle n_\alpha\rangle V') = -\frac{\partial\Gamma_\alpha}{\partial\rho} + V'S_\alpha.\tag{1}
+$$
+
+A detailed derivation of the transport equations is provided in the [Appendix](#appendix).
+
+We denote $\alpha=e$ (by the electron species) and denoting $\langle n_e \rangle \equiv n_e$. Using the specific form of the *flux-surface averaged radial particle flux*
+$$
+\Gamma_e=- D_e n_e \frac{g_1}{V'}\frac{\partial n_e}{\partial \rho}+
+g_0 V_e n_e.
+$$
+
+Then
+$$
+-\frac{\partial \Gamma_e}{\partial \rho}= \frac{\partial}{\partial \rho}\Big[ D_e n_e\frac{g_1}{V'}\frac{\partial n_e}{\partial \rho}-
+g_0 V_e n_e\Big].
+$$
+
+Plugging (1), we get:
+$$
+\Big(\frac{\partial}{\partial t}+\frac{\dot B_0}{2B_0}\rho\frac{\partial}{\partial \rho}\Big)(n_eV') = \frac{\partial}{\partial \rho}\Big[ D_e n_e\frac{g_1}{V'}\frac{\partial n_e}{\partial \rho}-
+g_0 V_e n_e \Big] +V'S_n .
+$$
+
+Rewritting the grid-motion term using the *toroidal flux* $\Phi_b$ and a normalized radius $\hat\rho$. Using $\hat\rho^2 = \frac{\Phi}{\Phi_b(t)}$,
+so if $\Phi_b$ changes in time, by a chain-rule term:
+
+$$
+\left.\frac{\partial}{\partial t}\right|_{\hat\rho}=
+\left.\frac{\partial}{\partial t}\right|_{\Phi} +\frac{\dot\Phi_b}{2\Phi_b}\hat\rho\frac{\partial}{\partial \hat\rho}.
+$$
+
+That is exactly the operator appearing in the final equation:
+$$
+\Big(\frac{\partial}{\partial t}-\frac{\dot\Phi_b}{2\Phi_b}\hat\rho\frac{\partial}{\partial \hat\rho}\Big)(n_eV').
+$$
+
+
+Putting the pieces together gives:
+$$
+\boxed{\;
+\Big(\frac{\partial}{\partial t}-\frac{\dot\Phi_b}{2\Phi_b}\hat\rho\frac{\partial}{\partial \hat\rho}\Big)(n_eV') =
+\frac{\partial}{\partial \hat\rho}\Big[ D_e n_e \frac{g_1}{V'} \frac{\partial n_e}{\partial \hat\rho}-g_0 V_e n_e\Big]+V'S_n.\;}
+$$
+
+
+## 1.2 Current Diffusion Equation.
+
+In [Appendix](#appendix), we derived the 1D equation for the evolution of the poloidal flux $\psi$ using Ohm's law and Faraday's law:
+
+$$
+\sigma_\parallel \left(
+\frac{\partial\psi}{\partial t} + \rho\frac{\dot{B}_0}{2B_0}\frac{\partial\psi}{\partial\rho}
+\right)= \frac{R_0 J^2}{\mu_0 \rho}\frac{\partial}{\partial\rho}
+\left(\frac{G^2}{J}\frac{\partial\psi}{\partial\rho}\right)- \frac{V'}{2\pi\rho}(j_{bs} + j_{cd})
+$$
+Using the change of variables to $\hat\rho$ and $\Phi_b$, we get, as before, that:
+$$
+\left(\frac{\partial \psi}{\partial t}\right)_{\Phi}=
+\left(\frac{\partial \psi}{\partial t}\right)_{\hat\rho}-\frac{\dot{\hat\Phi}_b}{2\hat\Phi_b}\hat\rho
+\frac{\partial \psi}{\partial \hat\rho}.
+$$
+The diffusion term is
+$$
+\frac{R_0J^2}{\mu_0\rho}\frac{\partial}{\partial\rho}
+\left(\frac{G_2}{J}\frac{\partial\psi}{\partial\rho}\right),
+\qquad
+J=\frac{F}{R_0B_0},\quad
+G_2=\frac{V'}{4\pi^2}\Big\langle\frac{(\nabla\rho)^2}{R^2}\Big\rangle.
+$$
+Transport-code forms typically package all those geometric combinations into something like
+$$
+\frac{\partial}{\partial\hat\rho}\left(\frac{g_2g_3}{\hat\rho}\frac{\partial\psi}{\partial\hat\rho}\right),
+$$
+where $g_2=\langle (\nabla V)^2/R^2\rangle$ and $g_3=\langle 1/R^2\rangle$. Therefore we obtain the final form of the current diffusion equation
+$$
+\boxed{\;
+\frac{16 \pi^2 \sigma_{\parallel}}{\mu_0} 
+\frac{\hat\rho^2 \dot{\Phi}_b^2}{F^2}
+\left(
+\frac{\partial \psi}{\partial t} - \frac{\hat\rho \dot{\Phi}_b}{2 \Phi_b} 
+\frac{\partial \psi}{\partial \hat\rho}
+\right) =
+\frac{\partial}{\partial \hat\rho}
+\left(
+\frac{g_2 g_3}{\hat\rho} 
+\frac{\partial \psi}{\partial \hat\rho}
+\right) - \frac{8 \pi^2 V' \mu_0 \Phi_b}{F^2}
+\langle \mathbf{B} \cdot \mathbf{j}_{ni} \rangle\;}
+$$
+
+
+## 1.3 Ion and Electron Heat Transport Equations
+
+In a similar manner as the particle transport equation, an equation for energy transport can be derived [[4, Eq. 7.46]](#references). 
 
 $$
 \frac{3}{2}(V')^{5/3} \left(\frac{\partial}{\partial t} - \frac{\dot B}{2B_0}\frac{\partial}{\partial \rho}\rho\right)\left[(V')^{-5/3} n_\alpha T_\alpha\right] + \frac{1}{V'}\frac{\partial}{\partial \rho} \left( q_\alpha + \frac{5}{3}T_\alpha \Gamma_\alpha \right) = P_\alpha
@@ -165,106 +268,6 @@ V'^{5/3} {n_e} {T_e}
 \end{aligned}\;}
 $$
 
-## 1.2 Electron Particle Transport Equation
-
-For an arbitrary plasma species $\alpha$, which may refer to electrons, main or impurity ion species, or fusion-born $\alpha$ particles, let $n_\alpha$ be the local particle density of the species and
-$\mathbf{u}_\alpha$ be the local velocity of the particles. The continuity equation for this species is stated
-as
-$$
-\frac{\partial n_\alpha}{\partial t} + \nabla \cdot (n_\alpha \mathbf{u}_\alpha) = s_\alpha 
-$$
-Here $s_\alpha$ is a localized particle source. By writing the above equation inside a toroidal flux surface we obtain
-$$
-\left(\frac{\partial}{\partial t} + \frac{\dot{B}_0}{2B_0}\rho\frac{\partial}{\partial\rho}\right)
-(\langle n_\alpha\rangle V') = -\frac{\partial\Gamma_\alpha}{\partial\rho} + V'S_\alpha.\tag{1}
-$$
-
-A detailed derivation of the transport equations is provided in the [Appendix](#appendix).
-
-We denote $\alpha=e$ (by the electron species) and denoting $\langle n_e \rangle \equiv n_e$. Using the specific form of the *flux-surface averaged radial particle flux*
-$$
-\Gamma_e=- D_e n_e \frac{g_1}{V'}\frac{\partial n_e}{\partial \rho}+
-g_0 V_e n_e.
-$$
-
-Then
-$$
--\frac{\partial \Gamma_e}{\partial \rho}= \frac{\partial}{\partial \rho}\Big[ D_e n_e\frac{g_1}{V'}\frac{\partial n_e}{\partial \rho}-
-g_0 V_e n_e\Big].
-$$
-
-Plugging (1), we get:
-$$
-\Big(\frac{\partial}{\partial t}+\frac{\dot B_0}{2B_0}\rho\frac{\partial}{\partial \rho}\Big)(n_eV') = \frac{\partial}{\partial \rho}\Big[ D_e n_e\frac{g_1}{V'}\frac{\partial n_e}{\partial \rho}-
-g_0 V_e n_e \Big] +V'S_n .
-$$
-
-Rewritting the grid-motion term using the *toroidal flux* $\Phi_b$ and a normalized radius $\hat\rho$. Using $\hat\rho^2 = \frac{\Phi}{\Phi_b(t)}$,
-so if $\Phi_b$ changes in time, by a chain-rule term:
-
-$$
-\left.\frac{\partial}{\partial t}\right|_{\hat\rho}=
-\left.\frac{\partial}{\partial t}\right|_{\Phi} +\frac{\dot\Phi_b}{2\Phi_b}\hat\rho\frac{\partial}{\partial \hat\rho}.
-$$
-
-That is exactly the operator appearing in the final equation:
-$$
-\Big(\frac{\partial}{\partial t}-\frac{\dot\Phi_b}{2\Phi_b}\hat\rho\frac{\partial}{\partial \hat\rho}\Big)(n_eV').
-$$
-
-
-Putting the pieces together gives:
-$$
-\boxed{\;
-\Big(\frac{\partial}{\partial t}-\frac{\dot\Phi_b}{2\Phi_b}\hat\rho\frac{\partial}{\partial \hat\rho}\Big)(n_eV') =
-\frac{\partial}{\partial \hat\rho}\Big[ D_e n_e \frac{g_1}{V'} \frac{\partial n_e}{\partial \hat\rho}-g_0 V_e n_e\Big]+V'S_n.\;}
-$$
-
-
-## 1.3 Current Diffusion Equation.
-
-In [Appendix](#appendix), we derived the 1D equation for the evolution of the poloidal flux $\psi$:
-
-$$
-\sigma_\parallel \left(
-\frac{\partial\psi}{\partial t} + \rho\frac{\dot{B}_0}{2B_0}\frac{\partial\psi}{\partial\rho}
-\right)= \frac{R_0 J^2}{\mu_0 \rho}\frac{\partial}{\partial\rho}
-\left(\frac{G^2}{J}\frac{\partial\psi}{\partial\rho}\right)- \frac{V'}{2\pi\rho}(j_{bs} + j_{cd})
-$$
-Using the change of variables to $\hat\rho$ and $\Phi_b$, we get, as before, that:
-$$
-\left(\frac{\partial \psi}{\partial t}\right)_{\Phi}=
-\left(\frac{\partial \psi}{\partial t}\right)_{\hat\rho}-\frac{\dot{\hat\Phi}_b}{2\hat\Phi_b}\hat\rho
-\frac{\partial \psi}{\partial \hat\rho}.
-$$
-The diffusion term is
-$$
-\frac{R_0J^2}{\mu_0\rho}\frac{\partial}{\partial\rho}
-\left(\frac{G_2}{J}\frac{\partial\psi}{\partial\rho}\right),
-\qquad
-J=\frac{F}{R_0B_0},\quad
-G_2=\frac{V'}{4\pi^2}\Big\langle\frac{(\nabla\rho)^2}{R^2}\Big\rangle.
-$$
-Transport-code forms typically package all those geometric combinations into something like
-$$
-\frac{\partial}{\partial\hat\rho}\left(\frac{g_2g_3}{\hat\rho}\frac{\partial\psi}{\partial\hat\rho}\right),
-$$
-where $g_2=\langle (\nabla V)^2/R^2\rangle$ and $g_3=\langle 1/R^2\rangle$. Therefore we obtain the final form of the current diffusion equation
-$$
-\boxed{\;
-\frac{16 \pi^2 \sigma_{\parallel}}{\mu_0} 
-\frac{\hat\rho^2 \dot{\Phi}_b^2}{F^2}
-\left(
-\frac{\partial \psi}{\partial t} - \frac{\hat\rho \dot{\Phi}_b}{2 \Phi_b} 
-\frac{\partial \psi}{\partial \hat\rho}
-\right) =
-\frac{\partial}{\partial \hat\rho}
-\left(
-\frac{g_2 g_3}{\hat\rho} 
-\frac{\partial \psi}{\partial \hat\rho}
-\right) - \frac{8 \pi^2 V' \mu_0 \Phi_b}{F^2}
-\langle \mathbf{B} \cdot \mathbf{j}_{ni} \rangle\;}
-$$
 
 
 ## 2. Discretization and Numerical Methods
@@ -291,14 +294,13 @@ dividing by the cell volume, the finite volume method reduces to a special case
 of finite differences:
 
 $$
-  \frac{\partial }{\partial t}(x_i) + \frac{1}{d \hat{\rho}}({\Gamma}_{i+1/2}
-  - {\Gamma}_{i-1/2})  = S_i
+  \frac{\partial }{\partial t}(x_i) + \frac{1}{d \hat{\rho}}({\Gamma}_{i+1/2}  - {\Gamma}_{i-1/2})  = S_i
 $$
 where $x_i$ is the cell-averaged value of $x$ in cell $i$,
 $\Gamma_{i+1/2}$ is the flux at face $i+1/2$, and $S_i$ is the
 cell-averaged source term in cell $i$.
 
-In general, the fluxes in TORAX are decomposed as
+In general, the fluxes are decomposed as
 
 $$
   \Gamma = -D\frac{\partial x}{\partial \hat{\rho}} + Vx
@@ -308,7 +310,6 @@ where $D$ is a diffusion coefficient and $V$ now denotes a
 convection coefficient, leading to:
 
 $$
-
   \begin{aligned}
   \Gamma_{i+1/2} &= -D_{i+1/2}\frac{x_{i+1} - x_{i}}{d\hat{\rho}} +
    V_{i+1/2}x_{i+1/2} \\
@@ -344,7 +345,7 @@ $$
   -\frac{1}{Pe} & \text{if } Pe < -10.
   \end{cases}
 $$
-The Péclet number quantifies the relative strength of convection and diffusion.
+The *Péclet number* quantifies the relative strength of convection and diffusion.
 If the Péclet number is small and diffusion dominates, then the weighting scheme
 converges to central differencing. If the absolute value of the Péclet number is
 large, and convection dominates, then the scheme converges to upwinding.
@@ -363,9 +364,7 @@ matrix and boundary condition vectors for the PDE diffusion term.
 TORAX uses the theta method for time discretization, and employs several options
 for solving the discretized PDE system. These are described below.
 
-> Theta method
-
-The theta method is a weighted average between the explicit and implicit Euler
+The `theta method` is a weighted average between the explicit and implicit Euler
 methods. For a generic ODE of the form:
 
 $$  \frac{dx}{dt} = F(x, t) $$
@@ -393,8 +392,7 @@ $$\tag{2}
   \mathbf{x}_{t + \Delta t} - \mathbf{\tilde{T}}(x_t, u_t)\odot\mathbf{x}_t =
   \\
   & \Delta t \big[ \theta \big( \mathbf{\bar{C}}(x_{t+\Delta t}, u_{t+\Delta t})
-  \mathbf{x}_{t+\Delta t} + \mathbf{c}(x_{t+\Delta t}, u_{t+\Delta t}) \big) \\
-  & \qquad + (1-\theta) \big( \mathbf{\bar{C}}(x_t, u_t)\mathbf{x}_t +
+  \mathbf{x}_{t+\Delta t} + \mathbf{c}(x_{t+\Delta t}, u_{t+\Delta t}) \big)  + (1-\theta) \big( \mathbf{\bar{C}}(x_t, u_t)\mathbf{x}_t +
   \mathbf{c}(x_{t}, u_{t}) \big) \big]
   \end{aligned}
 $$
@@ -402,12 +400,10 @@ Starting from an initial condition $\mathbf{x}_0$, equation
 (2) solves for $\mathbf{x}_{t+\Delta t}$ at each
 timestep. $\mathbf{x}_t$ is the evolving state vector at time $t$,
 including all variables being solved by the system, and is of length
-$\#N$, where $\#$ is the number of solved variables. For example,
-consider a simulation with a gridsize of $25$ solving ion heat transport,
-electron heat transport, and current diffusion. Then $N=25$, $\#=3$,
-and $\mathbf{x}_t$ is comprised of $T_i$, $T_e$, and
-$\psi$, each with its own set of $N$ values, making a total vector
-length of 75.
+$\#N$, where $\#$ is the number of solved variables. 
+
+![alt text](image.png)
+Source: [[1]](#references)
 
 $\mathbf{u}_t$ corresponds to all known input parameters at time
 $t$. This includes boundary conditions, prescribed profiles
@@ -430,7 +426,7 @@ $x_{t+\Delta t}$ dependence. $\mathbf{c}$ is a vector, containing
 source terms and boundary condition terms.
 
 
-TORAX provides three solver options for solving the TORAX nonlinear evolution system of equations, summarized next.
+There are two solver options for solving the nonlinear evolution system of equations.
 
 #### Linear solver
 
@@ -447,8 +443,7 @@ $$
   \\
   & \Delta t \big[ \theta \big( \mathbf{\bar{C}}(x_{t+\Delta t}^{k-1},
   u_{t+\Delta t})\mathbf{x}_{t+\Delta t}^k + \mathbf{c}(x_{t+\Delta t}^{k-1},
-  u_{t+\Delta t}) \big) \\
-  & \qquad + (1-\theta) \big( \mathbf{\bar{C}}(x_t, u_t)\mathbf{x}_t +
+  u_{t+\Delta t}) \big) + (1-\theta) \big( \mathbf{\bar{C}}(x_t, u_t)\mathbf{x}_t +
   \mathbf{c}(x_{t}, u_{t}) \big) \big]
   \end{aligned}
 $$
@@ -457,19 +452,8 @@ and where $\mathbf{x}_{t+\Delta t}^{0} = \mathbf{x}_t$.
 By replacing $\mathbf{x}_{t+\Delta t}$ with
 $\mathbf{x}_{t+\Delta t}^{k-1}$ within the coefficients
 $\mathbf{\tilde{T}}$, $\mathbf{\bar{C}}$ and $\mathbf{c}$,
-these coefficients become known at every iteration step, describing a `linear`
-system of equations. $\mathbf{x}_{t+\Delta t}^k$ can then be solved using
-standard linear algebra methods implemented in JAX.
+these coefficients become known at every iteration step, describing a linear system of equations. $\mathbf{x}_{t+\Delta t}^k$ can then be solved using standard linear algebra methods implemented in JAX.
 
-To further enhance the stability of the linear solver, particularly in the
-presence of stiff transport coefficients (e.g., when using the QLKNN turbulent
-transport model, see), the `pereverzev-corrigan-method`
-is implemented as an option. This method adds a large (user-configurable)
-artificial diffusion term to the transport equations, balanced by a large inward
-convection term such that zero extra transport is added at time $t$. These
-terms stabilize the solution, at the cost of accuracy over short transient
-phenomena, demanding care in the choice of $\Delta t$ and the value of the
-artificial diffusion term.
 
 
 
@@ -508,47 +492,46 @@ $\varepsilon$,  i.e:
 $\| \mathbf{R}(\mathbf{x}_{t+\Delta t}^{k+1}) \|_2 < \varepsilon$, where
 $\|\cdot\|_2$ is the vector two-norm.
 
-Solver robustness is obtained with a combination of $\delta \mathbf{x}$
-line search and $\Delta t$ backtracking. $\delta \mathbf{x}$ line
-search reduces the step size within a given Newton iteration step, while
-$\Delta t$ backtracking reduces the overall time step and restarts the
-entire Newton-Raphson solver for the present timestep, as follows:
 
-  - If a Newton step leads to an increasing residual,
-    i.e.
-    $\mathbf{R}(\mathbf{x}_{t+\Delta t}^{k+1}) > \mathbf{R}(\mathbf{x}_{t+\Delta t}^k)$,
-    or if $\mathbf{x}_{t+\Delta t}^{k+1}$ is unphysical, e.g. negative
-    temperature, then $\delta \mathbf{x}$ is reduced by a
-    user-configurable factor, and the line-search checks are repeated. The total
-    accumulative reduction factor in a Newton step is denoted $\tau$.
-
-  - If during the line-search phase, $\tau$ becomes too low, as determined
-    by a user-configurable variable, then the solve is abandoned and
-    $\Delta t$ backtracking is invoked. A new solve attempt is made at a
-    reduced $\Delta t$, reduced by a user-configurable factor, which
-    results in a less nonlinear system.
-
-For the initial guess $\mathbf{x}_{t+\Delta t}^0$, two options are
-available. The user can start from $\mathbf{x}_t$, or use the result of
-the predictor-corrector linear solver as a warm-start.
-
-## Code Implementation (Torax)
-
+## 3. Code Implementation (Torax)
+You can see more examples and documentation at the [Torax GitHub repository](https://torax.readthedocs.io/en/v1.2.0/index.html).
 ```python
+import torax
 torax_config = torax.build_torax_config_from_file('examples/iterhybrid_rampup.py') # load Iter hybrid config
 torax_config.update_fields({
     "numerics.fixed_dt": 1.0,
     "numerics.t_final": 100.0, 
 })
-data_tree, state_history = torax.run_simulation(torax_config)
-data_tree.to_netcdf('iter.nc')
+dt, state_history = torax.run_simulation(torax_config)
 ```
 
 
 ![](axial_layers.gif)
 *Figure: Axial view of plasma inside a tokamak during a simulation.*
 
+```python
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+# Plot p_alpha_i on first subplot
+dt.profiles.p_alpha_i.plot(ax=ax1)
+ax1.set_xlabel('$\\hat{\\rho}$')
+ax1.set_title('Ion heating power density (W/m$^3$)')
+
+# Plot p_alpha_e on second subplot
+dt.profiles.p_alpha_e.plot(ax=ax2)
+ax2.set_xlabel('$\\hat{\\rho}$')
+ax2.set_title('Electron heating power density (W/m$^3$)')
+
+plt.savefig('fusion_power_density.png', dpi=300, bbox_inches='tight')
+plt.show()
+```
+
+![](fusion_power_density.png)
+
+*Figure: Ion and electron heating power density from fusion reactions during a simulation of ITER hybrid scenario ramp-up phase.*
 ## References
+
+[0] The code used for the figures is available at: https://github.com/dani2442/dani2442_code/tree/main/torax
 
 [1] Citrin, Jonathan, Ian Goodfellow, Akhil Raju, Jeremy Chen, Jonas Degrave, Craig Donner, Federico Felici et al. "TORAX: A fast and differentiable tokamak transport simulator in JAX." arXiv preprint arXiv:2406.06718 (2024).
 
@@ -557,6 +540,7 @@ data_tree.to_netcdf('iter.nc')
 [3] https://deepmind.google/discover/blog/bringing-ai-to-the-next-generation-of-fusion-energy/
 
 [4] Hinton, F. L. and R. D. Hazeltine (1976). “Theory of plasma transport in toroidal confinement systems.” In: Rev. Mod. Phys. 48.2, pp. 239–308. doi: 10.1103/RevModPhys. 48.239.
+
 
 ## Appendix
 
@@ -696,6 +680,7 @@ $$
 $$
 
 > 4. Ohm’s law.
+
 We can write the flux-surface-averaged Ohm’s law as:
 $$
 \langle \mathbf{j}\cdot\mathbf{B}\rangle = \sigma_\parallel \langle \mathbf{E}\cdot\mathbf{B}\rangle + \langle \mathbf{j}_{ni}\cdot\mathbf{B}\rangle
