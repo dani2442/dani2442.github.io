@@ -84,7 +84,7 @@ Here we summarize the variables and parameters used in the equations:
 
 **Boundary Conditions:**
 The boundary conditions are as follows. All equations have a zero-derivative boundary condition at $\hat{\rho} = 0$ (Von-Neumann). 
-The $T_i$, $T_e$, $n_e$ equations have fixed boundary conditions at $\hat{\rho} = 1$, which are user-defined. 
+The $T_i$, $T_e$, $n_e$ equations have fixed boundary conditions at $\hat{\rho} = 1$. 
 The $\psi$ equation has a Neumann (derivative) boundary condition at $\hat{\rho} = 1$, 
 which sets the total plasma current through the relation:
 
@@ -97,7 +97,7 @@ I_p =
 \right]_{LCFS}
 $$
 
-The equations are derived from the transport equations in toroidal geometry under the assumption of static background flux surfaces.
+The equations are derived from the transport equations in toroidal geometry under the assumption of static background flux surfaces [[2]](#references).
 
 
 
@@ -267,6 +267,271 @@ $$
 $$
 
 
+## 2. Discretization and Numerical Methods
+
+In [[1]](#references), the authors use a finite-volume method to discretize the spatial derivatives in the transport equations.
+
+### 2.1 Spatial discretization: Finite Volume Method (FVM)
+The 1D spatial domain, $0 \leq \hat{\rho} \leq 1$, is divided into a
+uniform grid of $N$ cells, each with a width of
+$d \hat{\rho} = 1/N$.  The cell centers are denoted by
+$\hat{\rho}_i$, where $0 = 1, 2,..., N-1$, and the $N+1$ cell
+faces are located at $\hat{\rho}_{i\pm1/2}$. Both $\hat{\rho}=0$ and
+$\hat{\rho}=1$ are on the face grid.
+
+For a generic conservation law of the form:
+$$
+  \frac{\partial x}{\partial t} + \nabla \cdot \mathbf{\Gamma} = S
+$$
+where $x$ is a conserved quantity, $\mathbf{\Gamma}$ is the flux,
+and $S$ is a source term, the FVM approach involves integrating the PDE
+over a control volume (named a "cell") and applying the divergence theorem to
+convert volume integrals to surface integrals. For 1D systems, following
+dividing by the cell volume, the finite volume method reduces to a special case
+of finite differences:
+
+$$
+  \frac{\partial }{\partial t}(x_i) + \frac{1}{d \hat{\rho}}({\Gamma}_{i+1/2}
+  - {\Gamma}_{i-1/2})  = S_i
+$$
+where $x_i$ is the cell-averaged value of $x$ in cell $i$,
+$\Gamma_{i+1/2}$ is the flux at face $i+1/2$, and $S_i$ is the
+cell-averaged source term in cell $i$.
+
+In general, the fluxes in TORAX are decomposed as
+
+$$
+  \Gamma = -D\frac{\partial x}{\partial \hat{\rho}} + Vx
+$$
+
+where $D$ is a diffusion coefficient and $V$ now denotes a
+convection coefficient, leading to:
+
+$$
+
+  \begin{aligned}
+  \Gamma_{i+1/2} &= -D_{i+1/2}\frac{x_{i+1} - x_{i}}{d\hat{\rho}} +
+   V_{i+1/2}x_{i+1/2} \\
+  \Gamma_{i-1/2} &= -D_{i-1/2}\frac{x_{i} - x_{i-1}}{d\hat{\rho}} +
+   V_{i-1/2}x_{i-1/2}
+  \end{aligned}
+$$
+The diffusion and convection coefficients are thus calculated on the face grid.
+The value of $x$ on the face grid is approximated by implementing a
+power-law scheme for Péclet-number weighting, which smoothly transitions between
+central differencing and upwinding, as follows:
+
+$$
+  \begin{aligned}
+  x_{i+1/2} &= \alpha_{i+1/2}x_i + (1 - \alpha_{i+1/2}) x_{i+1} \\
+  x_{i-1/2} &= \alpha_{i-1/2}x_i + (1 - \alpha_{i-1/2}) x_{i-1} \\
+  \end{aligned}
+$$
+where the $\alpha$ weighting factor depends on the Péclet number,
+defined as:
+
+$$
+  Pe = \frac{V d \hat{\rho}}{D}
+$$
+where $V$ is convection and $D$ is diffusion. The power-law scheme
+is as follows:
+
+$$
+  \alpha = \begin{cases}
+  \frac{Pe - 1}{Pe}  & \text{if } Pe > 10, \\
+  \frac{(Pe - 1) + (1 - Pe/10)^5}{Pe} & \text{if } 0 < Pe < 10, \\
+  \frac{(1 + Pe/10)^5 - 1}{Pe} & \text{if } -10 < Pe < 0, \\
+  -\frac{1}{Pe} & \text{if } Pe < -10.
+  \end{cases}
+$$
+The Péclet number quantifies the relative strength of convection and diffusion.
+If the Péclet number is small and diffusion dominates, then the weighting scheme
+converges to central differencing. If the absolute value of the Péclet number is
+large, and convection dominates, then the scheme converges to upwinding.
+
+Boundary conditions are taken into account by introducing ghost cells
+$x_{N}$ and $x_{-1}$ whose values are determined by assuming linear
+extrapolation through the edge cells and the face boundary conditions (for
+Dirichlet boundary conditions), or by directly satisfying the derivative
+(Neumann) boundary conditions.
+
+The above equations, when combined, define the elements of the discretization
+matrix and boundary condition vectors for the PDE diffusion term.
+
+### 2.2 Time discretization and solver options
+
+TORAX uses the theta method for time discretization, and employs several options
+for solving the discretized PDE system. These are described below.
+
+> Theta method
+
+The theta method is a weighted average between the explicit and implicit Euler
+methods. For a generic ODE of the form:
+
+$$  \frac{dx}{dt} = F(x, t) $$
+
+where $x$ is the state vector, the theta method approximates the solution at time
+$t + \Delta t$ as:
+
+$$
+  x_{t + \Delta t} - x_t = \Delta t \big[ \theta F(x_{t + \Delta t}, t +
+  \Delta t) + (1 - \theta) F(x_t, t)\big] \tag{1}
+$$
+where $\theta$ is a user-selected weighting parameter in the range
+$[0, 1]$. Different values of $\theta$ correspond to well-known
+solution methods: explicit Euler ($\theta = 0$), Crank-Nicolson
+($\theta = 0.5$), and implicit Euler ($\theta = 1$), which is
+unconditionally stable.
+
+
+Upon inspection of the equations, we generalize equation (1) and
+write the state evolution equation as:
+
+$$\tag{2}
+  \begin{aligned}
+  & \mathbf{\tilde{T}}(x_{t + \Delta t}, u_{t + \Delta t})\odot
+  \mathbf{x}_{t + \Delta t} - \mathbf{\tilde{T}}(x_t, u_t)\odot\mathbf{x}_t =
+  \\
+  & \Delta t \big[ \theta \big( \mathbf{\bar{C}}(x_{t+\Delta t}, u_{t+\Delta t})
+  \mathbf{x}_{t+\Delta t} + \mathbf{c}(x_{t+\Delta t}, u_{t+\Delta t}) \big) \\
+  & \qquad + (1-\theta) \big( \mathbf{\bar{C}}(x_t, u_t)\mathbf{x}_t +
+  \mathbf{c}(x_{t}, u_{t}) \big) \big]
+  \end{aligned}
+$$
+Starting from an initial condition $\mathbf{x}_0$, equation
+(2) solves for $\mathbf{x}_{t+\Delta t}$ at each
+timestep. $\mathbf{x}_t$ is the evolving state vector at time $t$,
+including all variables being solved by the system, and is of length
+$\#N$, where $\#$ is the number of solved variables. For example,
+consider a simulation with a gridsize of $25$ solving ion heat transport,
+electron heat transport, and current diffusion. Then $N=25$, $\#=3$,
+and $\mathbf{x}_t$ is comprised of $T_i$, $T_e$, and
+$\psi$, each with its own set of $N$ values, making a total vector
+length of 75.
+
+$\mathbf{u}_t$ corresponds to all known input parameters at time
+$t$. This includes boundary conditions, prescribed profiles
+(e.g. $n_e$ in the example above), and input parameters such as heating
+powers or locations.
+
+$\mathbf{\tilde{T}}$ is the transient term, where $\odot$ 
+signifies element-wise multiplication. For example, for the $T_e$
+equation, $\mathbf{\tilde{T}}=\mathbf{n_e}$, which makes the system
+nonlinear if $\mathbf{n_e}$ itself is an evolving variable.
+
+$\mathbf{\bar{C}}(x_t, u_t)$ and
+$\mathbf{\bar{C}}(x_{t+\Delta t}, u_{t+\Delta t})$ are the discretization
+matrices, of size $\#N\times \#N$. In general, depending on the physics
+models used, $\mathbf{\bar{C}}$ depends on state variables
+$\mathbf{x}$, for example through state-variable dependencies of transport
+coefficients $\chi$, $D$, $V$, plasma conductivity, and
+ion-electron heat exchange, making the system nonlinear due to the
+$x_{t+\Delta t}$ dependence. $\mathbf{c}$ is a vector, containing
+source terms and boundary condition terms.
+
+
+TORAX provides three solver options for solving the TORAX nonlinear evolution system of equations, summarized next.
+
+#### Linear solver
+
+This solver addresses the nonlinearity of the PDE system with fixed-point
+iteration, also known as the predictor-corrector method. For $K$
+iterations (user-configurable), an approximation for
+$\mathbf{x}_{t+\Delta t}$ is obtained by solving the following equation
+iteratively with $k=1,2,..,K$:
+
+$$
+  \begin{aligned}
+  & \mathbf{\tilde{T}}(x_{t + \Delta t}^{k-1}, u_{t + \Delta t})\odot
+  \mathbf{x}_{t + \Delta t}^k - \mathbf{\tilde{T}}(x_t, u_t)\odot\mathbf{x}_t =
+  \\
+  & \Delta t \big[ \theta \big( \mathbf{\bar{C}}(x_{t+\Delta t}^{k-1},
+  u_{t+\Delta t})\mathbf{x}_{t+\Delta t}^k + \mathbf{c}(x_{t+\Delta t}^{k-1},
+  u_{t+\Delta t}) \big) \\
+  & \qquad + (1-\theta) \big( \mathbf{\bar{C}}(x_t, u_t)\mathbf{x}_t +
+  \mathbf{c}(x_{t}, u_{t}) \big) \big]
+  \end{aligned}
+$$
+and where $\mathbf{x}_{t+\Delta t}^{0} = \mathbf{x}_t$.
+
+By replacing $\mathbf{x}_{t+\Delta t}$ with
+$\mathbf{x}_{t+\Delta t}^{k-1}$ within the coefficients
+$\mathbf{\tilde{T}}$, $\mathbf{\bar{C}}$ and $\mathbf{c}$,
+these coefficients become known at every iteration step, describing a `linear`
+system of equations. $\mathbf{x}_{t+\Delta t}^k$ can then be solved using
+standard linear algebra methods implemented in JAX.
+
+To further enhance the stability of the linear solver, particularly in the
+presence of stiff transport coefficients (e.g., when using the QLKNN turbulent
+transport model, see), the `pereverzev-corrigan-method`
+is implemented as an option. This method adds a large (user-configurable)
+artificial diffusion term to the transport equations, balanced by a large inward
+convection term such that zero extra transport is added at time $t$. These
+terms stabilize the solution, at the cost of accuracy over short transient
+phenomena, demanding care in the choice of $\Delta t$ and the value of the
+artificial diffusion term.
+
+
+
+#### Newton-Raphson Solver
+
+This solver solves the nonlinear PDE system, using a gradient-based iterative
+Newton-Raphson root-finding method for finding the value of
+$\mathbf{x}_{t+\Delta t}$ that renders the residual vector zero:
+$$\tag{3}
+  \mathbf{R}(\mathbf{x}_{t+\Delta t},\mathbf{x}_t,\mathbf{u}_{t+\Delta t},
+  \mathbf{u}_t, \theta, \Delta t) = 0
+$$
+where $\mathbf{R}$ is the LHS-RHS of equation (2).
+
+Starting from an initial guess
+$\mathbf{x}_{t+\Delta t}=\mathbf{x}_{t+\Delta t}^0$, the Newton-Raphson
+method linearizes equation (3) about iteration
+$\mathbf{x}_{t+\Delta t}^k$ and solves the linear system for a step
+$\delta\mathbf{x}$:
+
+$$
+  \mathbf{\bar{J}}(\mathbf{x}_{t+\Delta t}^k) \delta\mathbf{x} =
+  -\mathbf{R}(\mathbf{x}_{t+\Delta t}^k)
+$$
+
+where $\mathbf{\bar{J}}$ is the Jacobian of $\mathbf{R}$ with
+respect to $\mathbf{x}_{t+\Delta t}$. Crucially, JAX automatically
+calculates $\mathbf{\bar{J}}$ using auto-differentiation.
+
+With
+$\delta\mathbf{x} = \mathbf{x}_{t+\Delta t}^{k+1} - \mathbf{x}_{t+\Delta t}^{k}$,
+$\mathbf{x}_{t+\Delta t}^{k+1}$ is solved using standard linear algebra
+methods implemented in JAX such as LU decomposition. This process iterates until
+the residual falls below a user-configurable tolerance
+$\varepsilon$,  i.e:
+$\| \mathbf{R}(\mathbf{x}_{t+\Delta t}^{k+1}) \|_2 < \varepsilon$, where
+$\|\cdot\|_2$ is the vector two-norm.
+
+Solver robustness is obtained with a combination of $\delta \mathbf{x}$
+line search and $\Delta t$ backtracking. $\delta \mathbf{x}$ line
+search reduces the step size within a given Newton iteration step, while
+$\Delta t$ backtracking reduces the overall time step and restarts the
+entire Newton-Raphson solver for the present timestep, as follows:
+
+  - If a Newton step leads to an increasing residual,
+    i.e.
+    $\mathbf{R}(\mathbf{x}_{t+\Delta t}^{k+1}) > \mathbf{R}(\mathbf{x}_{t+\Delta t}^k)$,
+    or if $\mathbf{x}_{t+\Delta t}^{k+1}$ is unphysical, e.g. negative
+    temperature, then $\delta \mathbf{x}$ is reduced by a
+    user-configurable factor, and the line-search checks are repeated. The total
+    accumulative reduction factor in a Newton step is denoted $\tau$.
+
+  - If during the line-search phase, $\tau$ becomes too low, as determined
+    by a user-configurable variable, then the solve is abandoned and
+    $\Delta t$ backtracking is invoked. A new solve attempt is made at a
+    reduced $\Delta t$, reduced by a user-configurable factor, which
+    results in a less nonlinear system.
+
+For the initial guess $\mathbf{x}_{t+\Delta t}^0$, two options are
+available. The user can start from $\mathbf{x}_t$, or use the result of
+the predictor-corrector linear solver as a warm-start.
+
 ## Code Implementation (Torax)
 
 ```python
@@ -281,6 +546,8 @@ data_tree.to_netcdf('iter.nc')
 
 
 ![](axial_layers.gif)
+*Figure: Axial view of plasma inside a tokamak during a simulation.*
+
 ## References
 
 [1] Citrin, Jonathan, Ian Goodfellow, Akhil Raju, Jeremy Chen, Jonas Degrave, Craig Donner, Federico Felici et al. "TORAX: A fast and differentiable tokamak transport simulator in JAX." arXiv preprint arXiv:2406.06718 (2024).
