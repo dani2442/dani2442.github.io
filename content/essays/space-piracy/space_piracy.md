@@ -1,5 +1,5 @@
 ---
-title: "Space Piracy: Theft, Ransom, and Security in Orbit"
+title: "Space Piracy"
 date: 2025-12-23
 tags: ["space", "satellites", "security", "cybersecurity", "economics"]
 categories: ["space", "miscellaneous"]
