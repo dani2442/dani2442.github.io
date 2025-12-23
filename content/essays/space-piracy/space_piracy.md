@@ -17,19 +17,24 @@ editPost:
     appendFilePath: true # to append file path to Edit link
 ---
 
-If the space industry continues to develop as expected, it's only a matter of time before space piracy becomes a real concept. All these expensive satellites and data centers orbiting look very juicy and largely unprotected!
+Piracy is as old as trade itself. When Spain and Portugal started sending treasure fleets carrying gold, silver and goods across the Atlantic in the 16th century, it didn't take long for pirates to appear. You may know some of the most famous pirates: Francis Drake, Henry Morgan, Blackbeard, Hawkins, etc. 
+
+The famous English “piracy” operated in special way through `privateering`: privately owned ships authorized by the crown via letters of marque to raid enemy shipping in wartime. 
 
 ![Boats](ship.png)
+*Marek Rużyk (b. 1965, Polish painter) - Unrest sea*
 
-![Space Piracy](space_piracy.png)
 
-But "piracy" is a loaded word. If you imagine a grappling hook and a boarding party, you're thinking about the hardest (and least likely) version. The first wave of "piracy" will look far more mundane: credential theft, supply-chain compromises, command spoofing, and subtle manipulation of telemetry. In other words, it will resemble today's cybercrime - just with higher stakes and stranger physics.
+# A new era of piracy
 
-## What counts as space piracy?
+The way that countries, companies and individuals attack and disrupt each other nowadays has changed a lot, it is more digital and complex, but the underlying incentives remain the same: stealing value from others to enrich oneself.
 
-I'll use *space piracy* as a broad umbrella: extracting value from a space asset without authorization by taking control of it, degrading it, or coercing its operator.
+If the space industry continues to develop as expected, it's only a matter of time before space piracy becomes a real concept. All these expensive satellites and data centers orbiting look very juicy and largely unprotected!
 
-That includes several distinct behaviors:
+> What counts as space piracy?
+
+
+I'll use *space piracy* as a broad umbrella: extracting value from a space asset without authorization by taking control of it, degrading it, or coercing its operator. Some specific examples include:
 
 - **Service theft**: using someone else's satellite capacity (bandwidth, compute, sensing) without paying.
 - **Data theft**: exfiltrating high-value data products (imagery, signals intelligence, proprietary processing outputs) by compromising the ground segment or the downlink pipeline.
@@ -37,4 +42,11 @@ That includes several distinct behaviors:
 - **Signal hijacking**: interfering with user links, spoofing signals, or impersonating a satellite to users on the ground.
 - **Physical capture or tampering**: rendezvous and proximity operations (RPO), docking, attaching a device, or relocating the satellite.
 
-Most real-world incidents will be messy combinations: a cyber intrusion that enables a malicious maneuver; a jammed link that forces the operator into a risky recovery mode; a "salvage" attempt that is indistinguishable from theft.
+
+
+![Space Piracy](space_piracy.png)
+
+But "piracy" is a loaded word. If you imagine a grappling hook and a boarding party, you're thinking about the hardest (and least likely) version. The first wave of "piracy" will look far more mundane: credential theft, supply-chain compromises, command spoofing, and subtle manipulation of telemetry. In other words, it will resemble today's cybercrime - just with higher stakes and stranger physics.
+
+
+
