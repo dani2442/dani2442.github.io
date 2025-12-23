@@ -2,43 +2,29 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Metrics on dani2442&#39;s Blog</title>
-    <link>http://localhost:1313/tags/metrics/</link>
+    <link>https://dani2442.github.io/tags/metrics/</link>
     <description>Recent content in Metrics on dani2442&#39;s Blog</description>
     <image>
       <title>dani2442&#39;s Blog</title>
-      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+      <url>https://dani2442.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://dani2442.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
     </image>
     <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 16 Oct 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/metrics/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://dani2442.github.io/tags/metrics/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Death of industry by Oversupply</title>
-      <link>http://localhost:1313/essays/leverage-inequality/leverage-inequality/</link>
+      <link>https://dani2442.github.io/essays/leverage-inequality/leverage-inequality/</link>
       <pubDate>Thu, 16 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/leverage-inequality/leverage-inequality/</guid>
-      <description>Demand has limits, but supply can increase indefinitely</description>
-    </item>
-    <item>
-      <title>Death of industry by Oversupply</title>
-      <link>http://localhost:1313/essays/oversupply/death_by_oversupply/</link>
-      <pubDate>Thu, 16 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/oversupply/death_by_oversupply/</guid>
+      <guid>https://dani2442.github.io/essays/leverage-inequality/leverage-inequality/</guid>
       <description>Demand has limits, but supply can increase indefinitely</description>
     </item>
     <item>
       <title>The Importance of (Good) Metrics</title>
-      <link>http://localhost:1313/essays/metrics/</link>
+      <link>https://dani2442.github.io/essays/metrics/</link>
       <pubDate>Thu, 16 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/metrics/</guid>
-      <description>We live surrounded by metrics</description>
-    </item>
-    <item>
-      <title>The Importance of (Good) Metrics</title>
-      <link>http://localhost:1313/essays/space-piracy/space_piracy/</link>
-      <pubDate>Thu, 16 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/space-piracy/space_piracy/</guid>
+      <guid>https://dani2442.github.io/essays/metrics/</guid>
       <description>We live surrounded by metrics</description>
     </item>
   </channel>
