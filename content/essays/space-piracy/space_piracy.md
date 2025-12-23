@@ -5,7 +5,7 @@ tags: ["space", "satellites", "security", "cybersecurity", "economics"]
 categories: ["space", "miscellaneous"]
 author: "Daniel López Montero"
 showToc: true
-draft: true
+draft: false
 description: "Why piracy is likely to move to orbit, and how to defend against it."
 ShowWordCount: false
 ShowReadingTime: true
@@ -40,7 +40,7 @@ I'll use *space piracy* as a broad umbrella: extracting value from a space asset
 - **Data theft**: exfiltrating high-value data products (imagery, signals intelligence, proprietary processing outputs) by compromising the ground segment or the downlink pipeline.
 - **Ransom/denial**: threatening to disable, deorbit, or simply make an asset useless unless paid.
 - **Signal hijacking**: interfering with user links, spoofing signals, or impersonating a satellite to users on the ground.
-- **Physical capture or tampering**: rendezvous and proximity operations (RPO), docking, attaching a device, or relocating the satellite.
+- **Physical capture or tampering**: rendezvous and proximity operations, docking, attaching a device, or relocating the satellite.
 
 
 
