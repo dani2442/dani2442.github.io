@@ -45,8 +45,8 @@ I'll use *space piracy* as a broad umbrella: extracting value from a space asset
 
 
 ![Space Piracy](space_piracy.png)
+*Orbit changes the constraints, not the incentives.*
 
-But "piracy" is a loaded word. If you imagine a grappling hook and a boarding party, you're thinking about the hardest (and least likely) version. The first wave of "piracy" will look far more mundane: credential theft, supply-chain compromises, command spoofing, and subtle manipulation of telemetry. In other words, it will resemble today's cybercrime - just with higher stakes and stranger physics.
 
 
 
