@@ -15,9 +15,9 @@
     <atom:link href="http://localhost:1313/tags/economics/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Space Piracy</title>
-      <link>http://localhost:1313/essays/space-piracy/space_piracy/</link>
+      <link>http://localhost:1313/essays/space-piracy/</link>
       <pubDate>Tue, 23 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/space-piracy/space_piracy/</guid>
+      <guid>http://localhost:1313/essays/space-piracy/</guid>
       <description>Why piracy is likely to move to orbit, and how to defend against it.</description>
     </item>
   </channel>

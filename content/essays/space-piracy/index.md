@@ -22,8 +22,8 @@ Piracy is as old as trade itself. When Spain and Portugal began sending treasure
 Some pirates resembled more like companies than the anarchic individuals you might imagine.
 English piracy often took a special form: `privateering`, where privately owned ships were authorized by the Crown (via letters of marque) to raid enemy shipping during wartime.
 
-![Boats](ship.png)
-*Marek Rużyk (b. 1965, Polish painter) - Unrest at Sea*
+![Boats](ship2.png)
+*Marek Rużyk (1965, Polish painter) - Unrest at Sea*
 
 
 ## A new era of piracy
