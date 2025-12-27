@@ -368,9 +368,10 @@ which implies the first condition.
 > Thus, the Euler-Lagrange equations can be rewritten as
 $$
 \begin{aligned}
-\dot x_t^\star &= H_p(x_t^\star, u_t^\star, p_t^\star), & x^\star(0)=x_0\\
-\dot p_t^\star &= -H_x(x_t^\star, u_t^\star, p_t^\star), &p_T^\star = -h_x(x_T^\star)\\
+\dot x_t^\star &= H_p(x_t^\star, u_t^\star, p_t^\star),\qquad  x^\star(0)=x_0&&\\
+\dot p_t^\star &= -H_x(x_t^\star, u_t^\star, p_t^\star), \qquad p_T^\star= -h_x(x_T^\star)&&\\
 0 &= H_u(x_t^\star, u_t^\star, p_t^\star).
+\end{aligned}
 $$
 In addition, the optimal control $u^\star$ satisfies the
 $$  H\bigl(t,x^\ast(t),p(t),u^\ast(t)\bigr)=\max_{u\in U} H\bigl(t,x^\ast(t),p(t),u\bigr).  $$
