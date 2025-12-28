@@ -8,19 +8,49 @@
     <loc>http://localhost:1313/posts/</loc>
     <lastmod>2026-01-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/essays/</loc>
+    <loc>http://localhost:1313/tags/ai/</loc>
     <lastmod>2025-12-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/</loc>
-    <lastmod>2025-12-23T00:00:00+00:00</lastmod>
+    <lastmod>2025-12-26T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/cybersecurity/</loc>
-    <lastmod>2025-12-23T00:00:00+00:00</lastmod>
+    <loc>http://localhost:1313/tags/creativity/</loc>
+    <lastmod>2025-12-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/essays/oversupply/death_by_oversupply/</loc>
+    <lastmod>2025-12-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/economics/</loc>
-    <lastmod>2025-12-23T00:00:00+00:00</lastmod>
+    <lastmod>2025-12-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/essays/</loc>
+    <lastmod>2025-12-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/healthcare/</loc>
+    <lastmod>2025-12-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/healthcare/</loc>
+    <lastmod>2025-12-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/machine-learning/</loc>
+    <lastmod>2025-12-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/miscellaneous/</loc>
+    <lastmod>2025-12-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/essays/neo-hospital/</loc>
+    <lastmod>2025-12-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/oversupply/</loc>
+    <lastmod>2025-12-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/philosophy/</loc>
+    <lastmod>2025-12-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2025-12-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/cybersecurity/</loc>
     <lastmod>2025-12-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/satellites/</loc>
@@ -38,25 +68,10 @@
     <loc>http://localhost:1313/essays/space-piracy/</loc>
     <lastmod>2025-12-23T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2025-12-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/ai/</loc>
-    <lastmod>2025-12-22T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/tags/cognition/</loc>
     <lastmod>2025-12-22T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/creativity/</loc>
-    <lastmod>2025-12-22T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/essays/creativity/</loc>
-    <lastmod>2025-12-22T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/machine-learning/</loc>
-    <lastmod>2025-12-22T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/philosophy/</loc>
     <lastmod>2025-12-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/control-theory/</loc>
