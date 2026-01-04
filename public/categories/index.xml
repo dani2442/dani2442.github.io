@@ -11,33 +11,40 @@
     </image>
     <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 26 Dec 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 04 Jan 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Healthcare</title>
-      <link>http://localhost:1313/categories/healthcare/</link>
-      <pubDate>Fri, 26 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/healthcare/</guid>
-      <description></description>
-    </item>
     <item>
       <title>Machine Learning</title>
       <link>http://localhost:1313/categories/machine-learning/</link>
-      <pubDate>Fri, 26 Dec 2025 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/categories/machine-learning/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Probability</title>
+      <link>http://localhost:1313/categories/probability/</link>
+      <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/probability/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Healthcare</title>
+      <link>http://localhost:1313/categories/healthcare/</link>
+      <pubDate>Sun, 28 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/categories/healthcare/</guid>
       <description></description>
     </item>
     <item>
       <title>Miscellaneous</title>
       <link>http://localhost:1313/categories/miscellaneous/</link>
-      <pubDate>Fri, 26 Dec 2025 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 28 Dec 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/categories/miscellaneous/</guid>
       <description></description>
     </item>
     <item>
       <title>Philosophy</title>
       <link>http://localhost:1313/categories/philosophy/</link>
-      <pubDate>Fri, 26 Dec 2025 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 28 Dec 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/categories/philosophy/</guid>
       <description></description>
     </item>

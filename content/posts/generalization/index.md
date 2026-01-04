@@ -1,11 +1,11 @@
 ---
-title: "Generalization Theory"
-date: 2026-01-02
+title: "Notes on Generalization Theory"
+date: 2026-01-04
 tags: ["machine learning", "probability"]
 categories: ["probability", "machine learning"]
 author: "Daniel López Montero"
 showToc: true
-draft: true
+draft: false
 description: "Generalization bounds and theory for machine learning models."
 ShowWordCount: false
 ShowReadingTime: true
@@ -23,6 +23,6 @@ How do we know if a machine learning model will perform well on unseen data? Wha
 
 These questions have been around for many years and are central to the field of statistical learning theory.
 
-[Link to pdf](files/Generalization_Summary.pdf)
+[Link to pdf](/files/generalization.pdf)
 
 ![alt text](image.png)
