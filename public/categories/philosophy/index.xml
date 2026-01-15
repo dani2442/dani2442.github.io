@@ -2,50 +2,43 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Philosophy on dani2442&#39;s Blog</title>
-    <link>http://localhost:1313/categories/philosophy/</link>
+    <link>https://dani2442.github.io/categories/philosophy/</link>
     <description>Recent content in Philosophy on dani2442&#39;s Blog</description>
     <image>
       <title>dani2442&#39;s Blog</title>
-      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+      <url>https://dani2442.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://dani2442.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
     </image>
     <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 28 Dec 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/categories/philosophy/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Neo Hospitals</title>
-      <link>http://localhost:1313/essays/neo-hospital/</link>
-      <pubDate>Sun, 28 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/neo-hospital/</guid>
-      <description>The future of healthcare in the age of AI.</description>
-    </item>
+    <lastBuildDate>Thu, 15 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://dani2442.github.io/categories/philosophy/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Death of Industry by Oversupply</title>
-      <link>http://localhost:1313/essays/oversupply/death_by_oversupply/</link>
-      <pubDate>Fri, 26 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/oversupply/death_by_oversupply/</guid>
+      <link>https://dani2442.github.io/essays/oversupply/death_by_oversupply/</link>
+      <pubDate>Thu, 15 Jan 2026 00:00:00 +0000</pubDate>
+      <guid>https://dani2442.github.io/essays/oversupply/death_by_oversupply/</guid>
       <description>Demand has limits, but supply can increase indefinitely.</description>
     </item>
     <item>
+      <title>Neo Hospitals</title>
+      <link>https://dani2442.github.io/essays/neo-hospital/</link>
+      <pubDate>Sun, 28 Dec 2025 00:00:00 +0000</pubDate>
+      <guid>https://dani2442.github.io/essays/neo-hospital/</guid>
+      <description>The future of healthcare in the age of AI.</description>
+    </item>
+    <item>
       <title>Creativity in the Age of AI: The curse of knowledge</title>
-      <link>http://localhost:1313/essays/creativity/</link>
+      <link>https://dani2442.github.io/essays/creativity/</link>
       <pubDate>Mon, 22 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/creativity/</guid>
+      <guid>https://dani2442.github.io/essays/creativity/</guid>
       <description>When answers get cheap, originality becomes scarce</description>
     </item>
     <item>
-      <title>Death of industry by Oversupply</title>
-      <link>http://localhost:1313/essays/leverage-inequality/leverage-inequality/</link>
-      <pubDate>Thu, 16 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/leverage-inequality/leverage-inequality/</guid>
-      <description>Demand has limits, but supply can increase indefinitely</description>
-    </item>
-    <item>
       <title>The Importance of (Good) Metrics</title>
-      <link>http://localhost:1313/essays/metrics/</link>
+      <link>https://dani2442.github.io/essays/metrics/</link>
       <pubDate>Thu, 16 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/metrics/</guid>
+      <guid>https://dani2442.github.io/essays/metrics/</guid>
       <description>We live surrounded by metrics</description>
     </item>
   </channel>
