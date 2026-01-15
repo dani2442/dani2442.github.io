@@ -1,11 +1,11 @@
 ---
 title: "Death of Industry by Oversupply"
-date: 2025-12-26
+date: 2026-01-15
 tags: ["oversupply", "economics", "creativity", "AI"]
 categories: ["miscellaneous", "machine learning", "philosophy"]
 author: "Daniel López Montero"
 showToc: true
-draft: true
+draft: false
 description: "Demand has limits, but supply can increase indefinitely."
 ShowWordCount: false
 ShowReadingTime: true
