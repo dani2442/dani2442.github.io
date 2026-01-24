@@ -18,124 +18,106 @@ editPost:
     appendFilePath: true # to append file path to Edit link
 ---
 
-
 ## 1. Preliminaries
 
-We start by introducing some basic notions from representation theory and harmonic analysis on compact groups. 
+We start by introducing some basic notions from representation theory and harmonic analysis on compact groups.
 
-Let us denote by $G$ an arbitrary locally compact group with a fixed Haar measure $\mu$. 
+Let $G$ be a locally compact group with a fixed (left) Haar measure $\mu$.
 
-> **Definition (Representation).** A (unitary) representation of $G$ is a continuous homomorphism  from $G$ to the unitary group $\mathfrak{U}(\mathcal{H}_\pi)$ on a complex Hilbert space $\mathcal{H}_\pi$.
+> **Definition (Unitary representation).** A (unitary) representation of $G$ is a continuous homomorphism $\pi:G\to \mathfrak{U}(\mathcal{H}_\pi)$, where $\mathfrak{U}(\mathcal{H}_\pi)$ is the unitary group of a complex Hilbert space $\mathcal{H}_\pi$.
+>
+> Equivalently, $\pi(gh)=\pi(g)\pi(h)$ for all $g,h\in G$ and $g\mapsto \pi(g)\xi$ is continuous for every $\xi\in \mathcal{H}_\pi$.
 
-$$ \pi(gh) = \pi(g)\pi(h), \quad \forall g,h\in G. $$
+We denote $d_\pi:=\dim(\mathcal{H}_\pi)\in \mathbb{Z}_{\ge 0}\cup\{\infty\}$.
 
-*We denote $d_\pi := \dim(\mathcal{H}_\pi)$ the dimension of the representation.*
+For compact $G$, one often starts with (not necessarily unitary) finite-dimensional representations $\pi:G\to \mathrm{GL}(V)$. In that case, averaging an inner product over Haar measure produces a $G$-invariant inner product, so every continuous finite-dimensional representation is equivalent to a unitary one.
 
-The condition that $\pi$ is continuous means that $g\mapsto \pi(g)u$ is continuous for all $u\in \mathcal{H}_\pi$.
+> **Example (Left regular representation).** On $\mathcal{H}:=L^2(G)$, the left regular representation $\lambda:G\to \mathfrak{U}(\mathcal{H})$ is defined by
+> $$ (\lambda(g)f)(x):=f(g^{-1}x),\qquad f\in L^2(G).
+> $$
 
-Sometimes, people use the more general $\mathfrak{U}(\mathcal{H}_\pi)\subset\mathrm{GL}(\mathcal{H}_\pi)$ instead. However, they are equivalent for compact groups.
+> **Definition (Equivalence).** Two unitary representations $\pi_1:G\to\mathfrak{U}(\mathcal{H}_1)$ and $\pi_2:G\to\mathfrak{U}(\mathcal{H}_2)$ are equivalent if there exists a unitary $U:\mathcal{H}_1\to\mathcal{H}_2$ such that
+> $$ U\pi_1(g)=\pi_2(g)U,\qquad \forall g\in G. $$
+> We write $\pi_1\cong \pi_2$ and denote by $[\pi]$ the equivalence class of $\pi$.
 
-> **Example.** If we choose $\mathcal{H}_\pi:=L^2(G)$, then the left regular representation $\pi: G\rightarrow \mathcal{B}(\mathcal{H}_\pi)$ is defined by $\pi(g)f(x) = f(g^{-1}x)$ for all $f\in L^2(G)$.
-
-> **Definition (Equivalence of representations).** Two representations $\pi_1: G\rightarrow \mathfrak{U}(\mathcal{H}_1)$ and $\pi_2: G\rightarrow \mathfrak{U}(\mathcal{H}_2)$ are said to be equivalent if there exists a unitary operator $U:\mathcal{H}_1\rightarrow \mathcal{H}_2$ such that $\pi_1(g) = U\pi_2(g)U^*$ for all $g\in G$. We denote this by $\pi_1\cong \pi_2$, and let $[\pi]$ be the equivalence class of $\pi$. 
-
-> **Definition (Irreducible representation).** A representation $\pi: G\rightarrow \mathfrak{U}(\mathcal{H}_\pi)$ is said to be irreducible if the only closed subspaces of $\mathcal{H}_\pi$ that are invariant under $\pi(g)$ for all $g\in G$ are $\{0\}$ and $\mathcal{H}_\pi$ itself.
+> **Definition (Irreducible).** A unitary representation $\pi:G\to\mathfrak{U}(\mathcal{H}_\pi)$ is irreducible if the only closed subspaces of $\mathcal{H}_\pi$ invariant under every $\pi(g)$ are $\{0\}$ and $\mathcal{H}_\pi$.
 
 We denote by $\widehat{G}$ the set of equivalence classes of irreducible unitary representations of $G$.
 
-If $G$ is abelian, then every irreducible representation is one-dimensional. In particular, $\widehat{G}$ coincides with the character group (Pontryagin dual) of $G$.
+If $G$ is abelian, then every irreducible unitary representation is one-dimensional; in particular, $\widehat{G}$ coincides with the character group (Pontryagin dual) of $G$.
 
-Let $\pi, \eta$ be two representations of $G$, then $\pi\otimes \eta$ is defined on the tensor product space $\mathcal{H}_\pi \otimes \mathcal{H}_\eta$ by 
-$$ (\pi\otimes \eta)(g)(\xi, \zeta) = \pi(g)\xi \otimes \eta(g)\zeta, \quad \forall g\in G. $$
-
-If $n\in \mathbb{Z}^+ \cup \{\infty\}$, then $n\cdot \pi = \oplus_{i=1}^n \pi$ is the direct sum of $n$ copies of $\pi$.
-
-
-> **Definition.** If $\pi$ is a representation of $G$, then
+Given representations $\pi$ and $\eta$, the tensor product representation $\pi\otimes \eta$ acts on $\mathcal{H}_\pi\otimes \mathcal{H}_\eta$ via
 $$
-\pi(G)' := \{A\in \mathcal{B}(\mathcal{H}_\pi) : A\pi(g) = \pi(g)A, \forall g\in G\}
+(\pi\otimes \eta)(g)(\xi\otimes \zeta)=\pi(g)\xi\otimes \eta(g)\zeta,\qquad g\in G.
 $$
-is a self-adjoint subalgebra of $\mathcal{B}(\mathcal{H}_\pi)$ called the commutant of $\pi(G)$.
 
-> **Theorem 1.** Suppose that $\pi$ is a representation of $G$. Then the following are equivalent:
+If $n\in \mathbb{Z}^+\cup\{\infty\}$, then $n\cdot \pi:=\bigoplus_{i=1}^n \pi$ denotes the direct sum of $n$ copies of $\pi$.
+
+> **Definition (Commutant).** If $\pi$ is a unitary representation of $G$, then
+> $$ \pi(G)' := \{A\in \mathcal{B}(\mathcal{H}_\pi) : A\pi(g)=\pi(g)A,\ \forall g\in G\}  $$
+> is a *-subalgebra of $\mathcal{B}(\mathcal{H}_\pi)$ called the commutant of $\pi(G)$.
+
+> **Theorem (Schur's lemma / commutant characterization).** For a unitary representation $\pi$, the following are equivalent:
 > 1. $\pi$ is irreducible.
-> 2. $\pi(G)' = \mathbb{C}I$.
-> 3. Every non-zero $\xi\in \mathcal{H}_\pi$ is cyclic, i.e. $\overline{\mathrm{span}}\{\pi(g)\xi : g\in G\} = \mathcal{H}_\pi$.
+> 2. $\pi(G)'=\mathbb{C}I$.
+> 3. Every nonzero $\xi\in \mathcal{H}_\pi$ is cyclic, i.e.
+> $$ \overline{\mathrm{span}}\{\pi(g)\xi:g\in G\}=\mathcal{H}_\pi. $$
+
+**Proof.**
+(1)$\Rightarrow$(2): Let $A\in \pi(G)'$. The real and imaginary parts of $A$ are self-adjoint and still commute with $\pi(G)$, so it suffices to consider self-adjoint $A$. If $A$ is not a scalar multiple of the identity, the spectral theorem produces a nontrivial spectral projection $P$ of $A$ (e.g. $P=\mathbf{1}_{(-\infty,t]}(A)$ for a suitable $t$). Since $P$ is a Borel functional calculus of $A$, it also commutes with $\pi(G)$; hence $\mathrm{ran}(P)$ is a nontrivial closed $\pi$-invariant subspace, contradicting irreducibility.
+
+(2)$\Rightarrow$(1): If $W\subseteq \mathcal{H}_\pi$ is a nontrivial closed $\pi$-invariant subspace, the orthogonal projection $P_W$ belongs to $\pi(G)'$. By (2), $P_W$ must be $0$ or $I$, contradiction.
+
+(1)$\Leftrightarrow$(3): For $\xi\neq 0$, the cyclic subspace $\overline{\mathrm{span}}\{\pi(g)\xi:g\in G\}$ is a nonzero closed invariant subspace, so it equals $\mathcal{H}_\pi$ iff $\pi$ is irreducible. $\square$
 
 ## 2. Peter-Weyl Theorem
 
-In this section we specialize to **compact groups**. Recall that compact groups are characterized by the fact that Haar measure satisfies $\mu(G)<\infty$. It is customary to normalize Haar measure on a compact group by choosing the unique measure such that
+In this section we specialize to **compact groups**. A locally compact group $G$ is compact iff $\mu(G)<\infty$; in that case Haar measure can be normalized uniquely by requiring $\mu(G)=1$. With this normalization we write
 $$
-\mu(G)=1.
+\int_G f(g)\,dg
 $$
-With this normalization, for $f\in L^1(G)$ we write
-$$
-\int_G f(g)\,dg.
-$$
+for integration against Haar measure.
 
-Assume that $\pi$ is a finite-dimensional unitary representation of $G$ on $\mathcal{H}_\pi$. Choose an orthonormal basis
-$$
-\mathcal{B}=\{e_1,\dots,e_{d_\pi}\}
-\quad\text{of }\mathcal{H}_\pi.
-$$
-For each $g\in G$, the matrix of $\pi(g)$ with respect to $\mathcal{B}$ has $(i,j)$-entry. The functions
+### 2.1. Matrix coefficients and the coefficient space
+
+Let $\pi$ be a finite-dimensional unitary representation of $G$ on $\mathcal{H}_\pi$ and let $\{e_1,\dots,e_{d_\pi}\}$ be an orthonormal basis. The functions
 $$
 \varphi_{ij}^{\pi}(g):=\langle e_i,\pi(g)e_j\rangle,\qquad 1\le i,j\le d_\pi,
 $$
-are called the **coordinate functions** of $\pi$.
+are called the **matrix coefficients** (or **coordinate functions**) of $\pi$.
 
-Notice that $\varphi_{ij}^{\pi}\in C(G)$, and more generally for any $\xi,\eta\in \mathcal{H}_\pi$ the function
-$$
-g\longmapsto \langle \xi,\pi(g)\eta\rangle
-$$
-is continuous.
+More generally, for any $\xi,\eta\in \mathcal{H}_\pi$ the function $g\mapsto \langle \xi,\pi(g)\eta\rangle$ is continuous.
 
-> **Definition (The coefficient space $E$).** Let $E_G$ be the linear span of all functions of the form
-$$
-g\mapsto \langle \xi,\pi(g)\eta\rangle,
-$$
-where $\pi$ ranges over all **irreducible** unitary representations of $G$, and $\xi,\eta$ range over $\mathcal{H}_\pi$.
+> **Definition (Coefficient space).** Let $E_G$ be the linear span of all functions of the form
+> $$
+> g\mapsto \langle \xi,\pi(g)\eta\rangle,
+> $$
+> where $\pi$ ranges over all irreducible unitary representations of $G$ and $\xi,\eta\in\mathcal{H}_\pi$.
 
-Since every finite-dimensional representation is a direct sum of irreducibles, it follows in particular that every matrix coefficient coming from an arbitrary finite-dimensional representation belongs to $E$.
+We will write $E:=E_G$ when $G$ is clear.
+
+Since every finite-dimensional unitary representation of a compact group decomposes as a direct sum of irreducibles, every matrix coefficient coming from an arbitrary finite-dimensional representation belongs to $E$.
 
 > **Remark (Abelian case and trigonometric polynomials).**  
-When $G$ is abelian, the functions in $E$ are often called **trigonometric polynomials**. For example, if
-$$
-G=\mathbb{T}=\mathbb{R}/2\pi\mathbb{Z},
-$$
-then every $f\in E$ has the form
-$$
-f(\theta)=\sum_{n=-N}^N c_n e^{in\theta}
-\;=\;
-\sum_{n=0}^N \bigl(a_n\cos(n\theta)+b_n\sin(n\theta)\bigr).
-$$
+> When $G$ is abelian, the functions in $E$ are often called **trigonometric polynomials**. For example, if
+> $$ G=\mathbb{T}=\mathbb{R}/2\pi\mathbb{Z}, $$
+> then every $f\in E$ has the form
+> $$ f(\theta)=\sum_{n=-N}^N c_n e^{in\theta} = \sum_{n=0}^N \bigl(a_n\cos(n\theta)+b_n\sin(n\theta)\bigr). $$
 
-> **Remark (Self-adjointness and inversion).**  
-It is clear that $E$ is **self-adjoint** in the sense that if $f\in E$, then $\overline{f}\in E$. In terms of coordinate functions, one checks
-> $$ \overline{\varphi_{ij}^{\pi}(g)}=\varphi_{ji}^{\pi}(g).$$
-It is also true that if $f\in E$, then the function $\widetilde f$ defined by
-$$
-\widetilde f(g):=f(g^{-1})
-$$
-belongs to $E$ as well. One way to see this is by introducing the **conjugate Hilbert space** $\overline{\mathcal{H}}_\pi$ and the conjugate representation $\overline\pi$; then
-$$
-\varphi_{ij}^{\overline\pi}(g)=\varphi_{ij}^{\pi}(g^{-1}).
-$$
-This justifies the terminology “coordinate functions”.
+> **Remark (Conjugation and inversion).**  
+> If $f\in E$, then $\overline{f}\in E$. In terms of coordinate functions,
+> $$ \overline{\varphi_{ij}^{\pi}(g)} =\overline{\langle e_i,\pi(g)e_j\rangle} =\langle \pi(g)e_j,e_i\rangle =\langle e_j,\pi(g^{-1})e_i\rangle =\varphi_{ji}^\pi(g^{-1}). $$
+> In particular, if $f\in E$, then $\widetilde f(g):=f(g^{-1})$ also lies in $E$ (e.g. by passing to the contragredient representation). The same argument works inside $E_{\mathrm{fin}}$, since the contragredient of a finite-dimensional representation is again finite-dimensional.
 
 ### 2.2. Hilbert-Schmidt norms
 
 > **Definition (Hilbert-Schmidt norm).** Let $M_n$ be the complex $n\times n$ matrices. If $A=(a_{ij})\in M_n$, define the Hilbert-Schmidt norm by
-> $$
-\|A\|_{\mathrm{HS}}^2=\sum_{i,j}|a_{ij}|^2.
-$$
+> $$ \|A\|_{\mathrm{HS}}^2=\sum_{i,j}|a_{ij}|^2. $$
 
 > **Remark.** If $A\in M_n$, then
-> $$
-\|A\|_{\mathrm{HS}}^2=\mathrm{tr}(AA^*).
-$$
-In particular, if $B=UAU^*$ for a unitary matrix $U$, then $\|A\|_{\mathrm{HS}}=\|B\|_{\mathrm{HS}}$.
-Hence, if $\pi$ is finite-dimensional, the value $\|\pi(g)\|_{\mathrm{HS}}$ depends only on the equivalence class $[\pi]$.
+> $$ \|A\|_{\mathrm{HS}}^2=\mathrm{tr}(AA^*). $$
+> In particular, if $B=UAU^*$ for a unitary matrix $U$, then $\|A\|_{\mathrm{HS}}=\|B\|_{\mathrm{HS}}$.
+> Hence, if $\pi$ is finite-dimensional, the value $\|\pi(g)\|_{\mathrm{HS}}$ depends only on the equivalence class $[\pi]$.
 
 ### 2.3. Statement of the Peter-Weyl theorem
 
@@ -143,24 +125,14 @@ Our goal is to prove the following result.
 
 > **Theorem (Peter-Weyl).** Let $G$ be a compact group.
 > 1. Every irreducible unitary representation of $G$ is **finite-dimensional**.
-> 2. If $\lambda$ is the left regular representation of $G$ on > $L^2(G)$, then
->   $$
-   \lambda \;\cong\; \bigoplus_{[\pi]\in \widehat{G}} d_\pi\cdot \pi.  $$
-> 3. (**Separation of points**) Given $g\in G$ with $g\ne e$, there exists $[\pi]\in\widehat G$ such that
->   $$  \pi(g)\ne I.  $$
+> 2. If $\lambda$ is the left regular representation of $G$ on $L^2(G)$, then
+>   $$   \lambda \;\cong\; \bigoplus_{[\pi]\in \widehat{G}} d_\pi\cdot \pi.   $$
+> 3. (**Separation of points**) Given $g\in G$ with $g\ne e$, there exists $[\pi]\in\widehat G$ such that $\pi(g)\ne I$.
 > 4. The space $E$ is **dense** in $C(G)$ (hence also dense in $L^p(G)$ for all $1\le p<\infty$).
 > 5. (**Plancherel / Parseval identity**) If $f\in L^2(G)$, then
-> $$
-   \|f\|_2^2 =
-   \sum_{[\pi]\in\widehat G} d_\pi\,
-   \mathrm{tr}\bigl(\widehat f(\pi)\,\widehat f(\pi)^*\bigr) =
-   \sum_{[\pi]\in\widehat G} d_\pi \|\widehat f(\pi)\|_{\mathrm{HS}}^2,
-   $$
-   where the operator-valued Fourier transform $\widehat f(\pi)$ is defined by
-   $$
-   \widehat f(\pi)\;:=\;\int_G f(g)\,\pi(g)\,dg
-   \quad\in\mathcal{B}(\mathcal{H}_\pi).
-   $$
+>   $$  \|f\|_2^2 =   \sum_{[\pi]\in\widehat G} d_\pi\,\mathrm{tr}\bigl(\widehat f(\pi)\,\widehat f(\pi)^*\bigr) = \sum_{[\pi]\in\widehat G} d_\pi \|\widehat f(\pi)\|_{\mathrm{HS}}^2,   $$
+>   where the operator-valued Fourier transform $\widehat f(\pi)$ is defined by
+>   $$   \widehat f(\pi)\;:=\;\int_G f(g)\,\pi(g^{-1})\,dg   \quad\in\mathcal{B}(\mathcal{H}_\pi).   $$
 
 We will prove this theorem using a sequence of preliminary results.
 
@@ -168,33 +140,23 @@ We will prove this theorem using a sequence of preliminary results.
 
 ### 2.4. Intertwiners and invariant subspaces
 
-> **Lemma 1.** Let $\pi$ and $\eta$ be representations of a locally compact group $G$. If $A:\mathcal{H}_\pi\to\mathcal{H}_\eta$ is a bounded operator satisfying
-> $$
-A\pi(g)=\eta(g)A,\qquad \forall g\in G, $$
-> then
-> $$
-A^*A\,\eta(g)=\eta(g)\,A^*A,\qquad \forall g\in G. $$
+> **Lemma 1 (Adjoints of intertwiners).** Let $\pi$ and $\eta$ be unitary representations of a locally compact group $G$. If $A:\mathcal{H}_\pi\to\mathcal{H}_\eta$ is bounded and satisfies
+> $$ A\pi(g)=\eta(g)A,\qquad \forall g\in G, $$
+> then $A^*$ also intertwines:
+> $$ A^*\eta(g)=\pi(g)A^*,\qquad \forall g\in G. $$
+> In particular, $A^*A\in \pi(G)'$ and $AA^*\in \eta(G)'$.
 
-**Proof.** For $\xi,\zeta\in\mathcal{H}_\eta$ and $g\in G$,
-$$
-\langle A^*A\eta(g)\xi,\zeta\rangle
-=\langle A\eta(g)\xi,A\zeta\rangle
-=\langle \eta(g)A\xi,A\zeta\rangle
-=\langle A\xi,\eta(g^{-1})A\zeta\rangle
-=\langle \eta(g)A^*A\xi,\zeta\rangle,
-$$
-which implies the claim. $\square$
+**Proof.** Taking adjoints in $A\pi(g)=\eta(g)A$ gives $\pi(g^{-1})A^*=A^*\eta(g^{-1})$, and since $\pi$ and $\eta$ are unitary this is equivalent to $A^*\eta(g)=\pi(g)A^*$. The commutant statements follow by multiplying by $A$ and $A^*$. $\square$
 
-> **Lemma 2.** Suppose $\pi$ and $\eta$ are representations of a locally compact group $G$, with $\pi$ irreducible. If $A:\mathcal{H}_\pi\to\mathcal{H}_\eta$ is a nonzero bounded operator satisfying
-> $$
-A\pi(g)=\eta(g)A,\qquad \forall g\in G, $$
+> **Lemma 2 (Nonzero intertwiners from irreducibles).** Suppose $\pi$ and $\eta$ are unitary representations of a locally compact group $G$, with $\pi$ irreducible. If $A:\mathcal{H}_\pi\to\mathcal{H}_\eta$ is a nonzero bounded operator satisfying
+> $$ A\pi(g)=\eta(g)A,\qquad \forall g\in G, $$
 > then:
-> 1. $A\mathcal{H}_\pi$ is a **closed** $\eta$-invariant subspace of $\mathcal{H}_\eta$;
+> 1. $A\mathcal{H}_\pi$ is a closed $\eta$-invariant subspace of $\mathcal{H}_\eta$;
 > 2. $\pi\cong \eta|_{A\mathcal{H}_\pi}$.
 
-**Proof.** By the Lemma 1, $A^*A$ belongs to the commutant $\eta(G)'$. By Theorem 1, the $A^*A = \lambda I$. Thus $B:=\lambda^{-1/2}A$ is an isometry, so it is unitary from $\mathcal{H}_\pi$ onto $A\mathcal{H}_\pi$, which is closed as well.
+**Proof.** By Lemma 1, $A^*A\in \pi(G)'$, so Schur's lemma gives $A^*A=\lambda I$ for some $\lambda\ge 0$. Since $A\neq 0$, we have $\lambda>0$. Then $B:=\lambda^{-1/2}A$ satisfies $B^*B=I$, so $B$ is an isometry and $A\mathcal{H}_\pi=B\mathcal{H}_\pi$ is closed.
 
-Again by Lemma 1, $BB^*\in \eta(G)'$. Since $BB^*$ is the orthogonal projection onto $A\mathcal{H}_\pi = B\mathcal{H}_\pi$, it follows that $A\mathcal{H}_\pi$ is $\eta$-invariant. $\square$
+The intertwining identity implies $B\pi(g)=\eta(g)B$, so $B\mathcal{H}_\pi$ is $\eta$-invariant. Finally, $B$ is a unitary equivalence between $\pi$ and $\eta$ restricted to $B\mathcal{H}_\pi$. $\square$
 
 ---
 
@@ -202,59 +164,54 @@ Again by Lemma 1, $BB^*\in \eta(G)'$. Since $BB^*$ is the orthogonal projection 
 
 The next proposition is the key orthogonality statement for matrix coefficients, and it depends crucially on compactness of $G$.
 
-> **Proposition (Schur orthogonality).** Let $\pi$ and $\eta$ be irreducible representations of a compact group $G$. Fix orthonormal bases $\{e_i^\pi\}_{i=1}^{d_\pi}$ of $\mathcal{H}_\pi$ and $\{e_k^\eta\}_{k=1}^{d_\eta}$ of $\mathcal{H}_\eta$, and define
+> **Proposition (Schur orthogonality).** Let $\pi$ and $\eta$ be irreducible finite-dimensional unitary representations of a compact group $G$. Fix orthonormal bases $\{e_i^\pi\}_{i=1}^{d_\pi}$ of $\mathcal{H}_\pi$ and $\{e_k^\eta\}_{k=1}^{d_\eta}$ of $\mathcal{H}_\eta$, and define
 > $$ \varphi_{ij}^\pi(g)=\langle e_i^\pi,\pi(g)e_j^\pi\rangle, \qquad \varphi_{kl}^\eta(g)=\langle e_k^\eta,\eta(g)e_l^\eta\rangle. $$
 > 1. If $\pi\not\cong \eta$, then
+>   $$   \int_G \varphi_{ij}^\pi(g)\,\overline{\varphi_{kl}^\eta(g)}\,dg=0   \qquad\text{for all }i,j,k,l.   $$
+> 2. If $\pi\cong \eta$, then
+>   $$   \int_G \varphi_{ij}^\pi(g)\,\overline{\varphi_{kl}^\pi(g)}\,dg   =   \frac{\delta_{ik}\delta_{jl}}{d_\pi},   \qquad\text{for all }i,j,k,l.
 >   $$
-   \int_G \varphi_{ij}^\pi(g)\,\varphi_{kl}^\eta(g)\,dg=0
-   \quad\text{for all }i,j,k,l.    $$
-> 2. If $\pi$ is finite-dimensional, then
->   $$  \int_G \varphi_{ij}^\pi(g)\,\varphi_{kl}^\pi(g)\,dg    =   \frac{\delta_{ik}\delta_{jl}}{d_\pi},   \quad\text{for all }i,j,k,l.   $$
 
-**Proof.** Let $B:\mathcal{H}_\pi\to\mathcal{H}_\eta$ be bounded and define
+**Proof.** Fix a bounded operator $B:\mathcal{H}_\pi\to\mathcal{H}_\eta$ and define
 $$
-A=\int_G \eta(g)\,B\,\pi(g^{-1})\,dg.
+A:=\int_G \eta(g)\,B\,\pi(g^{-1})\,dg.
 $$
-Then for $r\in G$,
+Since $\pi$ and $\eta$ are finite-dimensional, $g\mapsto \eta(g)B\pi(g^{-1})$ is continuous in operator norm, so the integral is well-defined (as a Bochner integral).
+
+For $r\in G$, left invariance of Haar measure implies
 $$
-A\pi(r)
-=
-\int_G \eta(g)B\pi(g^{-1}r)\,dg
-=
-\int_G \eta(rg)B\pi(g^{-1})\,dg
-=
-\eta(r)A,
+A\pi(r)=
+\int_G \eta(g)\,B\,\pi(g^{-1}r)\,dg=
+\int_G \eta(rg)\,B\,\pi(g^{-1})\,dg=
+\eta(r)\,A,
 $$
 so $A$ intertwines $\pi$ and $\eta$.
 
-If $\pi\not\cong\eta$, the Lemma 2 must be $A=0$. Choosing $B$ to be rank-one operators of the form
-$$
-B_{ij}(\xi)=\langle \xi,e_j^\pi\rangle e_l^\eta,
-$$
-and testing against basis vectors yields the integral identity in (1) as follows:
+(1) If $\pi\not\cong\eta$, then Lemma 2 forces $A=0$. Fix indices $j,k$ and take the rank-one operator $B_{kj}(\xi)=\langle \xi,e_j^\pi\rangle e_k^\eta$. Then for any $i,l$,
 $$
 \begin{aligned}
-0 &= \langle A e_j^\pi, e_l^\eta \rangle = 
-\int_G \langle B_{ij} \pi(g^{-1}) e_j^\pi, \eta(g^{-1}) e_l^\eta \rangle dg \\ &= 
-\int_G \langle \pi(g^{-1}) e_i^\pi, e_j^\pi \rangle \langle e_l^\eta, \eta(g^{-1}) e_k^\eta \rangle dg \\ &=
-\int_G \varphi_{ij}^\pi(g^{-1}) \varphi_{kl}^\eta(g^{-1}) dg 
+0&=\langle A e_i^\pi, e_l^\eta\rangle \\ &=
+\int_G \left\langle \eta(g)\,B_{kj}\,\pi(g^{-1})e_i^\pi,\ e_l^\eta\right\rangle dg \\&=
+\int_G \left\langle B_{kj}\,\pi(g^{-1})e_i^\pi,\ \eta(g^{-1})e_l^\eta\right\rangle dg \\&=
+\int_G \langle \pi(g^{-1})e_i^\pi,e_j^\pi\rangle\ \langle e_k^\eta,\eta(g^{-1})e_l^\eta\rangle\ dg \\&=
+\int_G \varphi_{ij}^\pi(g)\ \overline{\varphi_{lk}^\eta(g)}\ dg,
 \end{aligned}
 $$
+using unitarity in the last step. Relabeling indices yields the desired orthogonality.
 
-Now assume $d_\pi<\infty$. By Lemma 2,
+(2) Now assume $\pi=\eta$.
+Then $A\in \pi(G)'$, so by Schur's lemma $A=\lambda I$ for some $\lambda\in \mathbb{C}$. Taking traces gives
 $$
-A = \int_G \pi(g) B \pi(g^{-1}) dg = \lambda I \qquad \forall B\in \mathcal{B}(\mathcal{H}_\pi).
+\lambda d_\pi=\mathrm{tr}(A)=\int_G \mathrm{tr}\!\left(\pi(g)B\pi(g^{-1})\right)dg=
+\int_G \mathrm{tr}(B)\,dg=\mathrm{tr}(B),
 $$
-Taking traces on both sides gives
+so $\lambda=\mathrm{tr}(B)/d_\pi$.
+Taking $B=B_{jl}$ on $\mathcal{H}_\pi$ (i.e. $B_{jl}(\xi)=\langle \xi,e_l^\pi\rangle e_j^\pi$) gives $\lambda=\delta_{jl}/d_\pi$, and
 $$
-\begin{aligned}
-\mathrm{tr}(A) &= \sum_{i=1}^{d_\pi} \langle A e_i^\pi, e_i^\pi \rangle =  \int_G \sum_{i=1}^{d_\pi} \langle B \pi(g^{-1}) e_i^\pi, \pi(g^{-1}) e_i^\pi \rangle dg \\ &=
-\int_G \mathrm{tr}(B \pi(g^{-1}) \pi(g)) dg = \mathrm{tr}(B),
-\end{aligned}
-$$
-Since $\mathrm{tr}(A) = \mathrm{tr}(\lambda I )= \lambda d_\pi$ and $\mathrm{tr}(B_{jl}) = \delta_{jl}$, we have $\lambda = \delta_{jl}/d_\pi$ when $B = B_{jl}$. On the other hand, 
-$$
-\int_G \varphi_{ij}^\pi(g)\,\overline{\varphi_{kl}^\pi(g)}\,dg = \langle A e_i^\pi, e_k^\pi \rangle = \lambda \langle e_i^\pi, e_k^\pi \rangle = \frac{\delta_{ik}\delta_{jl}}{d_\pi}
+\int_G \varphi_{ij}^\pi(g)\,\overline{\varphi_{kl}^\pi(g)}\,dg=
+\langle A e_i^\pi,e_k^\pi\rangle=
+\lambda\,\delta_{ik}=
+\frac{\delta_{ik}\delta_{jl}}{d_\pi}.
 $$
 $\square$
 
@@ -266,24 +223,21 @@ Let $E_{\mathrm{fin}}\subseteq E$ denote the subspace spanned by matrix coeffici
 
 We first show that it suffices to prove that $E_{\mathrm{fin}}$ is dense in $C(G)$.
 
-Assume $E_{\mathrm{fin}}$ is dense in $C(G)$. Since $C(G)$ is dense in $L^2(G)$, the orthogonality relations imply that $L^2(G)$ admits an orthonormal basis consisting of the normalized coefficients
-$$
-\sqrt{d_\pi}\,\varphi_{ij}^\pi,\qquad [\pi]\in\widehat G,\ 1\le i,j\le d_\pi.
-$$
+Assume $E_{\mathrm{fin}}$ is dense in $C(G)$. Since $C(G)$ is dense in $L^2(G)$, it follows that $E_{\mathrm{fin}}$ is also dense in $L^2(G)$.
 
-Indeed, if $\pi$ is irreducible and $d_\pi=\infty$, then Proposition (Schur orthogonality) forces all coefficients $\varphi_{ij}^\pi$ to be orthogonal to $E_{\mathrm{fin}}$; by density they must vanish, hence $\pi$ cannot occur. This proves item (1): all irreducibles are finite-dimensional.
+For each irreducible $\pi$, Proposition (Schur orthogonality) shows that the $d_\pi^2$ functions $\{\sqrt{d_\pi}\,\varphi_{ij}^\pi\}_{i,j}$ form an orthonormal set in $L^2(G)$, and their linear span contains all matrix coefficients of $\pi$. Hence the closed span of all such normalized coefficients contains $E_{\mathrm{fin}}$, and therefore equals $L^2(G)$. In other words, these normalized matrix coefficients form an orthonormal basis of $L^2(G)$.
 
-Now, for each finite-dimensional irreducible $\pi$, Proposition (Schur orthogonality) shows that the $d_\pi^2$ functions $\{\sqrt{d_\pi}\,\varphi_{ij}^\pi\}_{i,j}$ form an orthonormal basis for a subspace $H_\pi\subseteq L^2(G)$.
+This already implies item (1): if there were an irreducible unitary representation $\sigma$ with $\dim(\mathcal{H}_\sigma)=\infty$, then the same averaging operator as in the proof of Schur orthogonality would produce an intertwiner $A:\mathcal{H}_\sigma\to \mathcal{H}_\pi$ for each finite-dimensional irreducible $\pi$. Any such nonzero $A$ would be injective (its kernel is a closed $\sigma$-invariant subspace), which is impossible into a finite-dimensional space. Hence $A=0$, so every matrix coefficient of $\sigma$ is orthogonal to every element of $E_{\mathrm{fin}}$. By density, all coefficients of $\sigma$ would have to be $0$, contradiction.
 
-Observe that
+Now fix a finite-dimensional irreducible $\pi$ and let $H_\pi\subseteq L^2(G)$ be the closed span of its matrix coefficients (equivalently, the span of $\{\varphi_{ij}^\pi\}_{i,j}$).
+
+Observe the standard coefficient identity: for $g,t\in G$,
 $$
-\varphi_{ij}^\pi(g^{-1}t)
-=
-\langle e_i^\pi,\pi(g^{-1}t)e_j^\pi\rangle
-=
+\varphi_{ij}^\pi(g^{-1}t) =
+\langle e_i^\pi,\pi(g^{-1}t)e_j^\pi\rangle =
 \sum_{k=1}^{d_\pi} \varphi_{ik}^\pi(g^{-1})\,\varphi_{kj}^\pi(t).
 $$
-For each fixed $j$, define an operator $A_j:\mathcal{H}_\pi\to H_\pi$ by
+For each fixed $j$, define a linear map $A_j:\mathcal{H}_\pi\to H_\pi$ by
 $$
 A_j(e_i^\pi)=\varphi_{ij}^\pi.
 $$
@@ -291,45 +245,59 @@ Using the identity above, one checks that $A_j$ intertwines $\pi$ with the left 
 $$
 \lambda(g)\,A_j = A_j\,\pi(g).
 $$
-By the previous lemma, $\pi$ appears as a subrepresentation of $\lambda$ on $H_\pi$, and moreover
+By Schur orthogonality we have, for fixed $j$,
 $$
-\lambda|_{H_\pi}\cong d_\pi\cdot \pi.
+\left\langle \sqrt{d_\pi}\,\varphi_{ij}^\pi,\ \sqrt{d_\pi}\,\varphi_{kj}^\pi\right\rangle_{L^2} =
+\delta_{ik},
+$$
+so $\widetilde A_j:=\sqrt{d_\pi}\,A_j$ is an isometry $\mathcal{H}_\pi\to L^2(G)$ and its range
+$$
+H_{\pi,j}:=\mathrm{span}\{\varphi_{ij}^\pi:1\le i\le d_\pi\}
+$$
+is closed. Moreover, for $j\neq l$ the subspaces $H_{\pi,j}$ and $H_{\pi,l}$ are orthogonal. Hence
+$$
+H_\pi=\bigoplus_{j=1}^{d_\pi} H_{\pi,j}
+$$
+as an orthogonal direct sum of $\lambda$-invariant subspaces.
+
+Since each $\widetilde A_j$ is a nonzero intertwiner from the irreducible representation $\pi$ into $\lambda|_{H_{\pi,j}}$, Lemma 2 yields $\lambda|_{H_{\pi,j}}\cong \pi$. Therefore
+$$
+\lambda|_{H_\pi}\cong \bigoplus_{j=1}^{d_\pi} \pi \;\cong\; d_\pi\cdot \pi.
 $$
 Summing over $[\pi]\in\widehat G$ yields item (2):
 $$
 \lambda \cong \bigoplus_{[\pi]\in\widehat G} d_\pi\cdot\pi.
 $$
 
-At this point we know that the functions $\{\sqrt{d_\pi}\,\varphi_{ij}^\pi\}$ form an orthonormal basis of $L^2(G)$, so every $f\in L^2(G)$ has an expansion
+At this point we know $\{\sqrt{d_\pi}\,\varphi_{ij}^\pi\}$ is an orthonormal basis of $L^2(G)$, so every $f\in L^2(G)$ has an expansion
 $$
-f=\sum_{[\pi]\in\widehat G}\ \sum_{i,j=1}^{d_\pi} c_{ij}^\pi\,\sqrt{d_\pi}\,\varphi_{ij}^\pi,
+f=\sum_{[\pi]\in\widehat G}\ \sum_{i,j=1}^{d_\pi} c_{ij}^\pi\,\sqrt{d_\pi}\,\varphi_{ij}^\pi
 $$
 with
 $$
 \|f\|_2^2=\sum_{[\pi]\in\widehat G}\ \sum_{i,j=1}^{d_\pi} |c_{ij}^\pi|^2.
 $$
-
-Moreover,
+Moreover, by definition of Fourier coefficients in an orthonormal basis,
 $$
-c_{ij}^\pi
-=
-\int_G f(g)\,\sqrt{d_\pi}\,\varphi_{ij}^\pi(g)\,dg
-=
-\sqrt{d_\pi}\int_G f(g)\,\langle e_i^\pi,\pi(g)e_j^\pi\rangle\,dg
-=
-\sqrt{d_\pi}\,\langle e_i^\pi,\widehat f(\pi)e_j^\pi\rangle.
+\begin{aligned}
+c_{ij}^\pi &=
+\left\langle f,\ \sqrt{d_\pi}\,\varphi_{ij}^\pi\right\rangle_{L^2} =
+\int_G f(g)\,\overline{\sqrt{d_\pi}\,\varphi_{ij}^\pi(g)}\,dg \\&=
+\sqrt{d_\pi}\int_G f(g)\,\langle e_j^\pi,\pi(g^{-1})e_i^\pi\rangle\,dg =
+\sqrt{d_\pi}\,\langle e_j^\pi,\widehat f(\pi)e_i^\pi\rangle.
+\end{aligned}
 $$
 Therefore
 $$
-\|f\|_2^2
-=
-\sum_{[\pi]\in\widehat G} d_\pi\sum_{i,j=1}^{d_\pi} |\langle e_i^\pi,\widehat f(\pi)e_j^\pi\rangle|^2
-=
+\begin{aligned}
+\|f\|_2^2 &=
+\sum_{[\pi]\in\widehat G} d_\pi\sum_{i,j=1}^{d_\pi} |\langle e_j^\pi,\widehat f(\pi)e_i^\pi\rangle|^2 \\ &=
 \sum_{[\pi]\in\widehat G} d_\pi\,\|\widehat f(\pi)\|_{\mathrm{HS}}^2,
+\end{aligned}
 $$
 which is item (5).
 
-Item (3) follows from item (4): if $E$ were dense but did not separate points, it would contradict Stone--Weierstrass.
+Item (3) follows from item (4): if $g\neq e$ and $\pi(g)=I$ for every irreducible $\pi$, then every matrix coefficient (hence every $f\in E$) would satisfy $f(g)=f(e)$, so $E$ could not be dense in $C(G)$.
 
 Thus it only remains to prove:
 
@@ -339,7 +307,7 @@ We prove this using Hilbert--Schmidt operators and an approximate identity.
 
 ---
 
-### 2.7. Hilbert--Schmidt operators and convolution by class functions
+### 2.7. Hilbert--Schmidt operators and convolution
 
 Let $(X,\nu)$ be a measure space and let $K\in L^2(X\times X,\nu\otimes\nu)$. Define an operator $T:L^2(X)\to L^2(X)$ by
 $$
@@ -351,61 +319,58 @@ H_\alpha=\{f\in L^2(X): Tf=\alpha f\}
 $$
 is finite-dimensional.
 
-In our case we take $X=G$ with normalized Haar measure and $K$ continuous.
+In our case we take $X=G$ with normalized Haar measure and $K$ continuous. Then $x\mapsto K(x,\cdot)$ is continuous as a map into $L^2(G)$, and therefore $Tf(x)=\langle f, K(x,\cdot)\rangle_{L^2}$ defines a continuous function for every $f\in L^2(G)$.
 
-Now fix a function $k\in C(G)$ satisfying
+Now fix $k\in C(G)$ satisfying
 $$
-k(g)=k(g^{-1}),\qquad \forall g\in G.
+k(g)=\overline{k(g^{-1})},\qquad \forall g\in G.
 $$
-Define the convolution operator $T:L^2(G)\to L^2(G)$ by
+Define the right-convolution operator $T:L^2(G)\to L^2(G)$ by
 $$
-Tf = f*k,
+Tf := f*k,
 \qquad
 Tf(g)=\int_G f(r)\,k(r^{-1}g)\,dr.
 $$
-Equivalently, $T$ is a Hilbert--Schmidt operator with kernel
-$$
-K(g,r)=k(r^{-1}g),
-$$
-which is symmetric in the appropriate sense, so $T$ is self-adjoint and compact.
+Equivalently, $T$ is Hilbert--Schmidt with kernel $K(g,r)=k(r^{-1}g)$, and the symmetry assumption implies $K(g,r)=\overline{K(r,g)}$, so $T$ is self-adjoint and compact.
 
 > **Lemma.** Let $k$ and $T$ be as above. For each $\alpha\in\mathbb{R}\setminus\{0\}$, the eigenspace
 > $$ H_\alpha=\{f\in L^2(G): Tf=\alpha f\} $$
 > is contained in $E_{\mathrm{fin}}$.
 
-**Proof.** Since $T$ is compact and self-adjoint, $H_\alpha$ is finite-dimensional and consists of continuous functions (because $k$ is continuous and $Tf$ is continuous whenever $f\in L^2(G)$).
+**Proof.** Since $T$ is compact and self-adjoint, $H_\alpha$ is finite-dimensional. Moreover, $H_\alpha\subseteq C(G)$: if $Tf=\alpha f$ with $\alpha\neq 0$, then $f=\alpha^{-1}Tf$ and $Tf$ is continuous by the discussion above.
 
-Moreover, $H_\alpha$ is invariant under the left regular representation. Indeed,
+The space $H_\alpha$ is invariant under the left regular representation. Indeed, for $g\in G$,
 $$
-T(\lambda(g)f)
-=
-(\lambda(g)f)*k
-=
-\lambda(g)(f*k)
-=
+T(\lambda(g)f) =
+(\lambda(g)f)*k =
+\lambda(g)(f*k) =
 \lambda(g)(Tf),
 $$
-so if $Tf=\alpha f$, then $T(\lambda(g)f)=\alpha\,\lambda(g)f$.
+so if $Tf=\alpha f$, then $T(\lambda(g)f)=\alpha\,\lambda(g)f$ and $\lambda(g)f\in H_\alpha$.
 
 Let $\{f_1,\dots,f_r\}$ be an orthonormal basis of $H_\alpha$. Define continuous functions
 $$
-\theta_{ij}(g):=\langle \lambda(g)f_i,f_j\rangle.
+\theta_{ij}(g):=\langle \lambda(g)f_i,f_j\rangle,\qquad 1\le i,j\le r.
 $$
-Since $\lambda(g)f_i\in H_\alpha$, we may expand
+Since $\lambda(g)f_i\in H_\alpha$, we can expand
 $$
-(\lambda(g)f_i)(t)=\sum_{k=1}^r \theta_{ki}(g)\,f_k(t),
+(\lambda(g)f_i)=\sum_{k=1}^r \theta_{ki}(g)\,f_k.
 $$
-and the map $g\mapsto (\theta_{ij}(g))_{i,j}$ defines a finite-dimensional unitary representation $\rho$ of $G$ on $\mathbb{C}^r$. In particular, each $f_i$ lies in the span of matrix coefficients of a finite-dimensional representation, hence in $E_{\mathrm{fin}}$. $\square$
+Thus $g\mapsto (\theta_{ij}(g))_{i,j}$ is the matrix of the unitary operator $\lambda(g)|_{H_\alpha}$ in the basis $\{f_i\}$, so it defines a finite-dimensional unitary representation $\rho$ of $G$ on $\mathbb{C}^r$.
+
+Finally, evaluating at the identity element $e\in G$ gives
+$$
+f_i(g^{-1})=(\lambda(g)f_i)(e)=\sum_{k=1}^r \theta_{ki}(g)\,f_k(e),
+$$
+so each $f_i$ is a linear combination of the coefficient functions $\theta_{ki}(g^{-1})$. Since $E_{\mathrm{fin}}$ is closed under inversion, we conclude $f_i\in E_{\mathrm{fin}}$. $\square$
 
 > **Lemma.** Let $k$ and $T$ be as above. Then for every $f\in L^2(G)$ we have
 > $$ Tf\in \overline{E_{\mathrm{fin}}}^{\|\cdot\|_2}. $$
 > In particular, $Tf$ can be approximated in $L^2$ by elements of $E_{\mathrm{fin}}$.
 
 **Proof.** Let $\{ \phi_n \}$ be a complete orthonormal set of eigenvectors for the nonzero eigenspaces of $T$, with eigenvalues $\alpha_n\ne 0$:
-$$
-T\phi_n=\alpha_n\phi_n.
-$$
-Then by the spectral theorem, any $f\in L^2(G)$ can be written as
+$$ T\phi_n=\alpha_n\phi_n.$$
+Then by the spectral theorem for compact self-adjoint operators, any $f\in L^2(G)$ can be written as
 $$
 f=\sum_{n} c_n\phi_n + f_0,
 \qquad Tf_0=0,
@@ -428,31 +393,30 @@ We now use the existence of an approximate identity in $C(G)$.
 > 3. $k_U(g)=k_U(g^{-1})$,
 > 4. for every $f\in C(G)$, both $k_U*f\to f$ and $f*k_U\to f$ uniformly on $G$.
 
-**Proof.** For each neighborhood $U$ of $e$, choose $k_U\in C(G)$ nonnegative with $\mathrm{supp}(k_U)\subseteq U$, $k_U(g)=k_U(g^{-1})$, and normalize so $\int_G k_U=1$.
+**Proof.** (Existence.) Fix a neighborhood $U$ of $e$. Choose a symmetric neighborhood $V$ of $e$ with $\overline V\subset U$ (possible in a topological group). By Urysohn's lemma, there exists $\psi\in C(G)$ with $0\le \psi\le 1$, $\psi\equiv 1$ on $\overline V$, and $\mathrm{supp}(\psi)\subset U$. Then $h(g):=\psi(g)+\psi(g^{-1})$ is continuous, nonnegative, symmetric, supported in $U$, and $\int_G h>0$. Setting $k_U:=h/\int_G h$ gives (1)--(3).
 
-Fix $f\in C(G)$ and $\varepsilon>0$. By uniform continuity of $f$ (compactness of $G$), there exists a neighborhood $W$ of $e$ such that
+(Approximation.) Fix $f\in C(G)$ and $\varepsilon>0$. By uniform continuity of $f$ (compactness of $G$), there exists a neighborhood $W$ of $e$ such that
 $$
-|f(tg)-f(g)|<\varepsilon,\qquad \forall g\in G,\ \forall t\in W.
+|f(t^{-1}g)-f(g)|<\varepsilon,\qquad \forall g\in G,\ \forall t\in W.
 $$
 If $U\subseteq W$, then for all $g\in G$,
 $$
-|(k_U*f)(g)-f(g)|
-=
-\left|\int_G k_U(t)\bigl(f(tg)-f(g)\bigr)\,dt\right|
-\le
-\int_G k_U(t)\,\varepsilon\,dt
-=\varepsilon.
+\begin{aligned}
+|(k_U*f)(g)-f(g)| &=
+\left|\int_G k_U(t)\bigl(f(t^{-1}g)-f(g)\bigr)\,dt\right| \\
+&\le
+\int_G k_U(t)\,\varepsilon\,dt =\varepsilon.
+\end{aligned}
 $$
-Thus $k_U*f\to f$ uniformly. A similar argument yields $f*k_U\to f$ uniformly. $\square$
+Thus $k_U*f\to f$ uniformly. The proof for $f*k_U\to f$ is the same, using uniform continuity of right translations. $\square$
 
 Now let $T_U$ be the convolution operator
 $$
-T_Uf := k_U*f.
+T_Uf := f*k_U.
 $$
 Each $k_U$ satisfies the hypotheses of the Hilbert--Schmidt lemmas above, and $T_Uf\to f$ uniformly for every $f\in C(G)$.
 
-By the previous lemma, $T_Uf\in \overline{E_{\mathrm{fin}}}^{\|\cdot\|_2}$ for every $f\in L^2(G)$. In particular, if $f\in C(G)$ then $T_Uf$ is continuous and can be approximated by elements of $E_{\mathrm{fin}}$; since $T_Uf\to f$ uniformly, we conclude:
-
+By the previous lemma, $T_Uf\in \overline{E_{\mathrm{fin}}}^{\|\cdot\|_2}$ for every $f\in L^2(G)$. In particular, if $f\in C(G)$ then $T_Uf$ is continuous and can be approximated by elements of $E_{\mathrm{fin}}$; since $T_Uf\to f$ uniformly, we conclude
 $$
 \overline{E_{\mathrm{fin}}}^{\|\cdot\|_\infty}=C(G).
 $$
@@ -461,8 +425,7 @@ This proves the claim, and therefore completes the proof of the Peter--Weyl theo
 
 ## References
 
-[0] The PeterWeyl Theorem for Compact Groups by Dana P. Williams https://math.dartmouth.edu/~dana/bookspapers/pw.pdf?utm_source=chatgpt.com
-
+[0] Dana P. Williams, *The Peter--Weyl Theorem for Compact Groups*, notes. <https://math.dartmouth.edu/~dana/bookspapers/pw.pdf>
 
 [1] Elias M. Stein, *Topics in Harmonic Analysis Related to the Littlewood--Paley Theory*, Annals of Mathematics Studies, Princeton University Press.
 

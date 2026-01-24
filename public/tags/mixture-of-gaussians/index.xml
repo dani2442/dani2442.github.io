@@ -14,6 +14,18 @@
     <lastBuildDate>Fri, 17 Oct 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/mixture-of-gaussians/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Harmonic Analysis: Peter-Weyl Theorem and Machine Learning</title>
+      <link>http://localhost:1313/posts/peter-weyl/</link>
+      <pubDate>Fri, 17 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/peter-weyl/</guid>
+      <description>&lt;h2 id=&#34;1-preliminaries&#34;&gt;1. Preliminaries&lt;/h2&gt;
+&lt;p&gt;We start by introducing some basic notions from representation theory and harmonic analysis on compact groups.&lt;/p&gt;
+&lt;p&gt;Let $G$ be a locally compact group with a fixed (left) Haar measure $\mu$.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Definition (Unitary representation).&lt;/strong&gt; A (unitary) representation of $G$ is a continuous homomorphism $\pi:G\to \mathfrak{U}(\mathcal{H}_\pi)$, where $\mathfrak{U}(\mathcal{H}_\pi)$ is the unitary group of a complex Hilbert space $\mathcal{H}_\pi$.&lt;/p&gt;
+&lt;p&gt;Equivalently, $\pi(gh)=\pi(g)\pi(h)$ for all $g,h\in G$ and $g\mapsto \pi(g)\xi$ is continuous for every $\xi\in \mathcal{H}_\pi$.&lt;/p&gt;</description>
+    </item>
+    <item>
       <title>Mixture of Gaussian Processes</title>
       <link>http://localhost:1313/posts/mixture-gaussian-processes/</link>
       <pubDate>Fri, 17 Oct 2025 00:00:00 +0000</pubDate>
