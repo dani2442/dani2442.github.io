@@ -371,7 +371,7 @@ which is symmetric in the appropriate sense, so $T$ is self-adjoint and compact.
 
 > **Lemma.** Let $k$ and $T$ be as above. For each $\alpha\in\mathbb{R}\setminus\{0\}$, the eigenspace
 > $$ H_\alpha=\{f\in L^2(G): Tf=\alpha f\} $$
-is contained in $E_{\mathrm{fin}}$.
+> is contained in $E_{\mathrm{fin}}$.
 
 **Proof.** Since $T$ is compact and self-adjoint, $H_\alpha$ is finite-dimensional and consists of continuous functions (because $k$ is continuous and $Tf$ is continuous whenever $f\in L^2(G)$).
 
