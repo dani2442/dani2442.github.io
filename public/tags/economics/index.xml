@@ -2,43 +2,43 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Economics on dani2442&#39;s Blog</title>
-    <link>http://localhost:1313/tags/economics/</link>
+    <link>https://dani2442.github.io/tags/economics/</link>
     <description>Recent content in Economics on dani2442&#39;s Blog</description>
     <image>
       <title>dani2442&#39;s Blog</title>
-      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+      <url>https://dani2442.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://dani2442.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
     </image>
     <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 20 Jan 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/economics/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://dani2442.github.io/tags/economics/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>AI Psychosis</title>
-      <link>http://localhost:1313/essays/ai-psychosis/</link>
+      <link>https://dani2442.github.io/essays/ai-psychosis/</link>
       <pubDate>Tue, 20 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/ai-psychosis/</guid>
+      <guid>https://dani2442.github.io/essays/ai-psychosis/</guid>
       <description>Losing touch with reality in the age of AI.</description>
     </item>
     <item>
       <title>Industries destined to collapse</title>
-      <link>http://localhost:1313/essays/oversupply/death_by_oversupply/</link>
+      <link>https://dani2442.github.io/essays/oversupply/death_by_oversupply/</link>
       <pubDate>Thu, 15 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/oversupply/death_by_oversupply/</guid>
+      <guid>https://dani2442.github.io/essays/oversupply/death_by_oversupply/</guid>
       <description>Supply compounds forever, but demand (attention) doesn&amp;#39;t.</description>
     </item>
     <item>
       <title>Neo Hospitals</title>
-      <link>http://localhost:1313/essays/neo-hospital/</link>
+      <link>https://dani2442.github.io/essays/neo-hospital/</link>
       <pubDate>Sun, 28 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/neo-hospital/</guid>
+      <guid>https://dani2442.github.io/essays/neo-hospital/</guid>
       <description>The future of healthcare in the age of AI.</description>
     </item>
     <item>
       <title>Space Piracy</title>
-      <link>http://localhost:1313/essays/space-piracy/</link>
+      <link>https://dani2442.github.io/essays/space-piracy/</link>
       <pubDate>Tue, 23 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/space-piracy/</guid>
+      <guid>https://dani2442.github.io/essays/space-piracy/</guid>
       <description>Why piracy is likely to move to orbit, and how to defend against it.</description>
     </item>
   </channel>

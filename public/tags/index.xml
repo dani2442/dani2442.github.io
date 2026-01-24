@@ -2,330 +2,330 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Tags on dani2442&#39;s Blog</title>
-    <link>http://localhost:1313/tags/</link>
+    <link>https://dani2442.github.io/tags/</link>
     <description>Recent content in Tags on dani2442&#39;s Blog</description>
     <image>
       <title>dani2442&#39;s Blog</title>
-      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+      <url>https://dani2442.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://dani2442.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
     </image>
     <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 20 Jan 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://dani2442.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>AI</title>
-      <link>http://localhost:1313/tags/ai/</link>
+      <link>https://dani2442.github.io/tags/ai/</link>
       <pubDate>Tue, 20 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/ai/</guid>
+      <guid>https://dani2442.github.io/tags/ai/</guid>
       <description></description>
     </item>
     <item>
       <title>Creativity</title>
-      <link>http://localhost:1313/tags/creativity/</link>
+      <link>https://dani2442.github.io/tags/creativity/</link>
       <pubDate>Tue, 20 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/creativity/</guid>
+      <guid>https://dani2442.github.io/tags/creativity/</guid>
       <description></description>
     </item>
     <item>
       <title>Economics</title>
-      <link>http://localhost:1313/tags/economics/</link>
+      <link>https://dani2442.github.io/tags/economics/</link>
       <pubDate>Tue, 20 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/economics/</guid>
+      <guid>https://dani2442.github.io/tags/economics/</guid>
       <description></description>
     </item>
     <item>
       <title>Oversupply</title>
-      <link>http://localhost:1313/tags/oversupply/</link>
+      <link>https://dani2442.github.io/tags/oversupply/</link>
       <pubDate>Tue, 20 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/oversupply/</guid>
+      <guid>https://dani2442.github.io/tags/oversupply/</guid>
       <description></description>
     </item>
     <item>
       <title>Machine Learning</title>
-      <link>http://localhost:1313/tags/machine-learning/</link>
+      <link>https://dani2442.github.io/tags/machine-learning/</link>
       <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/machine-learning/</guid>
+      <guid>https://dani2442.github.io/tags/machine-learning/</guid>
       <description></description>
     </item>
     <item>
       <title>Probability</title>
-      <link>http://localhost:1313/tags/probability/</link>
+      <link>https://dani2442.github.io/tags/probability/</link>
       <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/probability/</guid>
+      <guid>https://dani2442.github.io/tags/probability/</guid>
       <description></description>
     </item>
     <item>
       <title>Healthcare</title>
-      <link>http://localhost:1313/tags/healthcare/</link>
+      <link>https://dani2442.github.io/tags/healthcare/</link>
       <pubDate>Sun, 28 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/healthcare/</guid>
+      <guid>https://dani2442.github.io/tags/healthcare/</guid>
       <description></description>
     </item>
     <item>
       <title>Cybersecurity</title>
-      <link>http://localhost:1313/tags/cybersecurity/</link>
+      <link>https://dani2442.github.io/tags/cybersecurity/</link>
       <pubDate>Tue, 23 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/cybersecurity/</guid>
+      <guid>https://dani2442.github.io/tags/cybersecurity/</guid>
       <description></description>
     </item>
     <item>
       <title>Satellites</title>
-      <link>http://localhost:1313/tags/satellites/</link>
+      <link>https://dani2442.github.io/tags/satellites/</link>
       <pubDate>Tue, 23 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/satellites/</guid>
+      <guid>https://dani2442.github.io/tags/satellites/</guid>
       <description></description>
     </item>
     <item>
       <title>Security</title>
-      <link>http://localhost:1313/tags/security/</link>
+      <link>https://dani2442.github.io/tags/security/</link>
       <pubDate>Tue, 23 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/security/</guid>
+      <guid>https://dani2442.github.io/tags/security/</guid>
       <description></description>
     </item>
     <item>
       <title>Space</title>
-      <link>http://localhost:1313/tags/space/</link>
+      <link>https://dani2442.github.io/tags/space/</link>
       <pubDate>Tue, 23 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/space/</guid>
+      <guid>https://dani2442.github.io/tags/space/</guid>
       <description></description>
     </item>
     <item>
       <title>Cognition</title>
-      <link>http://localhost:1313/tags/cognition/</link>
+      <link>https://dani2442.github.io/tags/cognition/</link>
       <pubDate>Mon, 22 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/cognition/</guid>
+      <guid>https://dani2442.github.io/tags/cognition/</guid>
       <description></description>
     </item>
     <item>
       <title>Control Theory</title>
-      <link>http://localhost:1313/tags/control-theory/</link>
+      <link>https://dani2442.github.io/tags/control-theory/</link>
       <pubDate>Sat, 20 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/control-theory/</guid>
+      <guid>https://dani2442.github.io/tags/control-theory/</guid>
       <description></description>
     </item>
     <item>
       <title>Fusion Energy</title>
-      <link>http://localhost:1313/tags/fusion-energy/</link>
+      <link>https://dani2442.github.io/tags/fusion-energy/</link>
       <pubDate>Sat, 20 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/fusion-energy/</guid>
+      <guid>https://dani2442.github.io/tags/fusion-energy/</guid>
       <description></description>
     </item>
     <item>
       <title>Physics</title>
-      <link>http://localhost:1313/tags/physics/</link>
+      <link>https://dani2442.github.io/tags/physics/</link>
       <pubDate>Sat, 20 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/physics/</guid>
+      <guid>https://dani2442.github.io/tags/physics/</guid>
       <description></description>
     </item>
     <item>
       <title>Analysis</title>
-      <link>http://localhost:1313/tags/analysis/</link>
+      <link>https://dani2442.github.io/tags/analysis/</link>
       <pubDate>Thu, 30 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/analysis/</guid>
+      <guid>https://dani2442.github.io/tags/analysis/</guid>
       <description></description>
     </item>
     <item>
       <title>Attention Mechanisms</title>
-      <link>http://localhost:1313/tags/attention-mechanisms/</link>
+      <link>https://dani2442.github.io/tags/attention-mechanisms/</link>
       <pubDate>Thu, 30 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/attention-mechanisms/</guid>
+      <guid>https://dani2442.github.io/tags/attention-mechanisms/</guid>
       <description></description>
     </item>
     <item>
       <title>G-Metric Spaces</title>
-      <link>http://localhost:1313/tags/g-metric-spaces/</link>
+      <link>https://dani2442.github.io/tags/g-metric-spaces/</link>
       <pubDate>Thu, 30 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/g-metric-spaces/</guid>
+      <guid>https://dani2442.github.io/tags/g-metric-spaces/</guid>
       <description></description>
     </item>
     <item>
       <title>Kernel Methods</title>
-      <link>http://localhost:1313/tags/kernel-methods/</link>
+      <link>https://dani2442.github.io/tags/kernel-methods/</link>
       <pubDate>Thu, 30 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/kernel-methods/</guid>
+      <guid>https://dani2442.github.io/tags/kernel-methods/</guid>
       <description></description>
     </item>
     <item>
       <title>Harmonic Analysis</title>
-      <link>http://localhost:1313/tags/harmonic-analysis/</link>
+      <link>https://dani2442.github.io/tags/harmonic-analysis/</link>
       <pubDate>Fri, 17 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/harmonic-analysis/</guid>
+      <guid>https://dani2442.github.io/tags/harmonic-analysis/</guid>
       <description></description>
     </item>
     <item>
       <title>Mixture of Gaussians</title>
-      <link>http://localhost:1313/tags/mixture-of-gaussians/</link>
+      <link>https://dani2442.github.io/tags/mixture-of-gaussians/</link>
       <pubDate>Fri, 17 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/mixture-of-gaussians/</guid>
+      <guid>https://dani2442.github.io/tags/mixture-of-gaussians/</guid>
       <description></description>
     </item>
     <item>
       <title>Metrics</title>
-      <link>http://localhost:1313/tags/metrics/</link>
+      <link>https://dani2442.github.io/tags/metrics/</link>
       <pubDate>Thu, 16 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/metrics/</guid>
+      <guid>https://dani2442.github.io/tags/metrics/</guid>
       <description></description>
     </item>
     <item>
       <title>Gaussian Processes</title>
-      <link>http://localhost:1313/tags/gaussian-processes/</link>
+      <link>https://dani2442.github.io/tags/gaussian-processes/</link>
       <pubDate>Thu, 09 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/gaussian-processes/</guid>
+      <guid>https://dani2442.github.io/tags/gaussian-processes/</guid>
       <description></description>
     </item>
     <item>
       <title>Stochastic Processes</title>
-      <link>http://localhost:1313/tags/stochastic-processes/</link>
+      <link>https://dani2442.github.io/tags/stochastic-processes/</link>
       <pubDate>Thu, 09 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/stochastic-processes/</guid>
+      <guid>https://dani2442.github.io/tags/stochastic-processes/</guid>
       <description></description>
     </item>
     <item>
       <title>Applications</title>
-      <link>http://localhost:1313/tags/applications/</link>
+      <link>https://dani2442.github.io/tags/applications/</link>
       <pubDate>Wed, 01 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/applications/</guid>
+      <guid>https://dani2442.github.io/tags/applications/</guid>
       <description></description>
     </item>
     <item>
       <title>Data Science</title>
-      <link>http://localhost:1313/tags/data-science/</link>
+      <link>https://dani2442.github.io/tags/data-science/</link>
       <pubDate>Wed, 01 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/data-science/</guid>
+      <guid>https://dani2442.github.io/tags/data-science/</guid>
       <description></description>
     </item>
     <item>
       <title>Finance</title>
-      <link>http://localhost:1313/tags/finance/</link>
+      <link>https://dani2442.github.io/tags/finance/</link>
       <pubDate>Wed, 01 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/finance/</guid>
+      <guid>https://dani2442.github.io/tags/finance/</guid>
       <description></description>
     </item>
     <item>
       <title>Rockets</title>
-      <link>http://localhost:1313/tags/rockets/</link>
+      <link>https://dani2442.github.io/tags/rockets/</link>
       <pubDate>Wed, 01 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/rockets/</guid>
+      <guid>https://dani2442.github.io/tags/rockets/</guid>
       <description></description>
     </item>
     <item>
       <title>Mathematics</title>
-      <link>http://localhost:1313/tags/mathematics/</link>
+      <link>https://dani2442.github.io/tags/mathematics/</link>
       <pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/mathematics/</guid>
+      <guid>https://dani2442.github.io/tags/mathematics/</guid>
       <description></description>
     </item>
     <item>
       <title>Prediction Markets</title>
-      <link>http://localhost:1313/tags/prediction-markets/</link>
+      <link>https://dani2442.github.io/tags/prediction-markets/</link>
       <pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/prediction-markets/</guid>
+      <guid>https://dani2442.github.io/tags/prediction-markets/</guid>
       <description></description>
     </item>
     <item>
       <title>Stochastic Differential Equations</title>
-      <link>http://localhost:1313/tags/stochastic-differential-equations/</link>
+      <link>https://dani2442.github.io/tags/stochastic-differential-equations/</link>
       <pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/stochastic-differential-equations/</guid>
+      <guid>https://dani2442.github.io/tags/stochastic-differential-equations/</guid>
       <description></description>
     </item>
     <item>
       <title>Futurology</title>
-      <link>http://localhost:1313/tags/futurology/</link>
+      <link>https://dani2442.github.io/tags/futurology/</link>
       <pubDate>Sun, 14 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/futurology/</guid>
+      <guid>https://dani2442.github.io/tags/futurology/</guid>
       <description></description>
     </item>
     <item>
       <title>Inference</title>
-      <link>http://localhost:1313/tags/inference/</link>
+      <link>https://dani2442.github.io/tags/inference/</link>
       <pubDate>Sun, 14 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/inference/</guid>
+      <guid>https://dani2442.github.io/tags/inference/</guid>
       <description></description>
     </item>
     <item>
       <title>Llm</title>
-      <link>http://localhost:1313/tags/llm/</link>
+      <link>https://dani2442.github.io/tags/llm/</link>
       <pubDate>Sun, 14 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/llm/</guid>
+      <guid>https://dani2442.github.io/tags/llm/</guid>
       <description></description>
     </item>
     <item>
       <title>Deep Learning</title>
-      <link>http://localhost:1313/tags/deep-learning/</link>
+      <link>https://dani2442.github.io/tags/deep-learning/</link>
       <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/deep-learning/</guid>
+      <guid>https://dani2442.github.io/tags/deep-learning/</guid>
       <description></description>
     </item>
     <item>
       <title>ODE</title>
-      <link>http://localhost:1313/tags/ode/</link>
+      <link>https://dani2442.github.io/tags/ode/</link>
       <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/ode/</guid>
+      <guid>https://dani2442.github.io/tags/ode/</guid>
       <description></description>
     </item>
     <item>
       <title>PDE</title>
-      <link>http://localhost:1313/tags/pde/</link>
+      <link>https://dani2442.github.io/tags/pde/</link>
       <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/pde/</guid>
+      <guid>https://dani2442.github.io/tags/pde/</guid>
       <description></description>
     </item>
     <item>
       <title>Functional Data Analysis</title>
-      <link>http://localhost:1313/tags/functional-data-analysis/</link>
+      <link>https://dani2442.github.io/tags/functional-data-analysis/</link>
       <pubDate>Tue, 29 Apr 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/functional-data-analysis/</guid>
+      <guid>https://dani2442.github.io/tags/functional-data-analysis/</guid>
       <description></description>
     </item>
     <item>
       <title>Differentiable Programming</title>
-      <link>http://localhost:1313/tags/differentiable-programming/</link>
+      <link>https://dani2442.github.io/tags/differentiable-programming/</link>
       <pubDate>Sun, 18 Aug 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/differentiable-programming/</guid>
+      <guid>https://dani2442.github.io/tags/differentiable-programming/</guid>
       <description></description>
     </item>
     <item>
       <title>Neural ODEs</title>
-      <link>http://localhost:1313/tags/neural-odes/</link>
+      <link>https://dani2442.github.io/tags/neural-odes/</link>
       <pubDate>Sun, 18 Aug 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/neural-odes/</guid>
+      <guid>https://dani2442.github.io/tags/neural-odes/</guid>
       <description></description>
     </item>
     <item>
       <title>Optimization</title>
-      <link>http://localhost:1313/tags/optimization/</link>
+      <link>https://dani2442.github.io/tags/optimization/</link>
       <pubDate>Sun, 18 Aug 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/optimization/</guid>
+      <guid>https://dani2442.github.io/tags/optimization/</guid>
       <description></description>
     </item>
     <item>
       <title>Simulation</title>
-      <link>http://localhost:1313/tags/simulation/</link>
+      <link>https://dani2442.github.io/tags/simulation/</link>
       <pubDate>Sun, 18 Aug 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/simulation/</guid>
+      <guid>https://dani2442.github.io/tags/simulation/</guid>
       <description></description>
     </item>
     <item>
       <title>Numerical Methods</title>
-      <link>http://localhost:1313/tags/numerical-methods/</link>
+      <link>https://dani2442.github.io/tags/numerical-methods/</link>
       <pubDate>Sat, 17 Aug 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/numerical-methods/</guid>
+      <guid>https://dani2442.github.io/tags/numerical-methods/</guid>
       <description></description>
     </item>
     <item>
       <title>Bifurcation Theory</title>
-      <link>http://localhost:1313/tags/bifurcation-theory/</link>
+      <link>https://dani2442.github.io/tags/bifurcation-theory/</link>
       <pubDate>Thu, 11 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/bifurcation-theory/</guid>
+      <guid>https://dani2442.github.io/tags/bifurcation-theory/</guid>
       <description></description>
     </item>
     <item>
       <title>Nonlinear Functional Analysis</title>
-      <link>http://localhost:1313/tags/nonlinear-functional-analysis/</link>
+      <link>https://dani2442.github.io/tags/nonlinear-functional-analysis/</link>
       <pubDate>Thu, 11 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/tags/nonlinear-functional-analysis/</guid>
+      <guid>https://dani2442.github.io/tags/nonlinear-functional-analysis/</guid>
       <description></description>
     </item>
   </channel>
