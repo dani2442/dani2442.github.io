@@ -2,43 +2,40 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://dani2442.github.io/tags/ai/</loc>
-    <lastmod>2026-01-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dani2442.github.io/essays/ai-psychosis/</loc>
-    <lastmod>2026-01-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dani2442.github.io/categories/</loc>
-    <lastmod>2026-01-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dani2442.github.io/tags/creativity/</loc>
-    <lastmod>2026-01-20T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://dani2442.github.io/</loc>
-    <lastmod>2026-01-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dani2442.github.io/tags/economics/</loc>
     <lastmod>2026-01-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://dani2442.github.io/essays/</loc>
     <lastmod>2026-01-20T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://dani2442.github.io/categories/machine-learning/</loc>
-    <lastmod>2026-01-20T00:00:00+00:00</lastmod>
+    <loc>https://dani2442.github.io/tags/ai/</loc>
+    <lastmod>2026-01-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://dani2442.github.io/categories/miscellaneous/</loc>
-    <lastmod>2026-01-20T00:00:00+00:00</lastmod>
+    <loc>https://dani2442.github.io/categories/</loc>
+    <lastmod>2026-01-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://dani2442.github.io/tags/oversupply/</loc>
-    <lastmod>2026-01-20T00:00:00+00:00</lastmod>
+    <loc>https://dani2442.github.io/tags/creativity/</loc>
+    <lastmod>2026-01-15T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://dani2442.github.io/categories/philosophy/</loc>
-    <lastmod>2026-01-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dani2442.github.io/tags/</loc>
-    <lastmod>2026-01-20T00:00:00+00:00</lastmod>
+    <loc>https://dani2442.github.io/tags/economics/</loc>
+    <lastmod>2026-01-15T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://dani2442.github.io/essays/oversupply/death_by_oversupply/</loc>
+    <lastmod>2026-01-15T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dani2442.github.io/categories/machine-learning/</loc>
+    <lastmod>2026-01-15T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dani2442.github.io/categories/miscellaneous/</loc>
+    <lastmod>2026-01-15T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dani2442.github.io/tags/oversupply/</loc>
+    <lastmod>2026-01-15T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dani2442.github.io/categories/philosophy/</loc>
+    <lastmod>2026-01-15T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dani2442.github.io/tags/</loc>
     <lastmod>2026-01-15T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://dani2442.github.io/tags/machine-learning/</loc>
@@ -127,30 +124,6 @@
   </url><url>
     <loc>https://dani2442.github.io/posts/higher-order-attention/</loc>
     <lastmod>2025-10-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dani2442.github.io/posts/control-theory/</loc>
-    <lastmod>2025-10-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dani2442.github.io/categories/harmonic-analysis/</loc>
-    <lastmod>2025-10-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dani2442.github.io/tags/harmonic-analysis/</loc>
-    <lastmod>2025-10-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dani2442.github.io/posts/peter-weyl/</loc>
-    <lastmod>2025-10-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dani2442.github.io/categories/mathematics/</loc>
-    <lastmod>2025-10-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dani2442.github.io/posts/mixture-gaussian-processes/</loc>
-    <lastmod>2025-10-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dani2442.github.io/tags/mixture-of-gaussians/</loc>
-    <lastmod>2025-10-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://dani2442.github.io/essays/leverage-inequality/leverage-inequality/</loc>
-    <lastmod>2025-10-16T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://dani2442.github.io/tags/metrics/</loc>
     <lastmod>2025-10-16T00:00:00+00:00</lastmod>
@@ -258,6 +231,9 @@
     <lastmod>2024-08-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://dani2442.github.io/tags/bifurcation-theory/</loc>
+    <lastmod>2024-07-11T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://dani2442.github.io/categories/mathematics/</loc>
     <lastmod>2024-07-11T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://dani2442.github.io/tags/nonlinear-functional-analysis/</loc>

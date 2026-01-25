@@ -11,26 +11,26 @@
     </image>
     <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 20 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 15 Jan 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://dani2442.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Machine Learning</title>
       <link>https://dani2442.github.io/categories/machine-learning/</link>
-      <pubDate>Tue, 20 Jan 2026 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 15 Jan 2026 00:00:00 +0000</pubDate>
       <guid>https://dani2442.github.io/categories/machine-learning/</guid>
       <description></description>
     </item>
     <item>
       <title>Miscellaneous</title>
       <link>https://dani2442.github.io/categories/miscellaneous/</link>
-      <pubDate>Tue, 20 Jan 2026 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 15 Jan 2026 00:00:00 +0000</pubDate>
       <guid>https://dani2442.github.io/categories/miscellaneous/</guid>
       <description></description>
     </item>
     <item>
       <title>Philosophy</title>
       <link>https://dani2442.github.io/categories/philosophy/</link>
-      <pubDate>Tue, 20 Jan 2026 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 15 Jan 2026 00:00:00 +0000</pubDate>
       <guid>https://dani2442.github.io/categories/philosophy/</guid>
       <description></description>
     </item>
@@ -70,20 +70,6 @@
       <description></description>
     </item>
     <item>
-      <title>Harmonic Analysis</title>
-      <link>https://dani2442.github.io/categories/harmonic-analysis/</link>
-      <pubDate>Fri, 17 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>https://dani2442.github.io/categories/harmonic-analysis/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Mathematics</title>
-      <link>https://dani2442.github.io/categories/mathematics/</link>
-      <pubDate>Fri, 17 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>https://dani2442.github.io/categories/mathematics/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Applied Math</title>
       <link>https://dani2442.github.io/categories/applied-math/</link>
       <pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate>
@@ -109,6 +95,13 @@
       <link>https://dani2442.github.io/categories/simulation/</link>
       <pubDate>Sat, 17 Aug 2024 00:00:00 +0000</pubDate>
       <guid>https://dani2442.github.io/categories/simulation/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Mathematics</title>
+      <link>https://dani2442.github.io/categories/mathematics/</link>
+      <pubDate>Thu, 11 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://dani2442.github.io/categories/mathematics/</guid>
       <description></description>
     </item>
   </channel>

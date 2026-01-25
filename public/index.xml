@@ -2,188 +2,148 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>dani2442&#39;s Blog</title>
-    <link>http://localhost:1313/</link>
+    <link>https://dani2442.github.io/</link>
     <description>Recent content on dani2442&#39;s Blog</description>
     <image>
       <title>dani2442&#39;s Blog</title>
-      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+      <url>https://dani2442.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://dani2442.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
     </image>
     <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 20 Jan 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>AI Psychosis</title>
-      <link>http://localhost:1313/essays/ai-psychosis/</link>
-      <pubDate>Tue, 20 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/ai-psychosis/</guid>
-      <description>Losing touch with reality in the age of AI.</description>
-    </item>
+    <lastBuildDate>Thu, 15 Jan 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://dani2442.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Industries destined to collapse</title>
-      <link>http://localhost:1313/essays/oversupply/death_by_oversupply/</link>
+      <link>https://dani2442.github.io/essays/oversupply/death_by_oversupply/</link>
       <pubDate>Thu, 15 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/oversupply/death_by_oversupply/</guid>
+      <guid>https://dani2442.github.io/essays/oversupply/death_by_oversupply/</guid>
       <description>Supply compounds forever, but demand (attention) doesn&amp;#39;t.</description>
     </item>
     <item>
       <title>Notes on Generalization Theory</title>
-      <link>http://localhost:1313/posts/generalization/</link>
+      <link>https://dani2442.github.io/posts/generalization/</link>
       <pubDate>Sun, 04 Jan 2026 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/generalization/</guid>
+      <guid>https://dani2442.github.io/posts/generalization/</guid>
       <description>Generalization bounds and theory for machine learning models.</description>
     </item>
     <item>
       <title>Neo Hospitals</title>
-      <link>http://localhost:1313/essays/neo-hospital/</link>
+      <link>https://dani2442.github.io/essays/neo-hospital/</link>
       <pubDate>Sun, 28 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/neo-hospital/</guid>
+      <guid>https://dani2442.github.io/essays/neo-hospital/</guid>
       <description>The future of healthcare in the age of AI.</description>
     </item>
     <item>
       <title>Space Piracy</title>
-      <link>http://localhost:1313/essays/space-piracy/</link>
+      <link>https://dani2442.github.io/essays/space-piracy/</link>
       <pubDate>Tue, 23 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/space-piracy/</guid>
+      <guid>https://dani2442.github.io/essays/space-piracy/</guid>
       <description>Why piracy is likely to move to orbit, and how to defend against it.</description>
     </item>
     <item>
       <title>Creativity in the Age of AI: The curse of knowledge</title>
-      <link>http://localhost:1313/essays/creativity/</link>
+      <link>https://dani2442.github.io/essays/creativity/</link>
       <pubDate>Mon, 22 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/creativity/</guid>
+      <guid>https://dani2442.github.io/essays/creativity/</guid>
       <description>When answers get cheap, originality becomes scarce</description>
     </item>
     <item>
       <title>Fusion Energy Simulation: Tokamak</title>
-      <link>http://localhost:1313/posts/torax/</link>
+      <link>https://dani2442.github.io/posts/torax/</link>
       <pubDate>Sat, 20 Dec 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/torax/</guid>
+      <guid>https://dani2442.github.io/posts/torax/</guid>
       <description>Notes on Tokamak transport PDEs.</description>
     </item>
     <item>
       <title>Talk at Workshop in Palermo (Italy)</title>
-      <link>http://localhost:1313/events/2025_11_20_erice/</link>
+      <link>https://dani2442.github.io/events/2025_11_20_erice/</link>
       <pubDate>Thu, 20 Nov 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/events/2025_11_20_erice/</guid>
+      <guid>https://dani2442.github.io/events/2025_11_20_erice/</guid>
       <description>Workshop: &amp;#39;The Mathematics of Scientific Machine Learning and Digital Twins&amp;#39;</description>
     </item>
     <item>
       <title>Self-Attention, Kernel Methods and G-Metric Spaces</title>
-      <link>http://localhost:1313/posts/higher-order-attention/</link>
+      <link>https://dani2442.github.io/posts/higher-order-attention/</link>
       <pubDate>Thu, 30 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/higher-order-attention/</guid>
+      <guid>https://dani2442.github.io/posts/higher-order-attention/</guid>
       <description>An introduction to Higher-Order Attention, Kernel Methods, and G-Metric Spaces.</description>
     </item>
     <item>
-      <title>Control Theory</title>
-      <link>http://localhost:1313/posts/control-theory/</link>
-      <pubDate>Fri, 17 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/control-theory/</guid>
-      <description>A concise introduction to controllability for linear time-invariant systems: Kalman rank condition, the controllability Gramian, and the minimum-energy control.</description>
-    </item>
-    <item>
-      <title>Harmonic Analysis: Peter-Weyl Theorem and Machine Learning</title>
-      <link>http://localhost:1313/posts/peter-weyl/</link>
-      <pubDate>Fri, 17 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/peter-weyl/</guid>
-      <description>&lt;h2 id=&#34;1-preliminaries&#34;&gt;1. Preliminaries&lt;/h2&gt;
-&lt;p&gt;We start by introducing some basic notions from representation theory and harmonic analysis on compact groups.&lt;/p&gt;
-&lt;p&gt;Let $G$ be a locally compact group with a fixed (left) Haar measure $\mu$.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;Definition (Unitary representation).&lt;/strong&gt; A (unitary) representation of $G$ is a continuous homomorphism $\pi:G\to \mathfrak{U}(\mathcal{H}_\pi)$, where $\mathfrak{U}(\mathcal{H}_\pi)$ is the unitary group of a complex Hilbert space $\mathcal{H}_\pi$.&lt;/p&gt;
-&lt;p&gt;Equivalently, $\pi(gh)=\pi(g)\pi(h)$ for all $g,h\in G$ and $g\mapsto \pi(g)\xi$ is continuous for every $\xi\in \mathcal{H}_\pi$.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Mixture of Gaussian Processes</title>
-      <link>http://localhost:1313/posts/mixture-gaussian-processes/</link>
-      <pubDate>Fri, 17 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/mixture-gaussian-processes/</guid>
-      <description>A concise introduction to controllability for linear time-invariant systems: Kalman rank condition, the controllability Gramian, and the minimum-energy control.</description>
-    </item>
-    <item>
-      <title>Death of industry by Oversupply</title>
-      <link>http://localhost:1313/essays/leverage-inequality/leverage-inequality/</link>
-      <pubDate>Thu, 16 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/leverage-inequality/leverage-inequality/</guid>
-      <description>Demand has limits, but supply can increase indefinitely</description>
-    </item>
-    <item>
       <title>The Importance of (Good) Metrics</title>
-      <link>http://localhost:1313/essays/metrics/</link>
+      <link>https://dani2442.github.io/essays/metrics/</link>
       <pubDate>Thu, 16 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/essays/metrics/</guid>
+      <guid>https://dani2442.github.io/essays/metrics/</guid>
       <description>We live surrounded by metrics</description>
     </item>
     <item>
       <title>Gaussian Processes</title>
-      <link>http://localhost:1313/posts/gaussian-processes/</link>
+      <link>https://dani2442.github.io/posts/gaussian-processes/</link>
       <pubDate>Thu, 09 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/gaussian-processes/</guid>
+      <guid>https://dani2442.github.io/posts/gaussian-processes/</guid>
       <description>Math and Code</description>
     </item>
     <item>
       <title>Low-Earth Orbit</title>
-      <link>http://localhost:1313/posts/low-earth-orbit/</link>
+      <link>https://dani2442.github.io/posts/low-earth-orbit/</link>
       <pubDate>Wed, 01 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/low-earth-orbit/</guid>
+      <guid>https://dani2442.github.io/posts/low-earth-orbit/</guid>
       <description>Analysis and Predictions</description>
     </item>
     <item>
       <title>Prediction Markets</title>
-      <link>http://localhost:1313/posts/prediction-markets/</link>
+      <link>https://dani2442.github.io/posts/prediction-markets/</link>
       <pubDate>Wed, 24 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/prediction-markets/</guid>
+      <guid>https://dani2442.github.io/posts/prediction-markets/</guid>
       <description>Analysis, Predictions and Experiments</description>
     </item>
     <item>
       <title>Analog computing in LLMs</title>
-      <link>http://localhost:1313/posts/analog-computing/</link>
+      <link>https://dani2442.github.io/posts/analog-computing/</link>
       <pubDate>Sun, 14 Sep 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/analog-computing/</guid>
+      <guid>https://dani2442.github.io/posts/analog-computing/</guid>
       <description>Analog computing &#43; AI</description>
     </item>
     <item>
       <title>Physics-Informed Neural Networks</title>
-      <link>http://localhost:1313/posts/pinns/</link>
+      <link>https://dani2442.github.io/posts/pinns/</link>
       <pubDate>Tue, 08 Jul 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/pinns/</guid>
+      <guid>https://dani2442.github.io/posts/pinns/</guid>
       <description>Introduction to Physics-Informed Neural Networks</description>
     </item>
     <item>
       <title>Functional Principal Component Analysis</title>
-      <link>http://localhost:1313/posts/functional-pca/</link>
+      <link>https://dani2442.github.io/posts/functional-pca/</link>
       <pubDate>Tue, 29 Apr 2025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/functional-pca/</guid>
+      <guid>https://dani2442.github.io/posts/functional-pca/</guid>
       <description>Introduction to Functional PCA.</description>
     </item>
     <item>
       <title>Differentiable programming for gradient-based control and optimization in physical systems</title>
-      <link>http://localhost:1313/posts/agraria-paper/</link>
+      <link>https://dani2442.github.io/posts/agraria-paper/</link>
       <pubDate>Sun, 18 Aug 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/agraria-paper/</guid>
+      <guid>https://dani2442.github.io/posts/agraria-paper/</guid>
       <description>Optimization using Differntiable Programming and Neural ODEs.</description>
     </item>
     <item>
       <title>Traffic Flow Dynamics</title>
-      <link>http://localhost:1313/posts/traffic-flow/</link>
+      <link>https://dani2442.github.io/posts/traffic-flow/</link>
       <pubDate>Sat, 17 Aug 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/traffic-flow/</guid>
+      <guid>https://dani2442.github.io/posts/traffic-flow/</guid>
       <description>Introduction to Traffic Flow Dynamics.</description>
     </item>
     <item>
       <title>Nonlinear Functional Analysis: Bifurcation Theory</title>
-      <link>http://localhost:1313/posts/bifurcation-theory/</link>
+      <link>https://dani2442.github.io/posts/bifurcation-theory/</link>
       <pubDate>Thu, 11 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/posts/bifurcation-theory/</guid>
+      <guid>https://dani2442.github.io/posts/bifurcation-theory/</guid>
       <description>Introduction to Bifurcation Theory from simple eigenvalues.</description>
     </item>
     <item>
       <title>About</title>
-      <link>http://localhost:1313/about/</link>
+      <link>https://dani2442.github.io/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/about/</guid>
+      <guid>https://dani2442.github.io/about/</guid>
       <description>&lt;p&gt;Hi, this is Daniel López Montero. I will upload notes, projects and some thoughts on topics I am interested in. I am a PhD student of Mathematics researching in Machine Learning, and like to program, read and play football, basketball and padel in my spare time.&lt;/p&gt;</description>
     </item>
   </channel>

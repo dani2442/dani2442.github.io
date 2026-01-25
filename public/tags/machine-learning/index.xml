@@ -35,39 +35,6 @@
       <description>An introduction to Higher-Order Attention, Kernel Methods, and G-Metric Spaces.</description>
     </item>
     <item>
-      <title>Control Theory</title>
-      <link>https://dani2442.github.io/posts/control-theory/</link>
-      <pubDate>Fri, 17 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>https://dani2442.github.io/posts/control-theory/</guid>
-      <description>A concise introduction to controllability for linear time-invariant systems: Kalman rank condition, the controllability Gramian, and the minimum-energy control.</description>
-    </item>
-    <item>
-      <title>Harmonic Analysis: Peter-Weyl Theorem and Machine Learning</title>
-      <link>https://dani2442.github.io/posts/peter-weyl/</link>
-      <pubDate>Fri, 17 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>https://dani2442.github.io/posts/peter-weyl/</guid>
-      <description>&lt;h2 id=&#34;1-preliminaries&#34;&gt;1. Preliminaries&lt;/h2&gt;
-&lt;p&gt;We start by introducing some basic notions from representation theory and harmonic analysis on compact groups.&lt;/p&gt;
-&lt;p&gt;Let $G$ be a locally compact group with a fixed (left) Haar measure $\mu$.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;Definition (Unitary representation).&lt;/strong&gt; A (unitary) representation of $G$ is a continuous homomorphism $\pi:G\to \mathfrak{U}(\mathcal{H}_\pi)$, where $\mathfrak{U}(\mathcal{H}_\pi)$ is the unitary group of a complex Hilbert space $\mathcal{H}_\pi$.&lt;/p&gt;
-&lt;p&gt;Equivalently, $\pi(gh)=\pi(g)\pi(h)$ for all $g,h\in G$ and $g\mapsto \pi(g)\xi$ is continuous for every $\xi\in \mathcal{H}_\pi$.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Mixture of Gaussian Processes</title>
-      <link>https://dani2442.github.io/posts/mixture-gaussian-processes/</link>
-      <pubDate>Fri, 17 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>https://dani2442.github.io/posts/mixture-gaussian-processes/</guid>
-      <description>A concise introduction to controllability for linear time-invariant systems: Kalman rank condition, the controllability Gramian, and the minimum-energy control.</description>
-    </item>
-    <item>
-      <title>Death of industry by Oversupply</title>
-      <link>https://dani2442.github.io/essays/leverage-inequality/leverage-inequality/</link>
-      <pubDate>Thu, 16 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>https://dani2442.github.io/essays/leverage-inequality/leverage-inequality/</guid>
-      <description>Demand has limits, but supply can increase indefinitely</description>
-    </item>
-    <item>
       <title>The Importance of (Good) Metrics</title>
       <link>https://dani2442.github.io/essays/metrics/</link>
       <pubDate>Thu, 16 Oct 2025 00:00:00 +0000</pubDate>
