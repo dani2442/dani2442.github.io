@@ -548,7 +548,120 @@ $$
 $$
 
 
-### 4. Group Convolutional Neural Networks
+### 3.2. The rotation group SO(3)
+
+We now spell out the Peter--Weyl theorem concretely for $G=\mathrm{SO}(3)$, where the Fourier basis is given by Wigner $D$-matrix coefficients.
+
+#### Identify $\mathrm{SO}(3)$ and its Haar measure
+Recall
+$$
+\mathrm{SO}(3)=\{R\in M_{3\times 3}(\mathbb{R}) : R^\top R=I,\ \det R=1\},
+$$
+a compact (non-abelian) Lie group.
+
+Using Euler angles, every $g\in \mathrm{SO}(3)$ can be written (non-uniquely on a null set) as
+$$
+g = R_z(\alpha)\,R_y(\beta)\,R_z(\gamma),
+\qquad
+(\alpha,\gamma)\in[0,2\pi),\ \beta\in[0,\pi].
+$$
+With Haar measure normalized by $\mu(\mathrm{SO}(3))=1$, one has
+$$
+dg=\frac{1}{8\pi^2}\,\sin\beta\,d\alpha\,d\beta\,d\gamma,
+$$
+so for $f\in L^1(\mathrm{SO}(3))$,
+$$
+\int_{\mathrm{SO}(3)} f(g)\,dg
+=
+\frac{1}{8\pi^2}\int_0^{2\pi}\int_0^\pi\int_0^{2\pi} f\bigl(R_z(\alpha)R_y(\beta)R_z(\gamma)\bigr)\,\sin\beta\,d\alpha\,d\beta\,d\gamma.
+$$
+
+#### Irreducible unitary representations
+The irreducible unitary representations of $\mathrm{SO}(3)$ are indexed by $\ell\in\mathbb{Z}_{\ge 0}$. Denote a choice of representative by
+$$
+\pi_\ell:\mathrm{SO}(3)\to \mathfrak{U}(\mathcal{H}_\ell),
+\qquad
+d_\ell:=\dim \mathcal{H}_\ell = 2\ell+1.
+$$
+Equivalently, $\pi_\ell$ may be realized as the natural action on spherical harmonics of degree $\ell$.
+Thus
+$$
+\widehat{\mathrm{SO}(3)}\cong \mathbb{Z}_{\ge 0},
+\qquad
+[\pi_\ell]\longleftrightarrow \ell.
+$$
+
+#### Matrix coefficients and the Peter--Weyl space $E_{\mathrm{fin}}$
+Fix an orthonormal basis $\{e_m^\ell\}_{m=-\ell}^{\ell}$ of $\mathcal{H}_\ell$. The matrix coefficients of $\pi_\ell$ are
+$$
+D^{\ell}_{mn}(g):=\langle \pi_\ell(g)e_n^\ell,e_m^\ell\rangle,
+\qquad -\ell\le m,n\le \ell,
+$$
+the (unitary) Wigner $D$-matrix elements.
+Therefore
+$$
+E_{\mathrm{fin}}
+=
+\mathrm{span}\bigl\{D^{\ell}_{mn}:\ell\in\mathbb{Z}_{\ge 0},\ -\ell\le m,n\le \ell\bigr\}.
+$$
+
+#### The left regular representation decomposes into $D$-matrix blocks
+For each $\ell$, the span of $\{D^\ell_{mn}\}_{m,n=-\ell}^\ell$ is a $\lambda$-invariant subspace of $L^2(\mathrm{SO}(3))$ isomorphic to $\mathcal{H}_\ell\otimes \mathcal{H}_\ell^*$.
+In particular, each $\pi_\ell$ occurs in the left regular representation with multiplicity $d_\ell$:
+$$
+L^2(\mathrm{SO}(3))
+\cong
+\bigoplus_{\ell=0}^\infty \mathcal{H}_\ell\otimes \mathcal{H}_\ell^*,
+\qquad
+\lambda \cong \bigoplus_{\ell=0}^\infty d_\ell\cdot \pi_\ell.
+$$
+
+#### Orthogonality relations
+Schur orthogonality specializes to
+$$
+\int_{\mathrm{SO}(3)} D^{\ell}_{mn}(g)\,\overline{D^{\ell'}_{m'n'}(g)}\,dg
+=
+\frac{1}{2\ell+1}\,\delta_{\ell\ell'}\,\delta_{mm'}\,\delta_{nn'}.
+$$
+Equivalently, $\{\sqrt{2\ell+1}\,D^\ell_{mn}\}$ is an orthonormal basis of $L^2(\mathrm{SO}(3))$.
+
+#### Separation of points and density in $C(\mathrm{SO}(3))$
+The standard representation $\pi_1(g)=g$ on $\mathbb{C}^3$ is irreducible: if $0\neq v\in W\subseteq \mathbb{C}^3$ and $W$ is $\pi_1$-invariant, then for any $u$ with $\|u\|=\|v\|$ there is $g\in\mathrm{SO}(3)$ with $gv=u$, hence $u\in W$, so $W=\mathbb{C}^3$.
+Its matrix coefficients are the coordinate functions $g\mapsto g_{ij}$.
+If $g\neq h$ in $\mathrm{SO}(3)$, then $g_{ij}\neq h_{ij}$ for some $i,j$, so matrix coefficients separate points.
+Moreover,
+$$
+\overline{E_{\mathrm{fin}}}^{\|\cdot\|_\infty}=C(\mathrm{SO}(3)).
+$$
+
+#### Fourier transform and Plancherel (Parseval)
+For $f\in L^1(\mathrm{SO}(3))$, the Peter--Weyl Fourier transform at $\pi_\ell$ is matrix-valued:
+$$
+\widehat f(\pi_\ell)
+:=
+\int_{\mathrm{SO}(3)} f(g)\,\pi_\ell(g^{-1})\,dg
+\in \mathbb{C}^{(2\ell+1)\times (2\ell+1)}.
+$$
+In the basis above,
+$$
+\bigl(\widehat f(\pi_\ell)\bigr)_{mn}
+=
+\int_{\mathrm{SO}(3)} f(g)\,D^{\ell}_{mn}(g^{-1})\,dg
+=
+\int_{\mathrm{SO}(3)} f(g)\,\overline{D^{\ell}_{nm}(g)}\,dg.
+$$
+Plancherel becomes
+$$
+\|f\|_2^2
+=
+\sum_{\ell=0}^\infty (2\ell+1)\,\|\widehat f(\pi_\ell)\|_{\mathrm{HS}}^2.
+$$
+
+
+
+
+
+## 4. Group Convolutional Neural Networks
 
 We are interested in studying learnable functions that satisfy certain symmetries. In particular, we want to study functions that are equivariant with respect to the action of a compact group $G$. 
 
@@ -562,7 +675,8 @@ We are interested in studying learnable functions that satisfy certain symmetrie
 
 Equivariant operators are exactly right-convolutions with suitable kernels.
 
-In the example of $G = \mathrm{SO}(2)$, using a change of variables $d\mu = \frac{d\theta}{2\pi}$. The formula becomes
+### 4.1 Example SO(2)
+In the example $G = \mathrm{SO}(2)$, using a change of variables $d\mu = \frac{d\theta}{2\pi}$. The formula becomes
 $$(Ff)(\theta) = \frac{1}{2\pi}\int_0^{2\pi} f(\theta - \phi) L(\phi) \, d\phi,$$
 which is the classical convolution on the circle. 
 
@@ -605,6 +719,8 @@ conv_fft = np.fft.ifft(f_hat * L_hat).real * dtheta / (2*np.pi)
 max_err = np.max(np.abs(conv_direct - conv_fft))
 print("Max |direct - fft| =", max_err)
 ```
+
+### 4.2. Example SO(3)
 
 ## References
 
