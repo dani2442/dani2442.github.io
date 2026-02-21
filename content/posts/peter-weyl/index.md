@@ -1,12 +1,12 @@
 ---
 title: "Harmonic Analysis: Peter-Weyl Theorem and Machine Learning"
-date: 2025-10-17
+date: 2026-02-21
 tags: ["machine learning", "mixture of gaussians", "harmonic analysis"]
 categories: ["machine learning", "mathematics", "harmonic analysis"]
 author: "Daniel López Montero"
 showToc: true
-draft: true
-description: ""
+draft: false
+description: "An overview of the Peter-Weyl theorem and its applications in machine learning."
 ShowWordCount: false
 ShowReadingTime: true
 comments: true
@@ -19,6 +19,20 @@ editPost:
 ---
 
 ![](so3_equivariance.gif)
+
+
+The Peter-Weyl theorem is one of the most beautiful results in Harmonic Analysis, and it has found surprisingly wide applications in machine learning (drug discovery, molecular dynamics, robotics, particle physics, graphs, etc).
+
+In many real-world problems, data is scarce, complexity is high, or we simply want our models to generalize better and produce more robust solutions. In these cases, it makes sense to leverage any prior knowledge we have about the problem structure. For example, in meteorology the data lives on a sphere (the Earth), or we might know that the underlying dynamics roughly satisfy the Navier-Stokes equations. The desire to incorporate this kind of domain-specific knowledge into machine learning models gave rise to what we now call Physics-Informed ML and Geometry-Informed ML.
+The former led to Neural ODEs and Physics-Informed Neural Networks (PINNs), but in this post we focus on the latter.
+
+One of the reasons Convolutional Neural Networks work so well is a mathematical property that allows the model to recognize patterns even when they are shifted along the x- or y-axis. This is known as translation invariance (or equivariance), and we owe it to the convolution operation.
+
+What's interesting is that this same idea generalizes far beyond translation. It extends to arbitrary symmetries (rotations, reflections, permutations, etc) and to spaces beyond Euclidean geometry, such as graphs (giving us Graph Convolutional Networks). In full generality, it applies to locally compact groups.
+
+In this post, we explore the theorem that makes all of this possible, and walk through how to compute the convolution on two concrete examples: SO(2) and SO(3).
+
+
 
 ## 1. Preliminaries
 
@@ -379,6 +393,59 @@ Tf=\sum_n \alpha_n c_n \phi_n.
 $$
 Approximating this series by partial sums yields $L^2$-convergence, and each $\phi_n\in E_{\mathrm{fin}}$ by the previous lemma. Thus $Tf$ is in the $L^2$-closure of $E_{\mathrm{fin}}$. $\square$
 
+> **Lemma (Smoothing upgrades to uniform approximation).** Let $k\in C(G)$ satisfy $k(g)=\overline{k(g^{-1})}$ and let $T:L^2(G)\to L^2(G)$ be right-convolution by $k$:
+> $$
+> Tf=f*k.
+> $$
+> Then for every $f\in L^2(G)$ we have
+> $$
+> Tf\in \overline{E_{\mathrm{fin}}}^{\|\cdot\|_\infty}\subseteq C(G).
+> $$
+
+**Proof.** Since $T$ is compact and self-adjoint, it has nonzero eigenvalues $\alpha$ with finite-dimensional eigenspaces
+$$
+H_\alpha=\{f\in L^2(G): Tf=\alpha f\},
+$$
+and $L^2(G)=\ker T \oplus \bigoplus_{\alpha\ne 0} H_\alpha$ orthogonally. For $\varepsilon>0$, define the finite-rank truncation by **eigenspaces**
+$$
+T_\varepsilon := \sum_{|\alpha|\ge \varepsilon} \alpha\,P_\alpha,
+$$
+where the sum ranges over nonzero eigenvalues $\alpha$ of $T$ and $P_\alpha$ is the orthogonal projection onto the eigenspace $H_\alpha=\{f: Tf=\alpha f\}$. Since $\alpha\to 0$, the sum is finite, so $T_\varepsilon$ has finite rank and $T_\varepsilon f\in E_{\mathrm{fin}}$.
+
+Moreover, each $H_\alpha$ is $\lambda$-invariant, hence $P_\alpha$ (and therefore $T_\varepsilon$) commutes with $\lambda$. Since $T_\varepsilon$ has finite rank and maps into $C(G)$, it has a continuous kernel $K_\varepsilon(g,r)$, and the commutation relation implies
+$$
+K_\varepsilon(tg,tr)=K_\varepsilon(g,r),\qquad \forall t,g,r\in G.
+$$
+Taking $t=r^{-1}$ gives $K_\varepsilon(g,r)=K_\varepsilon(r^{-1}g,e)$. Defining
+$$
+k_\varepsilon(x):=K_\varepsilon(x,e)\in C(G)
+$$
+we obtain $K_\varepsilon(g,r)=k_\varepsilon(r^{-1}g)$, i.e.
+$$
+T_\varepsilon f = f*k_\varepsilon.
+$$
+
+Now Cauchy--Schwarz gives, for every $g\in G$,
+$$
+|(Tf-T_\varepsilon f)(g)|
+=|(f*(k-k_\varepsilon))(g)|
+\le \|f\|_2\,\|k-k_\varepsilon\|_2,
+$$
+so
+$$
+\|Tf-T_\varepsilon f\|_\infty\le \|f\|_2\,\|k-k_\varepsilon\|_2.
+$$
+Finally, for the right-convolution operator $S_u(f)=f*u$ on a compact group one has $\|S_u\|_{\mathrm{HS}}=\|u\|_2$ (compute from the kernel $u(r^{-1}g)$), so
+$$
+\|k-k_\varepsilon\|_2=\|T-T_\varepsilon\|_{\mathrm{HS}}.
+$$
+By the spectral theorem for compact self-adjoint operators,
+$$
+\|T-T_\varepsilon\|_{\mathrm{HS}}^2
+=\sum_{|\alpha|<\varepsilon} (\dim H_\alpha)\,|\alpha|^2 \xrightarrow[\varepsilon\downarrow 0]{} 0,
+$$
+so $\|k-k_\varepsilon\|_2\to 0$ and therefore $T_\varepsilon f\to Tf$ uniformly, with $T_\varepsilon f\in E_{\mathrm{fin}}$. $\square$
+
 ---
 
 ### 2.8. Approximate identities and density
@@ -414,7 +481,7 @@ T_Uf := f*k_U.
 $$
 Each $k_U$ satisfies the hypotheses of the Hilbert--Schmidt lemmas above, and $T_Uf\to f$ uniformly for every $f\in C(G)$.
 
-By the previous lemma, $T_Uf\in \overline{E_{\mathrm{fin}}}^{\|\cdot\|_2}$ for every $f\in L^2(G)$. In particular, if $f\in C(G)$ then $T_Uf$ is continuous and can be approximated by elements of $E_{\mathrm{fin}}$; since $T_Uf\to f$ uniformly, we conclude
+By the previous lemma, $T_Uf\in \overline{E_{\mathrm{fin}}}^{\|\cdot\|_\infty}$ for every $f\in L^2(G)$, hence in particular for $f\in C(G)$. Since $T_Uf\to f$ uniformly on $G$, we conclude
 $$
 \overline{E_{\mathrm{fin}}}^{\|\cdot\|_\infty}=C(G).
 $$
@@ -628,9 +695,7 @@ $$
 Equivalently, $\{\sqrt{2\ell+1}\,D^\ell_{mn}\}$ is an orthonormal basis of $L^2(\mathrm{SO}(3))$.
 
 #### Separation of points and density in $C(\mathrm{SO}(3))$
-The standard representation $\pi_1(g)=g$ on $\mathbb{C}^3$ is irreducible: if $0\neq v\in W\subseteq \mathbb{C}^3$ and $W$ is $\pi_1$-invariant, then for any $u$ with $\|u\|=\|v\|$ there is $g\in\mathrm{SO}(3)$ with $gv=u$, hence $u\in W$, so $W=\mathbb{C}^3$.
-Its matrix coefficients are the coordinate functions $g\mapsto g_{ij}$.
-If $g\neq h$ in $\mathrm{SO}(3)$, then $g_{ij}\neq h_{ij}$ for some $i,j$, so matrix coefficients separate points.
+The standard representation $\pi_1(g)=g$ on $\mathbb{R}^3$ (and hence on $\mathbb{C}^3$ by complexification) is the $\ell=1$ irreducible representation. Its matrix coefficients are the coordinate functions $g\mapsto g_{ij}$, which clearly separate points: if $g\neq h$ then $g_{ij}\neq h_{ij}$ for some $i,j$.
 Moreover,
 $$
 \overline{E_{\mathrm{fin}}}^{\|\cdot\|_\infty}=C(\mathrm{SO}(3)).
@@ -684,13 +749,17 @@ which is the classical convolution on the circle.
 
 #### Fourier transform of group convolutions
 However, the Peter-Weyl theorem allows us to change the viewpoint and improve the efficiency of computations. Indeed,
-$$\widehat{Ff}(\pi) = \widehat{f}(\pi) \cdot \widehat{L}(\pi),$$
-where $\widehat{L}(\pi)$ is a $d_\pi \times d_\pi$ matrix. 
+$$
+\widehat{Ff}(\pi)=\widehat{f*L}(\pi)=\widehat L(\pi)\,\widehat f(\pi),
+$$
+where $\widehat{L}(\pi)$ is a $d_\pi \times d_\pi$ matrix. In the abelian case $d_\pi=1$ so this is scalar multiplication, but for non-abelian groups the matrix product order matters.
 
 
 > Example using $G = \mathrm{SO}(2)$, we have $d_{\pi_n} = 1$ for all $n \in \mathbb{Z}$:
 
 ```python
+import numpy as np
+
 N = 64
 theta = np.linspace(0, 2*np.pi, N, endpoint=False)  # Discretize SO(2) ~ [0, 2π)
 dtheta = 2 * np.pi / N
@@ -726,7 +795,59 @@ print("Max |direct - fft| =", max_err)
 
 ### 4.2. Example SO(3)
 
+Let $G=\mathrm{SO}(3)$ with normalized Haar measure
+$$
+dg=\frac{1}{8\pi^2}\,\sin\beta\,d\alpha\,d\beta\,d\gamma
+$$
+in $ZYZ$ Euler angles $g=R_z(\alpha)R_y(\beta)R_z(\gamma)$.
+
+For $\ell\in\mathbb{Z}_{\ge 0}$ let $D^\ell(g)\in\mathbb{C}^{(2\ell+1)\times(2\ell+1)}$ denote the Wigner $D$-matrix of the irreducible representation $\pi_\ell$, with entries
+$$
+D^\ell_{mn}(\alpha,\beta,\gamma)=e^{-im\alpha}\,d^\ell_{mn}(\beta)\,e^{-in\gamma},
+\qquad -\ell\le m,n\le \ell,
+$$
+where $d^\ell(\beta)$ is the (real) small Wigner $d$-matrix.
+
+With the Peter--Weyl Fourier transform convention
+$$
+\widehat f(\pi_\ell)=\int_{\mathrm{SO}(3)} f(g)\,D^\ell(g)^*\,dg\in\mathbb{C}^{(2\ell+1)\times(2\ell+1)},
+$$
+the (right) group convolution
+$$
+(f*L)(g)=\int_{\mathrm{SO}(3)} f(gh^{-1})\,L(h)\,dh
+$$
+satisfies the convolution theorem
+$$
+\widehat{f*L}(\pi_\ell)=\widehat L(\pi_\ell)\,\widehat f(\pi_\ell),
+$$
+which is a matrix product (and is not commutative in general).
+
+Numerically, one can discretize $(\alpha,\beta,\gamma)$ on a tensor grid, approximate integrals using quadrature weights proportional to $\sin\beta$, and truncate the inverse transform to $\ell\le L_{\max}$:
+$$
+f(g)\approx \sum_{\ell=0}^{L_{\max}} (2\ell+1)\,\mathrm{tr}\!\left(\widehat f(\pi_\ell)\,D^\ell(g)\right).
+$$
+
+In code, the spectral convolution step is literally matrix multiplication at each frequency $\ell$:
+```python
+alpha, beta, gamma, weights, rotations = make_euler_zyz_grid(N_ALPHA, N_BETA, N_GAMMA) # Helper functions.
+
+f = create_signal(rotations)
+L = normalize_kernel(create_kernel(rotations), weights)
+
+D_grid = precompute_wigner_D_grid(alpha, beta, gamma, L_MAX)
+
+f_hat = fourier_coefficients_from_samples(f, D_grid, weights)
+L_hat = fourier_coefficients_from_samples(L, D_grid, weights)
+
+conv_hat = {ell: L_hat[ell] @ f_hat[ell] for ell in f_hat}
+conv = inverse_fourier_on_grid(conv_hat, D_grid, L_MAX)
+```
+
+![](so3_equivariance.gif)
+
 ## References
+
+[-1] The code is available at: https://github.com/dani2442/dani2442_code/tree/main/group-cnn
 
 [0] Dana P. Williams, *The Peter--Weyl Theorem for Compact Groups*, notes. <https://math.dartmouth.edu/~dana/bookspapers/pw.pdf>
 
