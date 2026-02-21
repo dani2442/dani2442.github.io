@@ -18,6 +18,8 @@ editPost:
     appendFilePath: true # to append file path to Edit link
 ---
 
+![](so3_equivariance.gif)
+
 ## 1. Preliminaries
 
 We start by introducing some basic notions from representation theory and harmonic analysis on compact groups.
@@ -719,6 +721,8 @@ conv_fft = np.fft.ifft(f_hat * L_hat).real * dtheta / (2*np.pi)
 max_err = np.max(np.abs(conv_direct - conv_fft))
 print("Max |direct - fft| =", max_err)
 ```
+
+![](so2_equivariance.gif)
 
 ### 4.2. Example SO(3)
 
