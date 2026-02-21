@@ -72,7 +72,7 @@ $$
 Q(s_t,a_t)\leftarrow Q(s_t,a_t)+\eta\Big[r(s_t,a_t)+\gamma\max_{a'\in \mathcal{A}}Q(s_{t+1},a')-Q(s_t,a_t)\Big].
 $$
 
-## 2 Kullback-Liebler HJB
+## Appendix. Kullback-Liebler HJB
 
 A common KL-regularized continuous-time control formulation fixes a reference (prior) policy $\mu(\cdot\mid x)$ and introduces a temperature $\alpha>0$. The HJB equation becomes a pointwise maximization over action distributions $\pi(\cdot\mid x)$:
 $$

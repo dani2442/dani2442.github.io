@@ -2,28 +2,23 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Harmonic Analysis on dani2442&#39;s Blog</title>
-    <link>https://dani2442.github.io/categories/harmonic-analysis/</link>
+    <link>http://localhost:1313/categories/harmonic-analysis/</link>
     <description>Recent content in Harmonic Analysis on dani2442&#39;s Blog</description>
     <image>
       <title>dani2442&#39;s Blog</title>
-      <url>https://dani2442.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>https://dani2442.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
     </image>
     <generator>Hugo -- 0.150.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 17 Oct 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://dani2442.github.io/categories/harmonic-analysis/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 21 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/categories/harmonic-analysis/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Harmonic Analysis: Peter-Weyl Theorem and Machine Learning</title>
-      <link>https://dani2442.github.io/posts/peter-weyl/</link>
-      <pubDate>Fri, 17 Oct 2025 00:00:00 +0000</pubDate>
-      <guid>https://dani2442.github.io/posts/peter-weyl/</guid>
-      <description>&lt;h2 id=&#34;1-preliminaries&#34;&gt;1. Preliminaries&lt;/h2&gt;
-&lt;p&gt;We start by introducing some basic notions from representation theory and harmonic analysis on compact groups.&lt;/p&gt;
-&lt;p&gt;Let $G$ be a locally compact group with a fixed (left) Haar measure $\mu$.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;Definition (Unitary representation).&lt;/strong&gt; A (unitary) representation of $G$ is a continuous homomorphism $\pi:G\to \mathfrak{U}(\mathcal{H}_\pi)$, where $\mathfrak{U}(\mathcal{H}_\pi)$ is the unitary group of a complex Hilbert space $\mathcal{H}_\pi$.&lt;/p&gt;
-&lt;p&gt;Equivalently, $\pi(gh)=\pi(g)\pi(h)$ for all $g,h\in G$ and $g\mapsto \pi(g)\xi$ is continuous for every $\xi\in \mathcal{H}_\pi$.&lt;/p&gt;</description>
+      <link>http://localhost:1313/posts/peter-weyl/</link>
+      <pubDate>Sat, 21 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/peter-weyl/</guid>
+      <description>An overview of the Peter-Weyl theorem and its applications in machine learning.</description>
     </item>
   </channel>
 </rss>
