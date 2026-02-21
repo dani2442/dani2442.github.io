@@ -394,13 +394,9 @@ $$
 Approximating this series by partial sums yields $L^2$-convergence, and each $\phi_n\in E_{\mathrm{fin}}$ by the previous lemma. Thus $Tf$ is in the $L^2$-closure of $E_{\mathrm{fin}}$. $\square$
 
 > **Lemma (Smoothing upgrades to uniform approximation).** Let $k\in C(G)$ satisfy $k(g)=\overline{k(g^{-1})}$ and let $T:L^2(G)\to L^2(G)$ be right-convolution by $k$:
-> $$
-> Tf=f*k.
-> $$
+> $$ Tf=f*k.  $$
 > Then for every $f\in L^2(G)$ we have
-> $$
-> Tf\in \overline{E_{\mathrm{fin}}}^{\|\cdot\|_\infty}\subseteq C(G).
-> $$
+> $$ Tf\in \overline{E_{\mathrm{fin}}}^{\|\cdot\|_\infty}\subseteq C(G). $$
 
 **Proof.** Since $T$ is compact and self-adjoint, it has nonzero eigenvalues $\alpha$ with finite-dimensional eigenspaces
 $$
@@ -630,8 +626,7 @@ a compact (non-abelian) Lie group.
 
 Using Euler angles, every $g\in \mathrm{SO}(3)$ can be written (non-uniquely on a null set) as
 $$
-g = R_z(\alpha)\,R_y(\beta)\,R_z(\gamma),
-\qquad
+g = R_z(\alpha)\,R_y(\beta)\,R_z(\gamma), \qquad
 (\alpha,\gamma)\in[0,2\pi),\ \beta\in[0,\pi].
 $$
 With Haar measure normalized by $\mu(\mathrm{SO}(3))=1$, one has
@@ -640,37 +635,32 @@ dg=\frac{1}{8\pi^2}\,\sin\beta\,d\alpha\,d\beta\,d\gamma,
 $$
 so for $f\in L^1(\mathrm{SO}(3))$,
 $$
-\int_{\mathrm{SO}(3)} f(g)\,dg
-=
+\int_{\mathrm{SO}(3)} f(g)\,dg =
 \frac{1}{8\pi^2}\int_0^{2\pi}\int_0^\pi\int_0^{2\pi} f\bigl(R_z(\alpha)R_y(\beta)R_z(\gamma)\bigr)\,\sin\beta\,d\alpha\,d\beta\,d\gamma.
 $$
 
 #### Irreducible unitary representations
 The irreducible unitary representations of $\mathrm{SO}(3)$ are indexed by $\ell\in\mathbb{Z}_{\ge 0}$. Denote a choice of representative by
 $$
-\pi_\ell:\mathrm{SO}(3)\to \mathfrak{U}(\mathcal{H}_\ell),
-\qquad
+\pi_\ell:\mathrm{SO}(3)\to \mathfrak{U}(\mathcal{H}_\ell), \qquad
 d_\ell:=\dim \mathcal{H}_\ell = 2\ell+1.
 $$
 Equivalently, $\pi_\ell$ may be realized as the natural action on spherical harmonics of degree $\ell$.
 Thus
 $$
-\widehat{\mathrm{SO}(3)}\cong \mathbb{Z}_{\ge 0},
-\qquad
+\widehat{\mathrm{SO}(3)}\cong \mathbb{Z}_{\ge 0}, \qquad
 [\pi_\ell]\longleftrightarrow \ell.
 $$
 
 #### Matrix coefficients and the Peter--Weyl space $E_{\mathrm{fin}}$
 Fix an orthonormal basis $\{e_m^\ell\}_{m=-\ell}^{\ell}$ of $\mathcal{H}_\ell$. The matrix coefficients of $\pi_\ell$ are
 $$
-D^{\ell}_{mn}(g):=\langle \pi_\ell(g)e_n^\ell,e_m^\ell\rangle,
-\qquad -\ell\le m,n\le \ell,
+D^{\ell}_{mn}(g):=\langle \pi_\ell(g)e_n^\ell,e_m^\ell\rangle, \qquad -\ell\le m,n\le \ell,
 $$
 the (unitary) Wigner $D$-matrix elements.
 Therefore
 $$
-E_{\mathrm{fin}}
-=
+E_{\mathrm{fin}} =
 \mathrm{span}\bigl\{D^{\ell}_{mn}:\ell\in\mathbb{Z}_{\ge 0},\ -\ell\le m,n\le \ell\bigr\}.
 $$
 
@@ -688,8 +678,7 @@ $$
 #### Orthogonality relations
 Schur orthogonality specializes to
 $$
-\int_{\mathrm{SO}(3)} D^{\ell}_{mn}(g)\,\overline{D^{\ell'}_{m'n'}(g)}\,dg
-=
+\int_{\mathrm{SO}(3)} D^{\ell}_{mn}(g)\,\overline{D^{\ell'}_{m'n'}(g)}\,dg =
 \frac{1}{2\ell+1}\,\delta_{\ell\ell'}\,\delta_{mm'}\,\delta_{nn'}.
 $$
 Equivalently, $\{\sqrt{2\ell+1}\,D^\ell_{mn}\}$ is an orthonormal basis of $L^2(\mathrm{SO}(3))$.
@@ -704,23 +693,19 @@ $$
 #### Fourier transform and Plancherel (Parseval)
 For $f\in L^1(\mathrm{SO}(3))$, the Peter--Weyl Fourier transform at $\pi_\ell$ is matrix-valued:
 $$
-\widehat f(\pi_\ell)
-:=
+\widehat f(\pi_\ell) :=
 \int_{\mathrm{SO}(3)} f(g)\,\pi_\ell(g^{-1})\,dg
 \in \mathbb{C}^{(2\ell+1)\times (2\ell+1)}.
 $$
 In the basis above,
 $$
-\bigl(\widehat f(\pi_\ell)\bigr)_{mn}
-=
-\int_{\mathrm{SO}(3)} f(g)\,D^{\ell}_{mn}(g^{-1})\,dg
-=
+\bigl(\widehat f(\pi_\ell)\bigr)_{mn} =
+\int_{\mathrm{SO}(3)} f(g)\,D^{\ell}_{mn}(g^{-1})\,dg =
 \int_{\mathrm{SO}(3)} f(g)\,\overline{D^{\ell}_{nm}(g)}\,dg.
 $$
 Plancherel becomes
 $$
-\|f\|_2^2
-=
+\|f\|_2^2 =
 \sum_{\ell=0}^\infty (2\ell+1)\,\|\widehat f(\pi_\ell)\|_{\mathrm{HS}}^2.
 $$
 
