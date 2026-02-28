@@ -38,15 +38,51 @@ Under suitable regularity conditions:
 3. $r$ is bounded (or has at most linear growth with enough integrability).
 4. $V\in C^2(\mathbb R^d)$ and bounded (or polynomial growth, with the usual technical modifications).
 
-Then, the value function satisfies the *Hamilton–Jacobi–Bellman* (HJB) PDE:
+> Then, the value function satisfies the *Hamilton–Jacobi–Bellman* (HJB) PDE:
+> $$ \rho V(x)=\max_{a\in \mathcal{A}}\Big\{ r(x,a)+\mathcal{L}^a V(x)\Big\}.\tag{1} $$
+> where $\mathcal{L}^a$ is the infinitesimal generator of the diffusion process under action $a$:
+> $$ \mathcal{L}^a \varphi(x):=\nabla \varphi(x)^\top f(x,a)
++\tfrac12 \mathrm{Tr}\big(\Sigma\Sigma^\top \nabla^2 \varphi(x)\big) $$
+
+*Proof sketch*: 
+Fix $x$ and a small $h>0$. By the dynamic programming principle (DPP),
 $$
-\rho V(x)=\max_{a\in \mathcal{A}}\Big\{ r(x,a)+\mathcal{L}^a V(x)\Big\}.\tag{1}
+V(x)=\sup_{\pi}\mathbb E_x\left[\int_{0}^{h}e^{-\rho t}r(X_t,a_t)dt + e^{-\rho h}V(X_h)\right].
 $$
-where $\mathcal{L}^a$ is the infinitesimal generator (acting on sufficiently smooth test functions, e.g. $\varphi\in C^2(\mathbb R^d)$) of the diffusion process under action $a$:
+For the PDE derivation, it suffices to consider controls that hold a constant action $a$ over $[0,h]$ (then optimize over $a$ at the end). For such an $a$,
 $$
-\mathcal{L}^a \varphi(x):=\nabla \varphi(x)^\top f(x,a)
-+\tfrac12 \mathrm{Tr}\big(\Sigma\Sigma^\top \nabla^2 \varphi(x)\big)
+V(x)=\sup_{a\in\mathcal A}\mathbb E_x\left[\int_{0}^{h}e^{-\rho t}r(X_t,a)dt + e^{-\rho h}V(X_h)\right].
 $$
+
+Use Taylor expansions as $h\to0$. Since $r$ is continuous and $X_t=x+o(1)$ over short times,
+$$
+  \mathbb E_x\left[\int_0^h e^{-\rho t} r(X_t,a)dt\right]= h\,r(x,a)+o(h).
+$$
+
+By Itô’s formula for $V(X_t)$ and the definition of the generator,
+$$
+  \mathbb E_x[V(X_h)] = V(x) + h\,\mathcal L^a V(x) + o(h),
+$$
+and $e^{-\rho h}=1-\rho h+o(h)$. Hence
+$$
+  \mathbb E_x[e^{-\rho h}V(X_h)] = V(x) + h\big(\mathcal L^a V(x)-\rho V(x)\big)+o(h).
+$$
+
+Plugging into the DPP:
+$$
+V(x)=\sup_{a}\Big\{V(x) + h\big(r(x,a)+\mathcal L^aV(x)-\rho V(x)\big)+o(h)\Big\}.
+$$
+Cancel $V(x)$, divide by $h$, and let $h\downarrow 0$:
+$$
+0=\sup_{a\in\mathcal A}\big\{r(x,a)+\mathcal L^aV(x)-\rho V(x)\big\} \quad \Leftrightarrow \quad
+\rho V(x)=\max_{a\in\mathcal A}\left\{r(x,a)+\mathcal L^aV(x)\right\},
+$$
+which is exactly (1). $\quad\blacksquare$
+
+---
+
+The exact same argument can be used to derive the HJB for the non-autonomous case, where $f$, $\Sigma$, $r$ depend on time as well (see Appendix A).
+
 
 Let us define the $Q$-function as
 $$
@@ -72,7 +108,36 @@ $$
 Q(s_t,a_t)\leftarrow Q(s_t,a_t)+\eta\Big[r(s_t,a_t)+\gamma\max_{a'\in \mathcal{A}}Q(s_{t+1},a')-Q(s_t,a_t)\Big].
 $$
 
-## Appendix. Kullback-Liebler HJB
+
+## Appendix A: Non-autonomous case
+
+
+Let the dynamics and reward depend on time:
+$$
+dX_t=f(t,X_t,a_t),dt+\Sigma(t,X_t,a_t)\,dW_t,\qquad r=r(t,x,a).
+$$
+Define the time-dependent value (starting at time $t$ in state $x$):
+$$
+V(t,x):=\sup_\pi \mathbb E\Big[\int_t^\infty e^{-\rho(s-t)} r(s,X_s,a_s),ds\ \Big|\ X_t=x\Big].
+$$
+Then the (time-dependent) generator is
+$$
+\mathcal L_t^a \varphi(x)=\nabla \varphi(x)^\top f(t,x,a)+\tfrac12\mathrm{Tr}!\big(\Sigma\Sigma^\top(t,x,a)\nabla^2\varphi(x)\big),
+$$
+and the HJB becomes
+$$
+\rho V(t,x)=\max_{a\in\mathcal A}\Big\{r(t,x,a)+\partial_t V(t,x)+\mathcal L_t^a V(t,x)\Big\}.
+$$
+Equivalently,
+$$
+-\partial_t V(t,x)=\max_{a\in\mathcal A}\Big\{r(t,x,a)+\mathcal L_t^a V(t,x)\Big\}-\rho V(t,x).
+$$
+
+In the autonomous case, $V(t,x)$ is time-independent, so $\partial_t V=0$ and you recover (1).
+
+
+
+## Appendix B: Kullback-Liebler HJB
 
 A common KL-regularized continuous-time control formulation fixes a reference (prior) policy $\mu(\cdot\mid x)$ and introduces a temperature $\alpha>0$. The HJB equation becomes a pointwise maximization over action distributions $\pi(\cdot\mid x)$:
 $$
@@ -209,3 +274,6 @@ Given $Q_\alpha(x,\cdot)$ and its $x$-derivatives, the remaining objects are jus
 [1] Jia, Yanwei, and Xun Yu Zhou. "q-Learning in continuous time." Journal of Machine Learning Research 24, no. 161 (2023): 1-61.
 
 [2] Jia, Yanwei, and Xun Yu Zhou. "Policy gradient and actor-critic learning in continuous time and space: Theory and algorithms." Journal of Machine Learning Research 23, no. 275 (2022): 1-50.
+
+[3] Hamilton-Jacobi-Bellman Equations,
+Stochastic Differential Equations by Benjamin Moll https://benjaminmoll.com/wp-content/uploads/2019/07/Lecture4_ECO521_web.pdf
