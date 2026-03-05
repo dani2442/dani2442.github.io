@@ -1,12 +1,12 @@
 ---
-title: "Continuous-time Reinforcement Learning: HJB and Q-learning"
+title: "Continuous-time Reinforcement Learning: HJB and Policy Iteration"
 date: 2026-01-25
 tags: ["machine learning", "reinforcement learning", "control theory", "PDEs"]
 categories: ["Reinforcement Learning"]
 author: "Daniel López Montero"
 showToc: true
 draft: true
-description: "An overview of continuous-time reinforcement learning, focusing on the Hamilton–Jacobi–Bellman equation and continuous-time Q-learning."
+description: "Deriving the HJB equation, implementing neural policy iteration for continuous-time stochastic control, and validating on LQR and Merton's portfolio problem."
 ShowWordCount: false
 ShowReadingTime: true
 comments: true
@@ -96,6 +96,95 @@ $$
 $$
 Formally this is the direct continuous-time analogue of the discrete-time Bellman optimality equation. Note, however, that $x\mapsto \max_{a'}Q(x,a')$ need not be $C^2$ even if each $x\mapsto Q(x,a)$ is smooth. A standard way to make (4) mathematically precise is to interpret it in the viscosity sense (or to impose additional assumptions such as a unique maximizer with enough regularity).
 This is the continuous-time analogue of the Bellman equation for $Q$-functions in discrete time.
+
+## Example 1: Stochastic Linear-Quadratic Regulator
+
+The LQR is the canonical continuous-time control problem with a closed-form solution — ideal for validating our algorithm.
+
+**Dynamics** (additive noise):
+$$dX_t = (\alpha X_t + \beta\, a_t)\,dt + \sigma\, dW_t$$
+
+**Reward** (quadratic cost):
+$$r(x,a) = -\tfrac{1}{2}(q\,x^2 + r_a\,a^2)$$
+
+The HJB (1) for this problem admits a quadratic value function $V(x) = -\tfrac{1}{2}Px^2 - c$, where $P$ solves the **discounted algebraic Riccati equation**:
+$$\rho P = q + 2\alpha P - \frac{\beta^2}{r_a}P^2, \qquad c = \frac{\sigma^2 P}{2\rho}$$
+and the optimal policy is linear: $a^*(x) = -\frac{\beta}{r_a}Px$.
+
+We use $\alpha=-0.5,\; \beta=1,\; q=1,\; r_a=0.1,\; \sigma=0.3,\; \rho=0.1$.
+
+```python
+class StochasticLQR(ControlProblem):
+    def drift(self, x, a):
+        return x @ A.T + a @ B.T          # f(x,a) = Ax + Ba
+
+    def reward(self, x, a):
+        return -0.5 * ((x @ Q * x).sum(-1, keepdim=True)
+                      + (a @ R * a).sum(-1, keepdim=True))
+
+# Solve and compare
+P, c, K = solve_are(A, B, Q, R, D, rho=0.1)   # exact Riccati
+solver  = PolicyIteration(problem, config)
+history = solver.solve()                         # neural PI
+```
+
+The learned value function and policy closely match the analytical solution:
+
+![LQR — Value function and policy](lqr_value_policy.png)
+
+A sample optimal trajectory drives the state toward zero while the cumulative discounted reward plateaus:
+
+![LQR — Trajectory and reward](lqr_trajectory.png)
+
+Convergence diagnostics — the HJB residual drops by over an order of magnitude:
+
+![LQR — Convergence](lqr_convergence.png)
+
+
+## Example 2: Merton Portfolio / Consumption
+
+Merton's problem is a classical stochastic control problem in mathematical finance with a known closed-form solution under CRRA utility.
+
+**Dynamics**:
+$$dX_t = \big(r_f + \pi_t(\mu - r_f) - k_t\big)X_t\,dt + \pi_t\,\sigma\,X_t\,dW_t$$
+where $X_t$ is wealth, $\pi_t\in[0,1.5]$ is the risky-asset fraction, and $k_t = c_t/X_t \in [0.005, 0.20]$ is the consumption-to-wealth ratio.
+
+**Reward** (CRRA utility, $\gamma=2$):
+$$r(x,a) = \frac{(k\,x)^{1-\gamma}}{1-\gamma}$$
+
+The HJB yields *constant* optimal controls:
+$$\pi^* = \frac{\mu - r_f}{\gamma\,\sigma^2}, \qquad k^* = \frac{\rho - (1-\gamma)M}{\gamma}, \qquad M = r_f + \frac{(\mu-r_f)^2}{2\gamma\sigma^2}$$
+and a power-law value $V^*(x) \propto x^{1-\gamma}$.
+
+We use $r_f=0.03,\;\mu=0.08,\;\sigma=0.20,\;\gamma=2,\;\rho=0.05$.
+
+```python
+class MertonProblem(ControlProblem):
+    def drift(self, x, a):                        # a = (pi, c_rate)
+        pi, cr = a[:, 0:1], a[:, 1:2]
+        return (self.r_f + pi*(self.mu - self.r_f) - cr) * x
+
+    def diffusion(self, x, a):
+        return (a[:, 0:1] * self.sigma * x).unsqueeze(-1)
+
+    def reward(self, x, a):
+        c = (a[:, 1:2] * x).clamp(min=1e-8)
+        return c.pow(1 - self.gamma) / (1 - self.gamma)
+```
+
+The learned value function tracks the exact power-law solution, and the learned controls converge close to the analytical constants $\pi^*\approx 0.625$ and $k^*\approx 0.048$:
+
+![Merton — Value function and policy](merton_value_policy.png)
+
+A sample wealth trajectory under the learned policy, with its cumulative discounted reward:
+
+![Merton — Trajectory and reward](merton_trajectory.png)
+
+Convergence diagnostics:
+
+![Merton — Convergence](merton_convergence.png)
+
+---
 
 ### Q-learning in continuous time
 
