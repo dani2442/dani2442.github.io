@@ -122,7 +122,7 @@ V(t,x):=\sup_\pi \mathbb E\Big[\int_t^\infty e^{-\rho(s-t)} r(s,X_s,a_s),ds\ \Bi
 $$
 Then the (time-dependent) generator is
 $$
-\mathcal L_t^a \varphi(x)=\nabla \varphi(x)^\top f(t,x,a)+\tfrac12\mathrm{Tr}!\big(\Sigma\Sigma^\top(t,x,a)\nabla^2\varphi(x)\big),
+\mathcal L_t^a \varphi(x)=\nabla \varphi(x)^\top f(t,x,a)+\tfrac12\mathrm{Tr}\big(\Sigma\Sigma^\top(t,x,a)\nabla^2\varphi(x)\big),
 $$
 and the HJB becomes
 $$
