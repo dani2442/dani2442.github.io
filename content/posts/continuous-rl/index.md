@@ -6,7 +6,7 @@ categories: ["Reinforcement Learning"]
 author: "Daniel López Montero"
 showToc: true
 draft: true
-description: "Deriving the HJB equation, implementing neural policy iteration for continuous-time stochastic control, and validating on LQR and Merton's portfolio problem."
+description: "Why the HJB is Bellman's equation in continuous time, why continuous time matters, and how to solve the resulting control problem with neural policy iteration."
 ShowWordCount: false
 ShowReadingTime: true
 comments: true
@@ -18,6 +18,8 @@ editPost:
     appendFilePath: true # to append file path to Edit link
 ---
 
+Short motivation: Bellman's recursion does not disappear in continuous time; it becomes the HJB PDE. This post derives that limit, explains why continuous-time models matter, and shows how it leads to practical policy iteration for controlled diffusions.
+
 Richard Bellman in the early 50s [[6]](#references) developed the theory of dynamic programming. Assume a discrete-time Markov decision process with state space $\mathcal X$, action space $\mathcal A$, transition kernel $P(\cdot\mid x,a)$, reward function $r(x,a)$, and discount factor $\gamma\in(0,1)$. A policy $\pi$ maps states to distributions over actions. If the state evolves as a controlled Markov chain
 $$
 X_{n+1}\sim P(\cdot\mid X_n,a_n),
@@ -28,17 +30,66 @@ J(\pi)=\mathbb E\left[\sum_{n=0}^\infty \gamma^n r(X_n,a_n)\right],\qquad a_n\si
 $$
 and the value function is
 $$
-V(x)=\sup_\pi \mathbb E\left[\sum_{n=0}^\infty \gamma^n r(X_n,a_n),\middle|,X_0=x\right].
+V(x)=\sup_\pi \mathbb E\left[\sum_{n=0}^\infty \gamma^n r(X_n,a_n)\,\middle|\,X_0=x\right].
 $$
 
-Under the usual conditions, $V$ satisfies
+Under the usual conditions, $V$ satisfies the Bellman equation
 $$
-V(x)=\max_{a\in\mathcal A}\left\{r(x,a)+\gamma,\mathbb E \left[V(X_{n+1})\mid X_n=x,a_n=a\right]\right\}
+V(x)=\max_{a\in\mathcal A}\left\{r(x,a)+\gamma\,\mathbb E \left[V(X_{n+1})\mid X_n=x,a_n=a\right]\right\}.
 $$
+This says: choose the action that maximizes immediate reward plus continuation value. Continuous time keeps the same logic, but now the time step has length $h$ and we can send $h\downarrow 0$.
 
 In 1960, Rudolf E. Kalman published his seminal paper on the linear-quadratic regulator (LQR) problem, which is a continuous-time optimal control problem with linear dynamics and quadratic cost. The solution to the LQR problem is given by the algebraic Riccati equation, which can be derived from the Hamilton-Jacobi-Bellman (HJB) equation for continuous-time control problems.
 
 ## 1. Introduction
+
+### Why continuous time?
+
+Continuous time is not just cleaner notation for "very small discrete steps". In mechanics, robotics, finance, and many stochastic models, the primitive object is already a differential law: a drift, a diffusion, and a running reward. Writing the problem in continuous time matches the physics of the system instead of imposing an arbitrary sampling grid.
+
+This matters in modern generative modeling too. Diffusion models define a forward noising SDE and a reverse-time SDE/ODE indexed by continuous time $t\in[0,1]$. The neural network learns a time-dependent local vector field or score, while the sampler is only a numerical discretization of that underlying continuous process. The model lives in continuous time; the step size is an algorithmic choice.
+
+From the control side, the payoff is structural: once the problem is local in time, Bellman's recursion turns into a PDE. That PDE is the HJB equation.
+
+### Bellman + Hamilton-Jacobi = HJB
+
+To isolate the idea, first ignore noise and consider the deterministic control system
+$$
+\dot X_t = f(X_t,a_t),\qquad X_0=x,
+$$
+with discounted return
+$$
+V(x):=\sup_{a_\cdot}\int_0^\infty e^{-\rho t}r(X_t,a_t)\,dt.
+$$
+Bellman's principle over a short horizon $h>0$ gives
+$$
+V(x)=\sup_{a_\cdot}\left[\int_0^h e^{-\rho t}r(X_t,a_t)\,dt + e^{-\rho h}V(X_h)\right].
+$$
+For the infinitesimal derivation it is enough to freeze the action at a constant value $a$ on $[0,h]$ and optimize over $a$ at the end. For a smooth value function,
+$$
+V(X_h)=V(x)+h\,\nabla V(x)^\top f(x,a)+o(h),
+$$
+while
+$$
+\int_0^h e^{-\rho t}r(X_t,a)\,dt = h\,r(x,a)+o(h),
+\qquad
+e^{-\rho h}=1-\rho h+o(h).
+$$
+Substituting these expansions into the DPP, cancelling $V(x)$, dividing by $h$, and letting $h\downarrow0$ yields
+$$
+0=\sup_{a\in\mathcal A}\left\{r(x,a)+\nabla V(x)^\top f(x,a)-\rho V(x)\right\}.
+$$
+Define the Hamiltonian
+$$
+H(x,p):=\sup_{a\in\mathcal A}\left\{r(x,a)+p^\top f(x,a)\right\}.
+$$
+Then the PDE becomes
+$$
+\rho V(x)=H(x,\nabla V(x)).
+$$
+This is the Hamilton-Jacobi form. The Bellman part is the pointwise optimization over controls. So the HJB equation is simply the Hamilton-Jacobi PDE whose Hamiltonian is induced by Bellman's optimality principle.
+
+### Controlled diffusions (Itô processes)
 
 If time is continuous and the system evolves according to an ODE/SDE, the RL problem is naturally written as a control problem:
 $$
@@ -52,6 +103,9 @@ where $\rho>0$ is the discount rate. The value function
 $$
 V(x):=\sup_\pi \mathbb{E}\Big[\int_0^\infty e^{-\rho t}r(X_t,a_t)\,dt \Big| X_0=x\Big]
 $$
+
+The stochastic case is the same Bellman argument, but now Itô's formula contributes a second-order term. That extra curvature term is exactly what turns Hamilton-Jacobi into the diffusion HJB.
+
 > **Theorem (Hamilton-Jacobi-Bellman equation for controlled diffusion).** Under suitable regularity conditions:
 > 1. $f(\cdot,a)$, $\Sigma(\cdot,a)$, $r(\cdot,a)$ are continuous in $(x,a)$; Lipschitz in $x$ uniformly in $a$.
 > 2. $\Sigma\Sigma^\top(x,a)$ is bounded and uniformly nondegenerate (for classical $C^2$ theory; if you drop this you typically work in viscosity form).
@@ -586,5 +640,3 @@ The covariance term is the extra contribution coming from the log-sum-exp; it on
 #### Practical evaluation
 
 Given $Q_\alpha(x,\cdot)$ and its $x$-derivatives, the remaining objects are just expectations under $\bar\pi_\alpha(\cdot\mid x)$: sums when $\mathcal A$ is finite, and typically Monte Carlo / quadrature approximations when $\mathcal A$ is continuous. In parametric settings (e.g. neural networks), $\nabla_x Q_\alpha$ and $\nabla_x^2 Q_\alpha$ can be obtained by automatic differentiation (the Hessian being the expensive part).
-
-
