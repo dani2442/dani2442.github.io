@@ -18,7 +18,27 @@ editPost:
     appendFilePath: true # to append file path to Edit link
 ---
 
-# 1. Introduction
+Richard Bellman in the early 50s [[6]](#references) developed the theory of dynamic programming. Assume a discrete-time Markov decision process with state space $\mathcal X$, action space $\mathcal A$, transition kernel $P(\cdot\mid x,a)$, reward function $r(x,a)$, and discount factor $\gamma\in(0,1)$. A policy $\pi$ maps states to distributions over actions. If the state evolves as a controlled Markov chain
+$$
+X_{n+1}\sim P(\cdot\mid X_n,a_n),
+$$
+with one-step reward $r(x,a)$ and discount factor $\gamma\in(0,1)$, then the objective is
+$$
+J(\pi)=\mathbb E\left[\sum_{n=0}^\infty \gamma^n r(X_n,a_n)\right],\qquad a_n\sim \pi(\cdot\mid X_n),
+$$
+and the value function is
+$$
+V(x)=\sup_\pi \mathbb E\left[\sum_{n=0}^\infty \gamma^n r(X_n,a_n),\middle|,X_0=x\right].
+$$
+
+Under the usual conditions, $V$ satisfies
+$$
+V(x)=\max_{a\in\mathcal A}\left\{r(x,a)+\gamma,\mathbb E \left[V(X_{n+1})\mid X_n=x,a_n=a\right]\right\}
+$$
+
+In 1960, Rudolf E. Kalman published his seminal paper on the linear-quadratic regulator (LQR) problem, which is a continuous-time optimal control problem with linear dynamics and quadratic cost. The solution to the LQR problem is given by the algebraic Riccati equation, which can be derived from the Hamilton-Jacobi-Bellman (HJB) equation for continuous-time control problems.
+
+## 1. Introduction
 
 If time is continuous and the system evolves according to an ODE/SDE, the RL problem is naturally written as a control problem:
 $$
@@ -32,19 +52,19 @@ where $\rho>0$ is the discount rate. The value function
 $$
 V(x):=\sup_\pi \mathbb{E}\Big[\int_0^\infty e^{-\rho t}r(X_t,a_t)\,dt \Big| X_0=x\Big]
 $$
-Under suitable regularity conditions:
-1. $f(\cdot,a)$, $\Sigma(\cdot,a)$, $r(\cdot,a)$ are continuous in $(x,a)$; Lipschitz in $x$ uniformly in $a$.
-2. $\Sigma\Sigma^\top(x,a)$ is bounded and uniformly nondegenerate (for classical $C^2$ theory; if you drop this you typically work in viscosity form).
-3. $r$ is bounded (or has at most linear growth with enough integrability).
-4. $V\in C^2(\mathbb R^d)$ and bounded (or polynomial growth, with the usual technical modifications).
-
+> **Theorem (Hamilton-Jacobi-Bellman equation for controlled diffusion).** Under suitable regularity conditions:
+> 1. $f(\cdot,a)$, $\Sigma(\cdot,a)$, $r(\cdot,a)$ are continuous in $(x,a)$; Lipschitz in $x$ uniformly in $a$.
+> 2. $\Sigma\Sigma^\top(x,a)$ is bounded and uniformly nondegenerate (for classical $C^2$ theory; if you drop this you typically work in viscosity form).
+> 3. $r$ is bounded (or has at most linear growth with enough integrability).
+> 4. $V\in C^2(\mathbb R^d)$ and bounded (or polynomial growth, with the usual technical modifications).
+> 
 > Then, the value function satisfies the *Hamilton–Jacobi–Bellman* (HJB) PDE:
 > $$ \rho V(x)=\max_{a\in \mathcal{A}}\Big\{ r(x,a)+\mathcal{L}^a V(x)\Big\}.\tag{1} $$
 > where $\mathcal{L}^a$ is the infinitesimal generator of the diffusion process under action $a$:
 > $$ \mathcal{L}^a \varphi(x):=\nabla \varphi(x)^\top f(x,a)
 +\tfrac12 \mathrm{Tr}\big(\Sigma\Sigma^\top \nabla^2 \varphi(x)\big) $$
 
-*Proof sketch*: 
+*Proof sketch*:
 Fix $x$ and a small $h>0$. By the dynamic programming principle (DPP),
 $$
 V(x)=\sup_{\pi}\mathbb E_x\left[\int_{0}^{h}e^{-\rho t}r(X_t,a_t)dt + e^{-\rho h}V(X_h)\right].
@@ -59,7 +79,7 @@ $$
   \mathbb E_x\left[\int_0^h e^{-\rho t} r(X_t,a)dt\right]= h\,r(x,a)+o(h).
 $$
 
-By Itô’s formula for $V(X_t)$ and the definition of the generator,
+By Itô's formula for $V(X_t)$ and the definition of the generator,
 $$
   \mathbb E_x[V(X_h)] = V(x) + h\,\mathcal L^a V(x) + o(h),
 $$
@@ -81,102 +101,260 @@ which is exactly (1). $\quad\blacksquare$
 
 ---
 
-The exact same argument can be used to derive the HJB for the non-autonomous case, where $f$, $\Sigma$, $r$ depend on time as well (see Appendix A).
+The exact same argument can be used to derive the HJB for the non-autonomous case, where $f$, $\Sigma$, $r$ depend on time as well (see [Appendix C](#appendix-c-non-autonomous-case)).
 
-
-Let us define the $Q$-function as
+Define the **Q-function** as the *instantaneous advantage* scaled by $1/\rho$:
 $$
-Q(x,a):=\frac{1}{\rho} \Big(r(x,a)+\mathcal{L}^a V(x)\Big)\tag{2}
+Q(x,a):=\frac{1}{\rho}\Big(r(x,a)+\mathcal{L}^a V(x)\Big).\tag{2}
 $$
-Then if follows, by HJB (1), that 
-$$V(x)=\max_{a\in \mathcal{A}} Q(x,a).\tag{3}$$
-Combining (2) and (3), we get the following nonlinear equation for $Q$:
+From the HJB (1) it immediately follows that $V(x)=\max_{a} Q(x,a)$. This identity is the key to **policy improvement**: given an estimate of $V$, the best action at $x$ is $a^*(x) = \arg\max_a Q(x,a)$.
+
+
+## 2. Q-learning in Continuous Time (Model-free)
+
+Policy iteration above is model-based; a complementary route is **Q-learning**, which can be run in a model-free way from sampled transitions.
+
+In continuous time, the Q-function satisfies the PDE
 $$
-\rho Q(x,a)=r(x,a)+\mathcal{L}^a \Big(\max_{a'\in \mathcal{A}} Q(x,a')\Big).\tag{4}
+\rho Q(x,a)=r(x,a)+\mathcal L^a\big(\max_{a'\in\mathcal A}Q(x,a')\big).
 $$
-Formally this is the direct continuous-time analogue of the discrete-time Bellman optimality equation. Note, however, that $x\mapsto \max_{a'}Q(x,a')$ need not be $C^2$ even if each $x\mapsto Q(x,a)$ is smooth. A standard way to make (4) mathematically precise is to interpret it in the viscosity sense (or to impose additional assumptions such as a unique maximizer with enough regularity).
-This is the continuous-time analogue of the Bellman equation for $Q$-functions in discrete time.
+With neural networks, set
+$$
+Q_\psi(x,a)\approx Q(x,a),\qquad a_\omega(x)\approx \arg\max_{a}Q_\psi(x,a),
+$$
+where $Q_\psi$ (critic) and $a_\omega$ (actor) are MLPs.
 
-## Example 1: Stochastic Linear-Quadratic Regulator
+Using short transitions $(X_t,a_t,r_t,X_{t+\Delta t})$, a practical TD target is
+$$
+y_t = r_t\,\Delta t + e^{-\rho\Delta t}\,\bar V(X_{t+\Delta t}),
+\qquad
+\bar V(x):=Q_{\bar\psi}(x,a_\omega(x))\ \text{(or }\max_a Q_{\bar\psi}(x,a)\text{)}.
+$$
+Then train the critic with
+$$
+\mathcal L_Q(\psi)=\mathbb E\big[(Q_\psi(X_t,a_t)-y_t)^2\big].
+$$
+The actor is updated by ascent on
+$$
+\max_\omega\;\mathbb E\big[Q_\psi(X_t,a_\omega(X_t))\big].
+$$
+So the MLP roles mirror actor-critic: one network fits values of state-action pairs, the other outputs actions that maximize those values.
 
-The LQR is the canonical continuous-time control problem with a closed-form solution — ideal for validating our algorithm.
 
-**Dynamics** (additive noise):
-$$dX_t = (\alpha X_t + \beta\, a_t)\,dt + \sigma\, dW_t$$
+## 3. Policy Iteration (Model-based)
 
-**Reward** (quadratic cost):
+We solve the HJB numerically via policy iteration (PI), alternating between *evaluating* the current policy and *improving* it through the Q-function. Both the value $V_\theta$ and the policy $\alpha_\phi$ are MLPs.
+
+This algorithm is **model-based**: it assumes known dynamics through $f(x,a)$ and $\Sigma(x,a)$ (equivalently, access to the generator $\mathcal L^a$). The model is used both to simulate closed-loop trajectories in policy evaluation and to compute $\mathcal L^aV$ in policy improvement.
+
+We iterate the following steps until convergence:
+
+1. **Policy evaluation** (value under current policy $\alpha_k$):
+$$
+\rho V_k(x)=r\big(x,\alpha_k(x)\big)+\mathcal{L}^{\alpha_k(x)}V_k(x).
+$$
+In practice, we estimate $V_k\approx V^{\alpha_k}$ by Monte Carlo rollouts of the closed-loop SDE and fit $V_\theta$ by regression.
+
+2. **Policy improvement** (greedy with respect to $V_k$):
+$$
+\alpha_{k+1}(x)\in\arg\max_{a\in\mathcal A}\{r(x,a)+\mathcal L^aV_k(x)\}
+=\arg\max_{a\in\mathcal A} Q_k(x,a),
+$$
+where
+$$
+Q_k(x,a):=\frac{1}{\rho}\big(r(x,a)+\mathcal L^aV_k(x)\big).
+$$
+With a differentiable actor $\alpha_\phi$, this becomes gradient ascent on
+$$
+\max_\phi\;\mathbb E_x\big[Q_k\big(x,\alpha_\phi(x)\big)\big].
+$$
+
+3. **Diagnosis / stopping**:
+$$
+\mathcal R_{\mathrm{HJB}}(x)=\rho V(x)-\max_a\{r(x,a)+\mathcal L^aV(x)\},
+$$
+and stop when sampled norms of $\mathcal R_{\mathrm{HJB}}$ and parameter changes plateau.
+
+Intuition: evaluation gives the value landscape induced by the current policy; improvement moves the policy uphill on that landscape; repeating both steps drives $(V,\alpha)$ toward a fixed point of the HJB.
+
+
+### Computing the generator $\mathcal{L}^a V$
+
+The generator requires $\nabla V$ and $\nabla^2 V$, obtained from $V_\theta$ via autograd. The diffusion $\Sigma(x,a)$ is problem-given (model-based setting).
+
+```python
+def compute_generator(V_net, x, f_xa, Sigma_xa):
+    """L^a V(x) = ∇V · f + ½ Tr(ΣΣᵀ ∇²V)."""
+    V = V_net(x)                                                # (batch, 1)
+    grad_V = autograd.grad(V.sum(), x, create_graph=True)[0]    # (batch, d)
+    drift  = (grad_V * f_xa).sum(-1, keepdim=True)              # ∇V · f
+    H = torch.stack([autograd.grad(grad_V[:,i].sum(), x,
+                     create_graph=True)[0] for i in range(d)], dim=1)
+    A = Sigma_xa @ Sigma_xa.transpose(-1,-2)                    # ΣΣᵀ
+    diff = 0.5 * (A * H).sum(dim=(-2,-1)).unsqueeze(-1)         # ½Tr(AH)
+    return drift + diff
+```
+
+During policy improvement, $\nabla V$ and $\nabla^2 V$ are *detached* from $\theta$ so gradients flow only through $\phi$.
+
+### Policy evaluation (Feynman–Kac MC)
+
+For a fixed policy $\alpha$, $V^\alpha$ solves the linear PDE
+$$
+\rho V^\alpha(x)=r\big(x,\alpha(x)\big)+\mathcal L^{\alpha(x)}V^\alpha(x).
+$$
+By the Feynman-Kac representation, for any truncation horizon $T>0$,
+$$
+V^\alpha(x)=
+\mathbb E_x\!\left[\int_0^\infty e^{-\rho s}\,r\big(X_s,\alpha(X_s)\big)\,ds\right]=\mathbb E_x\!\left[\int_0^T e^{-\rho s}\,r\big(X_s,\alpha(X_s)\big)\,ds + e^{-\rho T}V^\alpha(X_T)\right]
+$$
+
+In Monte Carlo policy evaluation, we estimate the expectation with simulated trajectories and use the critic for terminal bootstrap.
+
+### Policy improvement
+
+At collocation points, compute $Q_k(x,\alpha_\phi(x))$ using the detached $\nabla V_k$, $\nabla^2 V_k$, and maximise $\mathbb{E}[Q_k]$ w.r.t. $\phi$:
+
+```python
+grad_V, H = compute_generator_detached(V_net, x)   # frozen V
+a    = policy_net(x)                                 # differentiable in φ
+f_xa, S_xa = problem.drift(x, a), problem.diffusion(x, a)
+L_V  = generator_from_precomputed(grad_V, H, f_xa, S_xa)
+Q    = (problem.reward(x, a) + L_V) / rho
+loss = -Q.mean()            # gradient ascent on Q
+loss.backward()
+opt_pi.step()
+```
+
+
+## Example 1 — Stochastic LQR
+
+The linear-quadratic regulator is the *canonical* continuous-time control benchmark: linear dynamics, quadratic cost, closed-form solution — ideal for validating a numerical solver.
+
+### Problem setup
+
+**Dynamics** (additive noise, 1-D scalar):
+$$dX_t = (\alpha\,X_t + \beta\,a_t)\,dt + \sigma\,dW_t$$
+
+**Reward** (negative quadratic cost):
 $$r(x,a) = -\tfrac{1}{2}(q\,x^2 + r_a\,a^2)$$
 
-The HJB (1) for this problem admits a quadratic value function $V(x) = -\tfrac{1}{2}Px^2 - c$, where $P$ solves the **discounted algebraic Riccati equation**:
-$$\rho P = q + 2\alpha P - \frac{\beta^2}{r_a}P^2, \qquad c = \frac{\sigma^2 P}{2\rho}$$
-and the optimal policy is linear: $a^*(x) = -\frac{\beta}{r_a}Px$.
+| Symbol | Meaning | Value |
+|:------:|:--------|------:|
+| $\alpha$ | open-loop drift (stable if $<0$) | $-0.5$ |
+| $\beta$ | control effectiveness | $1.0$ |
+| $q$ | state cost weight | $1.0$ |
+| $r_a$ | action cost weight | $0.1$ |
+| $\sigma$ | diffusion (noise intensity) | $0.3$ |
+| $\rho$ | discount rate | $0.1$ |
 
-We use $\alpha=-0.5,\; \beta=1,\; q=1,\; r_a=0.1,\; \sigma=0.3,\; \rho=0.1$.
+### Analytical solution
+
+Substituting a quadratic ansatz $V(x) = -\tfrac{1}{2}Px^2 - c$ into the HJB and optimising over $a$ yields (see [Appendix A](#appendix-a-lqr-derivation) for the full derivation):
+
+The closed-form objects are:
+$$
+a^*(x)=-\frac{\beta P}{r_a}x=: -Kx,
+$$
+$$
+\rho P = q + 2\alpha P - \frac{\beta^2}{r_a}P^2,
+$$
+$$
+c = \frac{\sigma^2 P}{2\rho}.
+$$
+
+### Code
 
 ```python
 class StochasticLQR(ControlProblem):
-    def drift(self, x, a):
-        return x @ A.T + a @ B.T          # f(x,a) = Ax + Ba
-
+    def drift(self, x, a):     return x @ A.T + a @ B.T
+    def diffusion(self, x, a): return D.unsqueeze(0).expand(x.shape[0], -1, -1)
     def reward(self, x, a):
-        return -0.5 * ((x @ Q * x).sum(-1, keepdim=True)
-                      + (a @ R * a).sum(-1, keepdim=True))
+        return -0.5*((x@Q*x).sum(-1,keepdim=True) + (a@R*a).sum(-1,keepdim=True))
 
-# Solve and compare
-P, c, K = solve_are(A, B, Q, R, D, rho=0.1)   # exact Riccati
-solver  = PolicyIteration(problem, config)
-history = solver.solve()                         # neural PI
+P, c, K = solve_are(A, B, Q, R, D, rho=0.1)    # exact Riccati solution
+solver  = PolicyIteration(problem, cfg)
+history = solver.solve()                          # neural PI
 ```
 
-The learned value function and policy closely match the analytical solution:
+### Results
+
+Learned $V_\theta$ and $\alpha_\phi$ closely match $V^*(x) = -\tfrac{1}{2}Px^2 - c$ and $a^*(x) = -Kx$:
 
 ![LQR — Value function and policy](lqr_value_policy.png)
 
-A sample optimal trajectory drives the state toward zero while the cumulative discounted reward plateaus:
+Sample trajectories under the learned policy ($x_0=1.5$) and cumulative discounted reward:
 
 ![LQR — Trajectory and reward](lqr_trajectory.png)
 
-Convergence diagnostics — the HJB residual drops by over an order of magnitude:
+Convergence diagnostics (value-fit MSE, policy objective, HJB residual):
 
 ![LQR — Convergence](lqr_convergence.png)
 
+---
 
-## Example 2: Merton Portfolio / Consumption
+## Example 2 — Merton Portfolio
 
-Merton's problem is a classical stochastic control problem in mathematical finance with a known closed-form solution under CRRA utility.
+Merton's (1969) problem: an investor allocates wealth between a risk-free bond and a risky asset while simultaneously consuming. The goal is to maximise expected lifetime CRRA (Constant Relative Risk Aversion) utility of consumption. It admits a closed-form solution, making it a perfect second benchmark with *multiplicative* noise (as opposed to the additive noise in LQR).
 
-**Dynamics**:
-$$dX_t = \big(r_f + \pi_t(\mu - r_f) - k_t\big)X_t\,dt + \pi_t\,\sigma\,X_t\,dW_t$$
-where $X_t$ is wealth, $\pi_t\in[0,1.5]$ is the risky-asset fraction, and $k_t = c_t/X_t \in [0.005, 0.20]$ is the consumption-to-wealth ratio.
+### Problem setup
 
-**Reward** (CRRA utility, $\gamma=2$):
+**State:** wealth $X_t > 0$. **Controls:** $a_t = (\pi_t, k_t)$ — risky-asset fraction and consumption-to-wealth ratio $k = c/X$.
+
+**Dynamics** (geometric / multiplicative noise):
+$$dX_t = \big[r_f + \pi_t(\mu - r_f) - k_t\big] X_t dt + \pi_t \sigma X_t dW_t$$
+
+**Reward** (CRRA utility of consumption flow, $\gamma \neq 1$):
 $$r(x,a) = \frac{(k\,x)^{1-\gamma}}{1-\gamma}$$
 
-The HJB yields *constant* optimal controls:
-$$\pi^* = \frac{\mu - r_f}{\gamma\,\sigma^2}, \qquad k^* = \frac{\rho - (1-\gamma)M}{\gamma}, \qquad M = r_f + \frac{(\mu-r_f)^2}{2\gamma\sigma^2}$$
-and a power-law value $V^*(x) \propto x^{1-\gamma}$.
+| Symbol | Meaning | Value |
+|:------:|:--------|------:|
+| $r_f$ | risk-free rate | $0.03$ |
+| $\mu$ | risky asset expected return | $0.08$ |
+| $\sigma$ | risky asset volatility | $0.20$ |
+| $\gamma$ | relative risk aversion (CRRA) | $2.0$ |
+| $\rho$ | subjective discount rate | $0.05$ |
 
-We use $r_f=0.03,\;\mu=0.08,\;\sigma=0.20,\;\gamma=2,\;\rho=0.05$.
+### Analytical solution
+
+Substituting a power-law ansatz $V(x) = \frac{A}{1-\gamma}x^{1-\gamma}$ into the HJB and optimising over $(\pi, k)$ yields (see [Appendix B](#appendix-b-merton-derivation) for the full derivation):
+
+The closed-form controls and value are:
+$$
+\pi^*=\frac{\mu-r_f}{\gamma\sigma^2}=0.625,
+$$
+$$
+k^*=\frac{\rho-(1-\gamma)M}{\gamma},\qquad
+M:=r_f+\frac{(\mu-r_f)^2}{2\gamma\sigma^2},\qquad
+k^*\approx 0.0478,
+$$
+$$
+V^*(x)=\frac{A}{1-\gamma}x^{1-\gamma},\qquad
+A=\left(\frac{\gamma}{\rho-(1-\gamma)M}\right)^\gamma.
+$$
+
+Both optimal controls are *constant* — independent of wealth and time. 
+
 
 ```python
 class MertonProblem(ControlProblem):
-    def drift(self, x, a):                        # a = (pi, c_rate)
+    def drift(self, x, a):                              # a = (π, c_rate)
         pi, cr = a[:, 0:1], a[:, 1:2]
         return (self.r_f + pi*(self.mu - self.r_f) - cr) * x
-
     def diffusion(self, x, a):
         return (a[:, 0:1] * self.sigma * x).unsqueeze(-1)
-
     def reward(self, x, a):
         c = (a[:, 1:2] * x).clamp(min=1e-8)
         return c.pow(1 - self.gamma) / (1 - self.gamma)
 ```
 
-The learned value function tracks the exact power-law solution, and the learned controls converge close to the analytical constants $\pi^*\approx 0.625$ and $k^*\approx 0.048$:
+### Results
+
+Learned value function matches the exact power-law $V^*\propto x^{1-\gamma}$; both controls converge to the analytical constants:
 
 ![Merton — Value function and policy](merton_value_policy.png)
 
-A sample wealth trajectory under the learned policy, with its cumulative discounted reward:
+Sample wealth trajectories under the learned policy ($X_0 = 1$) and cumulative discounted reward:
 
 ![Merton — Trajectory and reward](merton_trajectory.png)
 
@@ -184,30 +362,82 @@ Convergence diagnostics:
 
 ![Merton — Convergence](merton_convergence.png)
 
----
-
-### Q-learning in continuous time
-
-We will explore the simplest scenario to illustrate the idea. Assume that we are in position $x_t$ at time $t$, and we take action $a_t$. Then we also know $dx_t$, the infinitesimal change in position at time $t$ and we know $\Sigma$ (constant or even null). Then, we can compute $\mathcal{L}^{a_t}(\max_{a'\in \mathcal{A}} Q(x_t,a'))$ and using (4)
-$$
-Q(x_t, a_t) \leftarrow Q(x_t, a_t) +\eta\left[ r(x_t,a_t) + \mathcal{L}^{a_t}\Big(\max_{a'\in \mathcal{A}} Q(x_t,a')\Big)  - \rho Q(x_t,a_t)\right]
-$$
-Notice the similarity with the discrete-time Q-learning update:
-$$
-Q(s_t,a_t)\leftarrow Q(s_t,a_t)+\eta\Big[r(s_t,a_t)+\gamma\max_{a'\in \mathcal{A}}Q(s_{t+1},a')-Q(s_t,a_t)\Big].
-$$
 
 
-## Appendix A: Non-autonomous case
+## References
+
+[1] Jia, Yanwei, and Xun Yu Zhou. "q-Learning in continuous time." Journal of Machine Learning Research 24, no. 161 (2023): 1-61.
+
+[2] Jia, Yanwei, and Xun Yu Zhou. "Policy gradient and actor-critic learning in continuous time and space: Theory and algorithms." Journal of Machine Learning Research 23, no. 275 (2022): 1-50.
+
+[3] Hamilton-Jacobi-Bellman Equations,
+Stochastic Differential Equations by Benjamin Moll https://benjaminmoll.com/wp-content/uploads/2019/07/Lecture4_ECO521_web.pdf
+
+[4] Fleming, Wendell H., and H. Mete Soner. Controlled Markov processes and viscosity solutions. New York, NY: Springer New York, 2006.
+
+[5] Yong, Jiongmin, and Xun Yu Zhou. Stochastic controls: Hamiltonian systems and HJB equations. Vol. 43. Springer Science & Business Media, 1999.
+
+[6] Bellman, Richard Ernest, An Introduction to the Theory of Dynamic Programming. Santa Monica, CA: RAND Corporation, 1953. https://www.rand.org/pubs/reports/R245.html.
+
+[7] Pierre Bernhard, Marc Deschamps. Kalman 1960: The birth of modern system theory. Mathematical
+Population Studies, 2019, 26 (3), pp.123-145. ff10.1080/08898480.2018.1553393ff. ffhal-01940560f
+
+## Appendix A: LQR Derivation {#appendix-a-lqr-derivation}
+
+**Ansatz.** Guess $V(x) = -\tfrac{1}{2}Px^2 - c$ with $P > 0$. Then $V'=-Px$, $V''=-P$.
+
+**Generator.** With drift $f = \alpha x + \beta a$ and constant diffusion $\sigma$:
+$$\mathcal{L}^a V = V'(\alpha x + \beta a) + \tfrac{1}{2}\sigma^2 V'' = -P(\alpha x + \beta a) - \tfrac{1}{2}\sigma^2 P$$
+
+**HJB.** Substituting into $\rho V = \max_a \{r + \mathcal{L}^a V\}$:
+$$-\tfrac{1}{2}\rho P x^2 - \rho c = \max_{a}\Big\{-\tfrac{1}{2}qx^2 - \tfrac{1}{2}r_a a^2 - P\alpha x - P\beta a - \tfrac{1}{2}\sigma^2 P\Big\}$$
+
+**Optimality in $a$.** The RHS is concave in $a$; set $\partial_a(\cdot) = 0$:
+$$-r_a\,a - P\beta = 0 \implies a^*(x) = -\frac{\beta P}{r_a}\,x =: -Kx$$
+
+**Riccati equation.** Substituting $a^* = -Kx$ back and matching the $x^2$ coefficient and the constant:
+
+$$x^2:\quad \rho P = q + 2\alpha P - \frac{\beta^2}{r_a}P^2, \qquad \text{const:}\quad c = \frac{\sigma^2 P}{2\rho}$$
+
+The first is the *discounted algebraic Riccati equation*. In the scalar case it is a quadratic in $P$. $\quad\blacksquare$
+
+
+## Appendix B: Merton Derivation {#appendix-b-merton-derivation}
+
+**Ansatz.** Power-law value: $V(x) = \frac{A}{1-\gamma}\,x^{1-\gamma}$, $A > 0$. Then:
+$$V'(x) = A\,x^{-\gamma},\qquad V''(x) = -\gamma A\,x^{-\gamma-1}$$
+
+**Generator.** Using drift $\mu_X x = [r_f + \pi(\mu-r_f) - k]x$ and diffusion $\sigma_X x = \pi\sigma x$:
+$$\mathcal{L}^a V = A\,x^{-\gamma}\cdot\mu_X x - \tfrac{1}{2}\gamma A\,x^{-\gamma-1}\cdot\sigma_X^2 x^2 = A\,x^{1-\gamma}\big[r_f + \pi(\mu-r_f) - k - \tfrac{1}{2}\gamma\pi^2\sigma^2\big]$$
+
+**HJB.** Substituting and dividing through by $x^{1-\gamma} > 0$:
+$$\frac{\rho A}{1-\gamma} = \max_{\pi,\,k}\left\{\frac{k^{1-\gamma}}{1-\gamma} + A\big[r_f + \pi(\mu-r_f) - k - \tfrac{1}{2}\gamma\pi^2\sigma^2\big]\right\}$$
+
+**Optimality in $\pi$.** FOC $\partial_\pi(\cdot) = 0$: $\;A[(\mu-r_f) - \gamma\pi\sigma^2] = 0$:
+$$\pi^* = \frac{\mu - r_f}{\gamma\,\sigma^2}$$
+
+This is the **myopic** portfolio rule — independent of wealth and time. Higher risk aversion $\gamma$ or volatility $\sigma$ reduces exposure.
+
+**Optimality in $k$.** FOC $\partial_k(\cdot) = 0$: $\;k^{-\gamma} - A = 0$, so $k^* = A^{-1/\gamma}$.
+
+**Solving for $A$.** Define the *certainty-equivalent growth rate* $M := r_f + \frac{(\mu-r_f)^2}{2\gamma\sigma^2}$. Substituting the optimisers back:
+$$\frac{\rho A}{1-\gamma} = \frac{A^{(1-\gamma)/(-\gamma)\cdot(1-\gamma)}}{1-\gamma} + A\big[M - A^{-1/\gamma}\big]$$
+After simplification:
+$$A = \left(\frac{\gamma}{\rho - (1-\gamma)M}\right)^\gamma, \qquad k^* = \frac{\rho - (1-\gamma)M}{\gamma}$$
+
+The denominator $\rho - (1-\gamma)M$ must be positive — this is the **feasibility condition** ensuring lifetime utility is finite. With our parameters: $M \approx 0.04563$, so $k^* \approx 0.0478$. $\quad\blacksquare$
+
+
+## Appendix C: Non-autonomous case
 
 
 Let the dynamics and reward depend on time:
 $$
-dX_t=f(t,X_t,a_t),dt+\Sigma(t,X_t,a_t)\,dW_t,\qquad r=r(t,x,a).
+dX_t=f(t,X_t,a_t)\,dt+\Sigma(t,X_t,a_t)\,dW_t,\qquad r=r(t,x,a).
 $$
 Define the time-dependent value (starting at time $t$ in state $x$):
 $$
-V(t,x):=\sup_\pi \mathbb E\Big[\int_t^\infty e^{-\rho(s-t)} r(s,X_s,a_s),ds\ \Big|\ X_t=x\Big].
+V(t,x):=\sup_\pi \mathbb E\Big[\int_t^\infty e^{-\rho(s-t)} r(s,X_s,a_s)\,ds\ \Big|\ X_t=x\Big].
 $$
 Then the (time-dependent) generator is
 $$
@@ -226,15 +456,15 @@ In the autonomous case, $V(t,x)$ is time-independent, so $\partial_t V=0$ and yo
 
 
 
-## Appendix B: Kullback-Liebler HJB
+## Appendix D: Kullback-Liebler HJB
+
 
 A common KL-regularized continuous-time control formulation fixes a reference (prior) policy $\mu(\cdot\mid x)$ and introduces a temperature $\alpha>0$. The HJB equation becomes a pointwise maximization over action distributions $\pi(\cdot\mid x)$:
 $$
 \rho V_\alpha(x)=
 \max_{\pi(\cdot\mid x)}
 \left\{
-\int_{\mathcal{A}}\pi(a\mid x)\big(r(x,a)+\mathcal{L}^aV_\alpha(x)\big)\,da
--
+\int_{\mathcal{A}}\pi(a\mid x)\big(r(x,a)+\mathcal{L}^aV_\alpha(x)\big)\,da -
 \alpha\,\mathrm{KL}\!\big(\pi(\cdot\mid x)\,\|\,\mu(\cdot\mid x)\big)
 \right\}.
 \tag{5}
@@ -263,7 +493,7 @@ $$
 {\int_{\mathcal{A}}\mu(a'\mid x)\exp\!\Big(\tfrac{r(x,a')+\mathcal{L}^{a'}V_\alpha(x)}{\alpha}\Big)\,da'}.
 \tag{7}
 $$
-This is the continuous-time analogue of softmax over “advantages”, with $\mu$ acting as a prior.
+This is the continuous-time analogue of softmax over "advantages", with $\mu$ acting as a prior.
 
 Keeping the same definition of $Q_\alpha$, but now with the soft value $V_\alpha$:
 $$
@@ -290,9 +520,9 @@ r(x,a)
 \right](x).
 \tag{10}
 $$
-This is the direct “soft” replacement of the hard-max PDE (4).
+This is the direct "soft" replacement of the hard-max PDE (4).
 
-### Expanding the generator term in (10)
+#### Expanding the generator term in (10)
 
 Equation (10) is often read in the viscosity sense, since $x\mapsto V_\alpha(x)$ may fail to be $C^2$ without extra assumptions. If you do assume $V_\alpha\in C^2$ (and can differentiate under the integral defining $V_\alpha$), then $\mathcal{L}^a[V_\alpha](x)$ can be expanded explicitly.
 
@@ -358,11 +588,3 @@ The covariance term is the extra contribution coming from the log-sum-exp; it on
 Given $Q_\alpha(x,\cdot)$ and its $x$-derivatives, the remaining objects are just expectations under $\bar\pi_\alpha(\cdot\mid x)$: sums when $\mathcal A$ is finite, and typically Monte Carlo / quadrature approximations when $\mathcal A$ is continuous. In parametric settings (e.g. neural networks), $\nabla_x Q_\alpha$ and $\nabla_x^2 Q_\alpha$ can be obtained by automatic differentiation (the Hessian being the expensive part).
 
 
-### References
-
-[1] Jia, Yanwei, and Xun Yu Zhou. "q-Learning in continuous time." Journal of Machine Learning Research 24, no. 161 (2023): 1-61.
-
-[2] Jia, Yanwei, and Xun Yu Zhou. "Policy gradient and actor-critic learning in continuous time and space: Theory and algorithms." Journal of Machine Learning Research 23, no. 275 (2022): 1-50.
-
-[3] Hamilton-Jacobi-Bellman Equations,
-Stochastic Differential Equations by Benjamin Moll https://benjaminmoll.com/wp-content/uploads/2019/07/Lecture4_ECO521_web.pdf
