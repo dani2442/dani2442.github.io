@@ -13,3 +13,8 @@ resources/_gen/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Large media files (exceed GitHub's 100 MB limit)
+*.mp4
+*.mov
+*.avi
