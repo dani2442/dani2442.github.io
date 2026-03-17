@@ -20,17 +20,16 @@ editPost:
 
 
 
-In this post we will explore the Hamilton-Jacobi-Bellman (HJB) equation and all its applications to physics, control theory, reinforcement learning, and generative modeling.
+In this post I focus on one structural fact: in continuous time, Bellman's recursion becomes a partial differential equation. That PDE is the Hamilton-Jacobi-Bellman (HJB) equation.
 
-From the control side, the payoff is structural: once the problem is local in time, Bellman's recursion turns into a PDE. That PDE is the HJB equation.
+Once you see that structure, several topics line up naturally: continuous-time reinforcement learning, stochastic control, neural policy iteration, and, with a finite-horizon change of notation, diffusion models.
 
-
-There is this long-live debate between: "optimize then discretize or discretize then optimize".
+There is also a long-running numerical-analysis question in the background: optimize first and then discretize, or discretize first and then optimize? The HJB sits exactly at that interface.
 
 
 ## 1. Introduction
 
-Richard Bellman in the early 50s [[6]](#references) developed the theory of dynamic programming. Assume a discrete-time Markov decision process with state space $\mathcal X$, action space $\mathcal A$, transition kernel $P(\cdot\mid x,a)$, reward function $r(x,a)$, and discount factor $\gamma\in(0,1)$. A policy $\pi$ maps states to distributions over actions. If the state evolves as a controlled Markov chain
+Richard Bellman in the early 1950s [[6]](#references) developed the theory of dynamic programming. Assume a discrete-time Markov decision process with state space $\mathcal X$, action space $\mathcal A$, transition kernel $P(\cdot\mid x,a)$, reward function $r(x,a)$, and discount factor $\gamma\in(0,1)$. A policy $\pi$ maps states to distributions over actions. If the state evolves as a controlled Markov chain
 $$
 X_{n+1}\sim P(\cdot\mid X_n,a_n),
 $$
@@ -43,28 +42,30 @@ $$
 V(x):=\sup_\pi \mathbb E\left[\sum_{n=0}^\infty \gamma^n r(X_n,a_n)\,\middle|\,X_0=x\right].
 $$
 
-Under some mild conditions, $V$ satisfies the Bellman equation
+Under mild conditions, $V$ satisfies the Bellman equation
 $$
 V(x)=\max_{a\in\mathcal A}\left\{r(x,a)+\gamma\,\mathbb E \left[V(X_{n+1})\mid X_n=x,a_n=a\right]\right\}.\tag{Bellman equation}
 $$
-> This says: choose the action that maximizes immediate reward plus continuation value. Continuous time keeps the same logic, but now the time step has length $h$ and we can send $h\downarrow 0$.
+> This says: choose the action that maximizes immediate reward plus continuation value. Continuous time keeps the same local logic, but now the time step has length $h$ and we send $h\downarrow 0$.
 
-What Bellman noticed in the 50s is that in the continuous case,
-$$ \dot x = f(x,a), $$
-the resulting equation was identical to the 19th century equation from physics:
+In deterministic finite-horizon control, with dynamics
 $$
-\frac{\partial S}{\partial t} + H^*\left(q, \frac{\partial S}{\partial q}\right) = 0 \tag{Hamilton-Jacobi PDE}
+\dot x_t = f(t,x_t,a_t),
 $$
-where we substitute $S$ for $V$, $q$ for state $x$, and $H(x,a, \nabla_x V) = r(x,a)+\nabla_x V(x)^\top f(x,a)$ is the Hamiltonian and by maximizing over $a$ we get the HJB PDE:
+running reward $r(t,x,a)$, and terminal reward $g(x)$, the value function $V(t,x)$ solves
 $$
-H^*(x, \nabla_x V) = \max_{a\in\mathcal A} H(x,a, \nabla_x V).
+-\partial_t V(t,x)=\max_{a\in\mathcal A}\left\{r(t,x,a)+\nabla_x V(t,x)^\top f(t,x,a)\right\},
+\qquad
+V(T,x)=g(x). \tag{HJB}
 $$
 
-The HJ equation dates back to 1840 when Jacobi took one step further from Hamiltonian and its principle of minimum energy and derived the above PDE for the action $S$ of a mechanical system. 
+This is Bellman's equation in PDE form. The Hamilton-Jacobi part is historical: Jacobi derived the analogous PDE in classical mechanics, and Bellman recognized the same structure as dynamic programming in continuous time.
 
-> **Historical Note:** In 1960, Rudolf E. Kalman published his seminal paper on the linear-quadratic regulator (LQR) problem [[8, 9]](#references), which is a continuous-time optimal control problem with linear dynamics and quadratic cost. The solution to the LQR problem is given by the algebraic Riccati equation, which can be derived from the Hamilton-Jacobi-Bellman (HJB) equation for continuous-time control problems.
+Once diffusion is added, Itô's formula contributes the second-order term that turns Hamilton-Jacobi into the full stochastic HJB. In linear-quadratic problems, that PDE collapses to a Riccati equation, which is why LQR is the canonical sanity check for any HJB solver.
 
-## 2. Continuous-time Reinforcement Learning
+Throughout Sections 2-4 I will use the stationary, infinite-horizon reward-maximization convention common in reinforcement learning. In Section 5 I will switch to the finite-horizon cost-minimization convention used in diffusion models; the underlying control logic is the same, but the signs and terminal conditions move.
+
+## 2. Controlled Diffusions and the HJB Equation
 
 ### Controlled diffusions (Itô processes)
 
@@ -140,39 +141,10 @@ Q(x,a):=\frac{1}{\rho}\Big(r(x,a)+\mathcal{L}^a V(x)\Big).\tag{2}
 $$
 From the HJB (1) it immediately follows that $V(x)=\max_{a} Q(x,a)$. This identity is the key to **policy improvement**: given an estimate of $V$, the best action at $x$ is $a^*(x) = \arg\max_a Q(x,a)$.
 
-
-## 2. Q-learning in Continuous Time (Model-free)
-
-Policy iteration above is model-based; a complementary route is **Q-learning**, which can be run in a model-free way from sampled transitions.
-
-In continuous time, the Q-function satisfies the PDE
-$$
-\rho Q(x,a)=r(x,a)+\mathcal L^a\big(\max_{a'\in\mathcal A}Q(x,a')\big).
-$$
-With neural networks, set
-$$
-Q_\psi(x,a)\approx Q(x,a),\qquad a_\omega(x)\approx \arg\max_{a}Q_\psi(x,a),
-$$
-where $Q_\psi$ (critic) and $a_\omega$ (actor) are MLPs.
-
-Using short transitions $(X_t,a_t,r_t,X_{t+\Delta t})$, a practical TD target is
-$$
-y_t = r_t\,\Delta t + e^{-\rho\Delta t}\,\bar V(X_{t+\Delta t}),
-\qquad
-\bar V(x):=Q_{\bar\psi}(x,a_\omega(x))\ \text{(or }\max_a Q_{\bar\psi}(x,a)\text{)}.
-$$
-Then train the critic with
-$$
-\mathcal L_Q(\psi)=\mathbb E\big[(Q_\psi(X_t,a_t)-y_t)^2\big].
-$$
-The actor is updated by ascent on
-$$
-\max_\omega\;\mathbb E\big[Q_\psi(X_t,a_\omega(X_t))\big].
-$$
-So the MLP roles mirror actor-critic: one network fits values of state-action pairs, the other outputs actions that maximize those values.
+This stationary, discounted form is the RL convention used in the next two sections.
 
 
-## 3. Policy Iteration (Model-based)
+## 3. Policy Iteration
 
 We solve the HJB numerically via policy iteration (PI), alternating between *evaluating* the current policy and *improving* it through the Q-function. Both the value $V_\theta$ and the policy $\alpha_\phi$ are MLPs.
 
@@ -257,12 +229,182 @@ loss.backward()
 opt_pi.step()
 ```
 
+## 4. Model-Free: Continuous-Time Q-learning
 
-## Example 1 — Stochastic LQR
+Policy iteration above is model-based; a complementary route is **Q-learning**, which can be run in a model-free way from sampled transitions.
+
+In continuous time, the Q-function satisfies the PDE
+$$
+\rho Q(x,a)=r(x,a)+\mathcal L^a\big(\max_{a'\in\mathcal A}Q(x,a')\big).
+$$
+With neural networks, set
+$$
+Q_\psi(x,a)\approx Q(x,a),\qquad a_\omega(x)\approx \arg\max_{a}Q_\psi(x,a),
+$$
+where $Q_\psi$ (critic) and $a_\omega$ (actor) are MLPs.
+
+Using short transitions $(X_t,a_t,r_t,X_{t+\Delta t})$, a practical TD target is
+$$
+y_t = r_t\,\Delta t + e^{-\rho\Delta t}\,\bar V(X_{t+\Delta t}),
+\qquad
+\bar V(x):=Q_{\bar\psi}(x,a_\omega(x))\ \text{(or }\max_a Q_{\bar\psi}(x,a)\text{)}.
+$$
+Then train the critic with
+$$
+\mathcal L_Q(\psi)=\mathbb E\big[(Q_\psi(X_t,a_t)-y_t)^2\big].
+$$
+The actor is updated by ascent on
+$$
+\max_\omega\;\mathbb E\big[Q_\psi(X_t,a_\omega(X_t))\big].
+$$
+So the MLP roles mirror actor-critic: one network fits values of state-action pairs, the other outputs actions that maximize those values.
+
+
+## 5. HJB and Diffusion Models
+
+The RL sections above used a stationary, infinite-horizon reward-maximization convention. Diffusion models are more naturally written in a finite-horizon, cost-minimization convention. The control logic is the same, but the value function now solves a terminal-value HJB.
+
+Following Berner, Richter, and Ullrich [[10]](#references), start from the forward noising SDE
+$$
+dY_t = f(Y_t,t)\,dt + \sigma(t)\,dB_t,\qquad Y_0\sim p_{\text{data}},
+$$
+where $\sigma$ depends only on time. Assume the coefficients are regular enough that all SDEs below admit unique strong solutions and that the relevant time marginals have strictly positive $C^{2,1}$ densities.
+
+Define
+$$
+\mu(x,t):=\sigma(t)\sigma(t)^\top \nabla_x\log p_Y(x,t)-f(x,t),
+\qquad
+D(t):=\tfrac12 \sigma(t)\sigma(t)^\top,
+$$
+and write $\bar h(t):=h(T-t)$ for time reversal. Let $p_0:=p_{Y_T}$. Then the exact reverse-time generative process is
+$$
+dX_t = \bar\mu(X_t,t)\,dt + \bar\sigma(t)\,dB_t,\qquad X_0\sim p_0,
+$$
+and its reverse-time density
+$$
+\bar p_X(x,t):=p_X(x,T-t)
+$$
+coincides with the forward density $p_Y(x,t)$. This is the first point to keep straight: the HJB is for $\bar p_X$, not for the forward density viewed in forward time.
+
+Since $p_X$ solves the Fokker-Planck equation
+$$
+\partial_t p_X
+=-\operatorname{div}(\bar\mu\,p_X)+\operatorname{Tr}\!\big(D(T-t)\nabla_x^2 p_X\big),
+$$
+the change of variables $t\mapsto T-t$ gives the backward PDE
+$$
+\partial_t \bar p_X
+=-\operatorname{Tr}\!\big(D(t)\nabla_x^2 \bar p_X\big)
++ \mu(x,t)\cdot \nabla_x \bar p_X
++ \operatorname{div}\mu(x,t)\,\bar p_X.
+$$
+Now set
+$$
+V(x,t):=-\log \bar p_X(x,t).
+$$
+Using $\bar p_X=e^{-V}$, together with
+$$
+\nabla_x \bar p_X=-e^{-V}\nabla_x V,
+\qquad
+\nabla_x^2 \bar p_X=e^{-V}\big(\nabla_x V\nabla_x V^\top-\nabla_x^2 V\big),
+$$
+one obtains the finite-horizon HJB
+$$
+\partial_t V
+= -\operatorname{Tr}\!\big(D(t)\nabla_x^2 V\big)
++ \mu(x,t)\cdot \nabla_x V
+- \operatorname{div}\mu(x,t)
++ \frac12\|\sigma(t)^\top \nabla_x V\|^2,
+\qquad
+V(x,T)=-\log p_0(x).
+$$
+The terminal condition is $V(x,T)=-\log p_X(x,0)$ because $\bar p_X(x,T)=p_X(x,0)=p_0(x)$.
+
+The quadratic term is the pointwise Legendre transform
+$$
+\frac12\|\sigma^\top \nabla_x V\|^2
+=-\inf_{u\in\mathbb R^d}\left\{\frac12\|u\|^2+(\sigma u)\cdot \nabla_x V\right\},
+$$
+so the PDE can be rewritten as
+$$
+\partial_t V
+=-\inf_u\left\{
+\operatorname{div}\mu
++\frac12\|u\|^2
++(\sigma u-\mu)\cdot \nabla_x V
++\operatorname{Tr}\!\big(D\nabla_x^2 V\big)
+\right\}.
+$$
+This is exactly the HJB associated with the controlled diffusion
+$$
+dY_s^u = \big(\sigma(s)u(Y_s^u,s)-\mu(Y_s^u,s)\big)\,ds + \sigma(s)\,dB_s
+$$
+and cost
+$$
+J(u;x,t):=
+\mathbb E\!\left[
+\int_t^T
+\left(
+\operatorname{div}\mu(Y_s^u,s)+\frac12\|u(Y_s^u,s)\|^2
+\right)ds
+-\log p_0(Y_T^u)
+\;\middle|\;
+Y_t^u=x
+\right].
+$$
+
+Applying Itô's formula to $V(Y_s^u,s)$ and using the HJB yields the verification identity
+$$
+J(u;x,t)
+=V(x,t)
++\frac12\,
+\mathbb E\!\left[
+\int_t^T
+\|u(Y_s^u,s)+\sigma(s)^\top \nabla_x V(Y_s^u,s)\|^2\,ds
+\;\middle|\;
+Y_t^u=x
+\right].
+$$
+Therefore
+$$
+V(x,t)=\inf_u J(u;x,t),
+\qquad
+u^*(x,t)=-\sigma(t)^\top \nabla_x V(x,t)
+=\sigma(t)^\top \nabla_x\log \bar p_X(x,t).
+$$
+Since $\bar p_X=p_Y$ along the exact reverse dynamics, this becomes
+$$
+u^*(x,t)=\sigma(t)^\top \nabla_x\log p_Y(x,t),
+$$
+which is the usual score field up to the diffusion scaling. Under the reparametrization $\mu=\sigma u-f$, this is exactly the feedback law appearing in score-based reverse SDEs.
+
+The ELBO and the KL statement come after this verification step, not before it. Evaluating the identity at $t=0$ gives the ELBO, and the nonnegative square term is the variational gap. That gap, not the full control cost $J(u)$, is what vanishes at the optimum; the paper then identifies it with a path-space KL divergence.
+
+Under the same reparametrization $\mu=\sigma u-f$, the expected negative ELBO reduces, up to constants independent of $u$, to the denoising score matching objective
+$$
+\mathcal L_{\mathrm{DSM}}(u)
+=
+\frac{T}{2}\,
+\mathbb E\left[
+\left\|
+u(Y_\tau,\tau)-\sigma(\tau)^\top \nabla \log p_{Y_\tau\mid Y_0}(Y_\tau\mid Y_0)
+\right\|^2
+\right],
+\qquad
+\tau\sim \mathrm{Unif}[0,T].
+$$
+So when a neural network learns the score, it is learning the optimal controller associated with this HJB.
+
+This viewpoint is exact rather than metaphorical: the reverse-time log-density is the HJB value function, the ELBO is the verification identity evaluated at $t=0$, and the training gap is a path-space relative entropy. Conditioning and guidance can then be read as cost shaping in the same control problem.
+
+
+## 6. Numerical Examples
+
+### Example 1 — Stochastic LQR
 
 The linear-quadratic regulator is the *canonical* continuous-time control benchmark: linear dynamics, quadratic cost, closed-form solution — ideal for validating a numerical solver.
 
-### Problem setup
+#### Problem setup
 
 **Dynamics** (additive noise, 1-D scalar):
 $$dX_t = (\alpha\,X_t + \beta\,a_t)\,dt + \sigma\,dW_t$$
@@ -279,7 +421,7 @@ $$r(x,a) = -\tfrac{1}{2}(q\,x^2 + r_a\,a^2)$$
 | $\sigma$ | diffusion (noise intensity) | $0.3$ |
 | $\rho$ | discount rate | $0.1$ |
 
-### Analytical solution
+#### Analytical solution
 
 Substituting a quadratic ansatz $V(x) = -\tfrac{1}{2}Px^2 - c$ into the HJB and optimising over $a$ yields (see [Appendix A](#appendix-a-lqr-derivation) for the full derivation):
 
@@ -294,7 +436,7 @@ $$
 c = \frac{\sigma^2 P}{2\rho}.
 $$
 
-### Code
+#### Code
 
 ```python
 class StochasticLQR(ControlProblem):
@@ -308,7 +450,7 @@ solver  = PolicyIteration(problem, cfg)
 history = solver.solve()                          # neural PI
 ```
 
-### Results
+#### Results
 
 Learned $V_\theta$ and $\alpha_\phi$ closely match $V^*(x) = -\tfrac{1}{2}Px^2 - c$ and $a^*(x) = -Kx$:
 
@@ -324,11 +466,11 @@ Convergence diagnostics (value-fit MSE, policy objective, HJB residual):
 
 ---
 
-## Example 2 — Merton Portfolio
+### Example 2 — Merton Portfolio
 
 Merton's (1969) problem: an investor allocates wealth between a risk-free bond and a risky asset while simultaneously consuming. The goal is to maximise expected lifetime CRRA (Constant Relative Risk Aversion) utility of consumption. It admits a closed-form solution, making it a perfect second benchmark with *multiplicative* noise (as opposed to the additive noise in LQR).
 
-### Problem setup
+#### Problem setup
 
 **State:** wealth $X_t > 0$. **Controls:** $a_t = (\pi_t, k_t)$ — risky-asset fraction and consumption-to-wealth ratio $k = c/X$.
 
@@ -346,7 +488,7 @@ $$r(x,a) = \frac{(k\,x)^{1-\gamma}}{1-\gamma}$$
 | $\gamma$ | relative risk aversion (CRRA) | $2.0$ |
 | $\rho$ | subjective discount rate | $0.05$ |
 
-### Analytical solution
+#### Analytical solution
 
 Substituting a power-law ansatz $V(x) = \frac{A}{1-\gamma}x^{1-\gamma}$ into the HJB and optimising over $(\pi, k)$ yields (see [Appendix B](#appendix-b-merton-derivation) for the full derivation):
 
@@ -366,6 +508,7 @@ $$
 
 Both optimal controls are *constant* — independent of wealth and time. 
 
+#### Code
 
 ```python
 class MertonProblem(ControlProblem):
@@ -379,7 +522,7 @@ class MertonProblem(ControlProblem):
         return c.pow(1 - self.gamma) / (1 - self.gamma)
 ```
 
-### Results
+#### Results
 
 Learned value function matches the exact power-law $V^*\propto x^{1-\gamma}$; both controls converge to the analytical constants:
 
@@ -416,6 +559,8 @@ Population Studies, 2019, 26 (3), pp.123-145. ff10.1080/08898480.2018.1553393ff.
 [8] Discrete-Time (1960): R.E. Kalman, "A New Approach to Linear Filtering and Prediction Problems," Journal of Basic Engineering, 82 (1), pp. 35–45.
 
 [9] Continuous-Time (1961): R.E. Kalman and R.S. Bucy, "New Results in Linear Filtering and Prediction Theory," Journal of Basic Engineering, 83 (1), pp. 95–108.
+
+[10] Berner, Julius, Lorenz Richter, and Karen Ullrich. "An optimal control perspective on diffusion-based generative modeling." Transactions on Machine Learning Research, 2024. https://arxiv.org/abs/2211.01364.
 
 ## Appendix A: LQR Derivation {#appendix-a-lqr-derivation}
 
@@ -491,7 +636,7 @@ In the autonomous case, $V(t,x)$ is time-independent, so $\partial_t V=0$ and yo
 
 
 
-## Appendix D: Kullback-Liebler HJB
+## Appendix D: Kullback-Leibler HJB
 
 
 A common KL-regularized continuous-time control formulation fixes a reference (prior) policy $\mu(\cdot\mid x)$ and introduces a temperature $\alpha>0$. The HJB equation becomes a pointwise maximization over action distributions $\pi(\cdot\mid x)$:
@@ -557,7 +702,7 @@ r(x,a)
 $$
 This is the direct "soft" replacement of the hard-max PDE (4).
 
-#### Expanding the generator term in (10)
+### Expanding the generator term in (10)
 
 Equation (10) is often read in the viscosity sense, since $x\mapsto V_\alpha(x)$ may fail to be $C^2$ without extra assumptions. If you do assume $V_\alpha\in C^2$ (and can differentiate under the integral defining $V_\alpha$), then $\mathcal{L}^a[V_\alpha](x)$ can be expanded explicitly.
 
@@ -606,7 +751,7 @@ $$
 $$
 Substituting these into (10), you get an explicit (but still nonlinear) PDE involving expectations and covariances of $\nabla_x Q_\alpha$ and $\nabla_x^2 Q_\alpha$ under $\bar\pi_\alpha(\cdot\mid x)$.
 
-#### Simplification when $\mu$ is independent of $x$
+### Simplification when $\mu$ is independent of $x$
 
 If $\mu(a\mid x)\equiv \mu(a)$, then $\nabla_x\log\mu=\nabla_x^2\log\mu=0$ and
 $$
@@ -618,6 +763,6 @@ $$
 $$
 The covariance term is the extra contribution coming from the log-sum-exp; it only affects (10) through the second-order part of the generator (i.e. it matters when $\Sigma\neq 0$).
 
-#### Practical evaluation
+### Practical evaluation
 
 Given $Q_\alpha(x,\cdot)$ and its $x$-derivatives, the remaining objects are just expectations under $\bar\pi_\alpha(\cdot\mid x)$: sums when $\mathcal A$ is finite, and typically Monte Carlo / quadrature approximations when $\mathcal A$ is continuous. In parametric settings (e.g. neural networks), $\nabla_x Q_\alpha$ and $\nabla_x^2 Q_\alpha$ can be obtained by automatic differentiation (the Hessian being the expensive part).
