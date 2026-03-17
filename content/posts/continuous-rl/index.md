@@ -18,7 +18,17 @@ editPost:
     appendFilePath: true # to append file path to Edit link
 ---
 
-Short motivation: Bellman's recursion does not disappear in continuous time; it becomes the HJB PDE. This post derives that limit, explains why continuous-time models matter, and shows how it leads to practical policy iteration for controlled diffusions.
+
+
+In this post we will explore the Hamilton-Jacobi-Bellman (HJB) equation and all its applications to physics, control theory, reinforcement learning, and generative modeling.
+
+From the control side, the payoff is structural: once the problem is local in time, Bellman's recursion turns into a PDE. That PDE is the HJB equation.
+
+
+There is this long-live debate between: "optimize then discretize or discretize then optimize".
+
+
+## 1. Introduction
 
 Richard Bellman in the early 50s [[6]](#references) developed the theory of dynamic programming. Assume a discrete-time Markov decision process with state space $\mathcal X$, action space $\mathcal A$, transition kernel $P(\cdot\mid x,a)$, reward function $r(x,a)$, and discount factor $\gamma\in(0,1)$. A policy $\pi$ maps states to distributions over actions. If the state evolves as a controlled Markov chain
 $$
@@ -26,72 +36,39 @@ X_{n+1}\sim P(\cdot\mid X_n,a_n),
 $$
 with one-step reward $r(x,a)$ and discount factor $\gamma\in(0,1)$, then the objective is
 $$
-J(\pi)=\mathbb E\left[\sum_{n=0}^\infty \gamma^n r(X_n,a_n)\right],\qquad a_n\sim \pi(\cdot\mid X_n),
+J(\pi):=\mathbb E\left[\sum_{n=0}^\infty \gamma^n r(X_n,a_n)\right],\qquad a_n\sim \pi(\cdot\mid X_n),
 $$
-and the value function is
+and the value function is defined as:
 $$
-V(x)=\sup_\pi \mathbb E\left[\sum_{n=0}^\infty \gamma^n r(X_n,a_n)\,\middle|\,X_0=x\right].
+V(x):=\sup_\pi \mathbb E\left[\sum_{n=0}^\infty \gamma^n r(X_n,a_n)\,\middle|\,X_0=x\right].
 $$
 
-Under the usual conditions, $V$ satisfies the Bellman equation
+Under some mild conditions, $V$ satisfies the Bellman equation
 $$
-V(x)=\max_{a\in\mathcal A}\left\{r(x,a)+\gamma\,\mathbb E \left[V(X_{n+1})\mid X_n=x,a_n=a\right]\right\}.
+V(x)=\max_{a\in\mathcal A}\left\{r(x,a)+\gamma\,\mathbb E \left[V(X_{n+1})\mid X_n=x,a_n=a\right]\right\}.\tag{Bellman equation}
 $$
-This says: choose the action that maximizes immediate reward plus continuation value. Continuous time keeps the same logic, but now the time step has length $h$ and we can send $h\downarrow 0$.
+> This says: choose the action that maximizes immediate reward plus continuation value. Continuous time keeps the same logic, but now the time step has length $h$ and we can send $h\downarrow 0$.
 
-In 1960, Rudolf E. Kalman published his seminal paper on the linear-quadratic regulator (LQR) problem, which is a continuous-time optimal control problem with linear dynamics and quadratic cost. The solution to the LQR problem is given by the algebraic Riccati equation, which can be derived from the Hamilton-Jacobi-Bellman (HJB) equation for continuous-time control problems.
+What Bellman noticed in the 50s is that in the continuous case,
+$$ \dot x = f(x,a), $$
+the resulting equation was identical to the 19th century equation from physics:
+$$
+\frac{\partial S}{\partial t} + H^*\left(q, \frac{\partial S}{\partial q}\right) = 0 \tag{Hamilton-Jacobi PDE}
+$$
+where we substitute $S$ for $V$, $q$ for state $x$, and $H(x,a, \nabla_x V) = r(x,a)+\nabla_x V(x)^\top f(x,a)$ is the Hamiltonian and by maximizing over $a$ we get the HJB PDE:
+$$
+H^*(x, \nabla_x V) = \max_{a\in\mathcal A} H(x,a, \nabla_x V).
+$$
 
-## 1. Introduction
+The HJ equation dates back to 1840 when Jacobi took one step further from Hamiltonian and its principle of minimum energy and derived the above PDE for the action $S$ of a mechanical system. 
 
-### Why continuous time?
+> **Historical Note:** In 1960, Rudolf E. Kalman published his seminal paper on the linear-quadratic regulator (LQR) problem [[8, 9]](#references), which is a continuous-time optimal control problem with linear dynamics and quadratic cost. The solution to the LQR problem is given by the algebraic Riccati equation, which can be derived from the Hamilton-Jacobi-Bellman (HJB) equation for continuous-time control problems.
 
-Continuous time is not just cleaner notation for "very small discrete steps". In mechanics, robotics, finance, and many stochastic models, the primitive object is already a differential law: a drift, a diffusion, and a running reward. Writing the problem in continuous time matches the physics of the system instead of imposing an arbitrary sampling grid.
-
-This matters in modern generative modeling too. Diffusion models define a forward noising SDE and a reverse-time SDE/ODE indexed by continuous time $t\in[0,1]$. The neural network learns a time-dependent local vector field or score, while the sampler is only a numerical discretization of that underlying continuous process. The model lives in continuous time; the step size is an algorithmic choice.
-
-From the control side, the payoff is structural: once the problem is local in time, Bellman's recursion turns into a PDE. That PDE is the HJB equation.
-
-### Bellman + Hamilton-Jacobi = HJB
-
-To isolate the idea, first ignore noise and consider the deterministic control system
-$$
-\dot X_t = f(X_t,a_t),\qquad X_0=x,
-$$
-with discounted return
-$$
-V(x):=\sup_{a_\cdot}\int_0^\infty e^{-\rho t}r(X_t,a_t)\,dt.
-$$
-Bellman's principle over a short horizon $h>0$ gives
-$$
-V(x)=\sup_{a_\cdot}\left[\int_0^h e^{-\rho t}r(X_t,a_t)\,dt + e^{-\rho h}V(X_h)\right].
-$$
-For the infinitesimal derivation it is enough to freeze the action at a constant value $a$ on $[0,h]$ and optimize over $a$ at the end. For a smooth value function,
-$$
-V(X_h)=V(x)+h\,\nabla V(x)^\top f(x,a)+o(h),
-$$
-while
-$$
-\int_0^h e^{-\rho t}r(X_t,a)\,dt = h\,r(x,a)+o(h),
-\qquad
-e^{-\rho h}=1-\rho h+o(h).
-$$
-Substituting these expansions into the DPP, cancelling $V(x)$, dividing by $h$, and letting $h\downarrow0$ yields
-$$
-0=\sup_{a\in\mathcal A}\left\{r(x,a)+\nabla V(x)^\top f(x,a)-\rho V(x)\right\}.
-$$
-Define the Hamiltonian
-$$
-H(x,p):=\sup_{a\in\mathcal A}\left\{r(x,a)+p^\top f(x,a)\right\}.
-$$
-Then the PDE becomes
-$$
-\rho V(x)=H(x,\nabla V(x)).
-$$
-This is the Hamilton-Jacobi form. The Bellman part is the pointwise optimization over controls. So the HJB equation is simply the Hamilton-Jacobi PDE whose Hamiltonian is induced by Bellman's optimality principle.
+## 2. Continuous-time Reinforcement Learning
 
 ### Controlled diffusions (Itô processes)
 
-If time is continuous and the system evolves according to an ODE/SDE, the RL problem is naturally written as a control problem:
+We will study the most general setting: continuous time, continuous state and action spaces, and stochastic dynamics. Assume the system evolves according to an ODE/SDE:
 $$
 dX_t = f(X_t,a_t)\,dt + \Sigma(X_t,a_t)\,dW_t
 $$
@@ -435,6 +412,10 @@ Stochastic Differential Equations by Benjamin Moll https://benjaminmoll.com/wp-c
 
 [7] Pierre Bernhard, Marc Deschamps. Kalman 1960: The birth of modern system theory. Mathematical
 Population Studies, 2019, 26 (3), pp.123-145. ff10.1080/08898480.2018.1553393ff. ffhal-01940560f
+
+[8] Discrete-Time (1960): R.E. Kalman, "A New Approach to Linear Filtering and Prediction Problems," Journal of Basic Engineering, 82 (1), pp. 35–45.
+
+[9] Continuous-Time (1961): R.E. Kalman and R.S. Bucy, "New Results in Linear Filtering and Prediction Theory," Journal of Basic Engineering, 83 (1), pp. 95–108.
 
 ## Appendix A: LQR Derivation {#appendix-a-lqr-derivation}
 
