@@ -260,146 +260,6 @@ $$
 So the MLP roles mirror actor-critic: one network fits values of state-action pairs, the other outputs actions that maximize those values.
 
 
-## 5. HJB and Diffusion Models
-
-The RL sections above used a stationary, infinite-horizon reward-maximization convention. Diffusion models are more naturally written in a finite-horizon, cost-minimization convention. The control logic is the same, but the value function now solves a terminal-value HJB.
-
-Following Berner, Richter, and Ullrich [[10]](#references), start from the forward noising SDE
-$$
-dY_t = f(Y_t,t)\,dt + \sigma(t)\,dB_t,\qquad Y_0\sim p_{\text{data}},
-$$
-where $\sigma$ depends only on time. Assume the coefficients are regular enough that all SDEs below admit unique strong solutions and that the relevant time marginals have strictly positive $C^{2,1}$ densities.
-
-Define
-$$
-\mu(x,t):=\sigma(t)\sigma(t)^\top \nabla_x\log p_Y(x,t)-f(x,t),
-\qquad
-D(t):=\tfrac12 \sigma(t)\sigma(t)^\top,
-$$
-and write $\bar h(t):=h(T-t)$ for time reversal. Let $p_0:=p_{Y_T}$. Then the exact reverse-time generative process is
-$$
-dX_t = \bar\mu(X_t,t)\,dt + \bar\sigma(t)\,dB_t,\qquad X_0\sim p_0,
-$$
-and its reverse-time density
-$$
-\bar p_X(x,t):=p_X(x,T-t)
-$$
-coincides with the forward density $p_Y(x,t)$. This is the first point to keep straight: the HJB is for $\bar p_X$, not for the forward density viewed in forward time.
-
-Since $p_X$ solves the Fokker-Planck equation
-$$
-\partial_t p_X
-=-\operatorname{div}(\bar\mu\,p_X)+\operatorname{Tr}\!\big(D(T-t)\nabla_x^2 p_X\big),
-$$
-the change of variables $t\mapsto T-t$ gives the backward PDE
-$$
-\partial_t \bar p_X
-=-\operatorname{Tr}\!\big(D(t)\nabla_x^2 \bar p_X\big)
-+ \mu(x,t)\cdot \nabla_x \bar p_X
-+ \operatorname{div}\mu(x,t)\,\bar p_X.
-$$
-Now set
-$$
-V(x,t):=-\log \bar p_X(x,t).
-$$
-Using $\bar p_X=e^{-V}$, together with
-$$
-\nabla_x \bar p_X=-e^{-V}\nabla_x V,
-\qquad
-\nabla_x^2 \bar p_X=e^{-V}\big(\nabla_x V\nabla_x V^\top-\nabla_x^2 V\big),
-$$
-one obtains the finite-horizon HJB
-$$
-\partial_t V
-= -\operatorname{Tr}\!\big(D(t)\nabla_x^2 V\big)
-+ \mu(x,t)\cdot \nabla_x V
-- \operatorname{div}\mu(x,t)
-+ \frac12\|\sigma(t)^\top \nabla_x V\|^2,
-\qquad
-V(x,T)=-\log p_0(x).
-$$
-The terminal condition is $V(x,T)=-\log p_X(x,0)$ because $\bar p_X(x,T)=p_X(x,0)=p_0(x)$.
-
-The quadratic term is the pointwise Legendre transform
-$$
-\frac12\|\sigma^\top \nabla_x V\|^2
-=-\inf_{u\in\mathbb R^d}\left\{\frac12\|u\|^2+(\sigma u)\cdot \nabla_x V\right\},
-$$
-so the PDE can be rewritten as
-$$
-\partial_t V
-=-\inf_u\left\{
-\operatorname{div}\mu
-+\frac12\|u\|^2
-+(\sigma u-\mu)\cdot \nabla_x V
-+\operatorname{Tr}\!\big(D\nabla_x^2 V\big)
-\right\}.
-$$
-This is exactly the HJB associated with the controlled diffusion
-$$
-dY_s^u = \big(\sigma(s)u(Y_s^u,s)-\mu(Y_s^u,s)\big)\,ds + \sigma(s)\,dB_s
-$$
-and cost
-$$
-J(u;x,t):=
-\mathbb E\!\left[
-\int_t^T
-\left(
-\operatorname{div}\mu(Y_s^u,s)+\frac12\|u(Y_s^u,s)\|^2
-\right)ds
--\log p_0(Y_T^u)
-\;\middle|\;
-Y_t^u=x
-\right].
-$$
-
-Applying Itô's formula to $V(Y_s^u,s)$ and using the HJB yields the verification identity
-$$
-J(u;x,t)
-=V(x,t)
-+\frac12\,
-\mathbb E\!\left[
-\int_t^T
-\|u(Y_s^u,s)+\sigma(s)^\top \nabla_x V(Y_s^u,s)\|^2\,ds
-\;\middle|\;
-Y_t^u=x
-\right].
-$$
-Therefore
-$$
-V(x,t)=\inf_u J(u;x,t),
-\qquad
-u^*(x,t)=-\sigma(t)^\top \nabla_x V(x,t)
-=\sigma(t)^\top \nabla_x\log \bar p_X(x,t).
-$$
-Since $\bar p_X=p_Y$ along the exact reverse dynamics, this becomes
-$$
-u^*(x,t)=\sigma(t)^\top \nabla_x\log p_Y(x,t),
-$$
-which is the usual score field up to the diffusion scaling. Under the reparametrization $\mu=\sigma u-f$, this is exactly the feedback law appearing in score-based reverse SDEs.
-
-The ELBO and the KL statement come after this verification step, not before it. Evaluating the identity at $t=0$ gives the ELBO, and the nonnegative square term is the variational gap. That gap, not the full control cost $J(u)$, is what vanishes at the optimum; the paper then identifies it with a path-space KL divergence.
-
-Under the same reparametrization $\mu=\sigma u-f$, the expected negative ELBO reduces, up to constants independent of $u$, to the denoising score matching objective
-$$
-\mathcal L_{\mathrm{DSM}}(u)
-=
-\frac{T}{2}\,
-\mathbb E\left[
-\left\|
-u(Y_\tau,\tau)-\sigma(\tau)^\top \nabla \log p_{Y_\tau\mid Y_0}(Y_\tau\mid Y_0)
-\right\|^2
-\right],
-\qquad
-\tau\sim \mathrm{Unif}[0,T].
-$$
-So when a neural network learns the score, it is learning the optimal controller associated with this HJB.
-
-This viewpoint is exact rather than metaphorical: the reverse-time log-density is the HJB value function, the ELBO is the verification identity evaluated at $t=0$, and the training gap is a path-space relative entropy. Conditioning and guidance can then be read as cost shaping in the same control problem.
-
-
-## 6. Numerical Examples
-
 ### Example 1 — Stochastic LQR
 
 The linear-quadratic regulator is the *canonical* continuous-time control benchmark: linear dynamics, quadratic cost, closed-form solution — ideal for validating a numerical solver.
@@ -535,6 +395,64 @@ Sample wealth trajectories under the learned policy ($X_0 = 1$) and cumulative d
 Convergence diagnostics:
 
 ![Merton — Convergence](merton_convergence.png)
+
+
+
+
+## 5. HJB and Diffusion Models
+
+The RL sections above used a stationary, infinite-horizon reward-maximization convention. Diffusion models are more naturally written in a finite-horizon, cost-minimization convention. The control logic is exactly the same, but the value function now solves a terminal-value HJB equation.
+
+Let $p_{\text{data}}(x)$ be the data distribution we wish to sample from. A diffusion model defines a forward process $Y_t$ from $t=0$ to $t=T$:
+$$ dY_t = f(Y_t, t)\,dt + \sigma(t)\,dB_t, \qquad Y_0 \sim p_{\text{data}}. $$
+Let $p_t(x)$ denote the marginal density of $Y_t$. By Anderson's theorem (1982), any forward diffusion has a unique corresponding reverse-time diffusion that perfectly retraces its marginal distributions backward in time. For convenience, instead of writing time backwards from $T$ down to $0$, we define a new process $X_t := Y_{T-t}$ that evolves forward in a new time variable $t \in [0, T]$. As a result of this time definition, $X_t$ is exactly the inverse process of $Y_t$: it starts at the terminal noise distribution ($X_0 \sim p_Y(x, T)$) and ends exactly at the original data distribution ($X_T \sim p_Y(x, 0) = p_{\text{data}}$), with its marginals satisfying $X_t \sim p_{T-t}$.
+
+To expose the optimal control structure [[10]](#references), let us define the time-reversed drift and diffusion terms from the forward process:
+$$ \mu(x, t) := -f(x, T-t), \qquad \Sigma(t) := \sigma(T-t). $$
+Consider a family of controlled diffusions $X_t^u$ parameterized by an arbitrary control policy $u(x, t)$:
+$$ dX_t^u = \big(\mu(X_t^u, t) + \Sigma(t) u(X_t^u, t)\big)\,dt + \Sigma(t)\,dW_t, \qquad X_0^u \sim p_T. $$
+The theoretical goal is to steer $X_t^u$ such that its terminal distribution $X_T^u$ matches $p_{\text{data}}$.
+
+We define the corresponding cost-to-go function $V(x, t)$ over $t \in [0,T]$ exactly as the negative log-likelihood of the reverse-time marginals:
+$$ V(x, t) := -\log p_{T-t}(x). $$
+By definition, the terminal value of this cost corresponds to evaluating the data likelihood:
+$$ V(x, T) = -\log p_{\text{data}}(x). $$
+
+To see the PDE that $V$ satisfies, recall that the forward marginals $p_t$ solve the Fokker-Planck equation for $Y_t$. Consequently, $\rho_t(x) := p_{T-t}(x) = e^{-V(x, t)}$ satisfies the following reversed Fokker-Planck PDE:
+$$ \partial_t \rho_t = -\operatorname{div}(\mu\,\rho_t) - \tfrac{1}{2}\operatorname{Tr}\big(\Sigma\Sigma^\top \nabla_x^2 \rho_t\big). $$
+Substituting $\rho_t = e^{-V}$, $\nabla_x \rho_t = -e^{-V}\nabla_x V$, and $\nabla_x^2 \rho_t = e^{-V}(\nabla_x V\nabla_x V^\top - \nabla_x^2 V)$ into the PDE, and dividing by $-e^{-V}$, we extract a PDE for $V$:
+$$ \partial_t V = \operatorname{div}\mu - \mu \cdot \nabla_x V + \tfrac{1}{2}\|\Sigma^\top \nabla_x V\|^2 - \tfrac{1}{2}\operatorname{Tr}\big(\Sigma\Sigma^\top \nabla_x^2 V\big). $$
+
+To cast this equation as a control problem over the dummy variable $u \in \mathbb{R}^d$, we exploit the convex conjugate (Legendre transform) identity for the simple quadratic function $g(y) = \frac{1}{2}\|y\|^2$. For any vector $y \in \mathbb{R}^d$, it holds that:
+$$ \tfrac{1}{2}\|y\|^2 = \sup_{u\in\mathbb{R}^d} \left\{ u \cdot y - \tfrac{1}{2}\|u\|^2 \right\}. $$
+Setting $y = -\Sigma^\top \nabla_x V$, this algebraic trick allows us to write the quadratic gradient term dynamically:
+$$ \tfrac{1}{2}\|-\Sigma^\top \nabla_x V\|^2 = \sup_{u} \left\{ u^\top (-\Sigma^\top \nabla_x V) - \tfrac{1}{2}\|u\|^2 \right\} = -\inf_{u} \left\{ \tfrac{1}{2}\|u\|^2 + (\Sigma u) \cdot \nabla_x V \right\}. $$
+This transformation isolates a linear term in the gradient, perfectly matching the drift of a controlled system.
+
+Plugging this infimum back into our PDE for $V$, multiplying the entire equation by $-1$, and pushing the terms independent of $u$ inside the infimum yields the finite-horizon Hamilton-Jacobi-Bellman (HJB) equation:
+$$ -\partial_t V = \inf_u \left\{ \tfrac{1}{2}\|u\|^2 - \operatorname{div}\mu + (\mu + \Sigma u)\cdot \nabla_x V + \tfrac{1}{2}\operatorname{Tr}\big(\Sigma\Sigma^\top \nabla_x^2 V\big) \right\}. \tag{3} $$
+
+This PDE reveals a stunning fact: $V(x,t) = -\log p_{T-t}(x)$ is exactly the optimal value function for the stochastic control problem constrained by the dynamics of $X_t^u$, with the cost functional
+$$ J(u; x, t) = \mathbb{E}\left[ \int_t^T \left( \tfrac{1}{2}\|u(X_s^u,s)\|^2 - \operatorname{div}\mu(X_s^u,s) \right) ds - \log p_{\text{data}}(X_T^u) \;\middle|\; X_t^u=x \right]. $$
+
+The optimal control law $u^*(x, t)$ is simply the vector that achieves the absolute minimum in the HJB equation. From our Legendre transform optimization, we know the minimum of the convex quadratic form $\frac{1}{2}\|u\|^2 + u^\top (\Sigma^\top \nabla_x V)$ is attained where its derivative w.r.t $u$ equals zero:
+$$ u^* + \Sigma^\top \nabla_x V = 0 \implies u^*(x, t) = -\Sigma^\top(t)\nabla_x V(x, t). $$
+Recalling our definition that $V(x, t) = -\log p_{T-t}(x)$, taking its gradient yields $\nabla_x V = -\nabla_x \log p_{T-t}(x)$. Substituting this into the optimal control gives the final exact control law:
+$$ u^*(x, t) = \Sigma^\top(t)\nabla_x \log p_{T-t}(x) = \sigma(T-t)^\top \nabla_x \log p_{T-t}(x). $$
+This is precisely the expected score matching drift from generative modeling, intrinsically discovered up to the diffusion scaling $\Sigma(t)$!
+
+Applying Itô's formula to $V(X_s^u, s)$ along an arbitrary controlled trajectory and plugging in the HJB yields the verification identity:
+$$ J(u; x, t) = V(x, t) + \frac{1}{2} \mathbb{E}\left[ \int_t^T \| u(X_s^u,s) - u^*(X_s^u,s) \|^2 ds \;\middle|\; X_t^u = x \right]. $$
+
+This exact identity elegantly relates several pillars of diffusion models:
+1. **The Model:** $u(x, t)$ is the neural network predicting the score.
+2. **The Loss:** The quadratic term is the explicit denoising score-matching loss—the expected Euclidean distance between the parameterized $u$ and the optimal control $u^*$.
+3. **The Bound:** Evaluating at $t=0$ and taking the expectation over $X_0 \sim p_T$, we observe that learning the optimal control minimizes an upper bound on the negative log-likelihood $\mathbb E[-\log p_{\text{data}}(X_T^u)]$ (i.e. maximizing the ELBO).
+4. **The Generative Process:** When $u = u^*$, the quadratic gap vanishes, and $X_T^{u^*}$ exactly recovers the data distribution $p_{\text{data}}$.
+
+Hence, generative modeling via diffusion equations is intrinsically a classic finite-horizon stochastic optimal control problem where we seek to learn the optimal policy $u^*$ to drive a noise distribution toward the data distribution.
+
+
 
 
 
