@@ -1,11 +1,11 @@
 ---
-title: "Continuous-time Reinforcement Learning: HJB and Policy Iteration"
-date: 2026-01-25
+title: "Hamilton-Jacobi-Bellman Equation: Continuous-Time Reinforcement Learning and Diffusion Models"
+date: 2026-03-20
 tags: ["machine learning", "reinforcement learning", "control theory", "PDEs"]
-categories: ["Reinforcement Learning"]
+categories: ["Reinforcement Learning", "diffusion models", "optimal control"]
 author: "Daniel López Montero"
 showToc: true
-draft: true
+draft: false
 description: "Why the HJB is Bellman's equation in continuous time, why continuous time matters, and how to solve the resulting control problem with neural policy iteration."
 ShowWordCount: false
 ShowReadingTime: true
@@ -20,11 +20,20 @@ editPost:
 
 
 
-In this post I focus on one structural fact: in continuous time, Bellman's recursion becomes a partial differential equation. That PDE is the Hamilton-Jacobi-Bellman (HJB) equation.
+Many people might say that machine learning is quite recent, but the theory lays its foundations in 1952, when Richard Bellman published a seminal paper titled "On the Theory of Dynamic Programming". Because of this, Bellman would be considered one of the founding fathers of optimal control and reinforcement learning.
 
-Once you see that structure, several topics line up naturally: continuous-time reinforcement learning, stochastic control, neural policy iteration, and, with a finite-horizon change of notation, diffusion models.
+Later in the 50s, Bellman extended his work to continuous-time systems, which turns the optimal condition into a PDE. What he later found was that the result was identical to a result in physics published a century before (1840s), known as the Hamilton-Jacobi equation.
 
-There is also a long-running numerical-analysis question in the background: optimize first and then discretize, or discretize first and then optimize? The HJB sits exactly at that interface.
+
+Once you see that structure, several topics line up naturally: 
+- continuous-time reinforcement learning
+- stochastic control
+- diffusion models
+- optimal transport
+
+
+In this post I want to turn our attention to two applications of Bellman's work: reinforcement learning and generative modeling (diffusion models).
+In particular, we will explore an extension of reinforcement learning to the continuous-time setting and how score matching in diffusion models can be seen as an optimal control problem.
 
 
 ## 1. Introduction
@@ -61,11 +70,8 @@ $$
 
 This is Bellman's equation in PDE form. The Hamilton-Jacobi part is historical: Jacobi derived the analogous PDE in classical mechanics, and Bellman recognized the same structure as dynamic programming in continuous time.
 
-Once diffusion is added, Itô's formula contributes the second-order term that turns Hamilton-Jacobi into the full stochastic HJB. In linear-quadratic problems, that PDE collapses to a Riccati equation, which is why LQR is the canonical sanity check for any HJB solver.
 
-Throughout Sections 2-4 I will use the stationary, infinite-horizon reward-maximization convention common in reinforcement learning. In Section 5 I will switch to the finite-horizon cost-minimization convention used in diffusion models; the underlying control logic is the same, but the signs and terminal conditions move.
 
-## 2. Controlled Diffusions and the HJB Equation
 
 ### Controlled diffusions (Itô processes)
 
@@ -131,9 +137,14 @@ $$
 $$
 which is exactly (1). $\quad\blacksquare$
 
----
+
 
 The exact same argument can be used to derive the HJB for the non-autonomous case, where $f$, $\Sigma$, $r$ depend on time as well (see [Appendix C](#appendix-c-non-autonomous-case)).
+
+
+> **Historical Note:** In 1960, Rudolf E. Kalman published his seminal paper on the linear-quadratic regulator (LQR) problem [[8, 9]](#references), which is a continuous-time optimal control problem with linear dynamics and quadratic cost. The solution to the LQR problem is given by the algebraic Riccati equation, which can be derived from the Hamilton-Jacobi-Bellman (HJB) equation for continuous-time control problems.
+
+## 2. Continuous-time Reinforcement Learning
 
 Define the **Q-function** as the *instantaneous advantage* scaled by $1/\rho$:
 $$
@@ -144,7 +155,7 @@ From the HJB (1) it immediately follows that $V(x)=\max_{a} Q(x,a)$. This identi
 This stationary, discounted form is the RL convention used in the next two sections.
 
 
-## 3. Policy Iteration
+### 2.1 Policy Iteration
 
 We solve the HJB numerically via policy iteration (PI), alternating between *evaluating* the current policy and *improving* it through the Q-function. Both the value $V_\theta$ and the policy $\alpha_\phi$ are MLPs.
 
@@ -229,7 +240,7 @@ loss.backward()
 opt_pi.step()
 ```
 
-## 4. Model-Free: Continuous-Time Q-learning
+### 2.2 Model-Free: Continuous-Time Q-learning
 
 Policy iteration above is model-based; a complementary route is **Q-learning**, which can be run in a model-free way from sampled transitions.
 
@@ -399,9 +410,8 @@ Convergence diagnostics:
 
 
 
-## 5. HJB and Diffusion Models
+## 3. Diffusion Models
 
-The RL sections above used a stationary, infinite-horizon reward-maximization convention. Diffusion models are more naturally written in a finite-horizon, cost-minimization convention. The control logic is exactly the same, but the value function now solves a terminal-value HJB equation.
 
 Let $p_{\text{data}}(x)$ be the data distribution we wish to sample from. A diffusion model defines a forward process $Y_t$ from $t=0$ to $t=T$:
 $$ dY_t = f(Y_t, t)\,dt + \sigma(t)\,dB_t, \qquad Y_0 \sim p_{\text{data}}. $$

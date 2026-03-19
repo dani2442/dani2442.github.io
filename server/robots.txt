@@ -1,3 +1,0 @@
-User-agent: *
-Disallow:
-Sitemap: https://dani2442.github.io/sitemap.xml
