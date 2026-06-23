@@ -1,0 +1,106 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2">
+  <diagram name="Page-1" id="5TyWE4iE0FkY3kelYPpo">
+    <mxGraphModel dx="1097" dy="1623" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="1" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-39" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="270" y="80" width="790" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-38" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="270" y="140" width="790" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-31" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="270" y="320" width="790" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-30" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="270" y="260" width="790" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-29" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="270" y="200" width="790" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-1" value="&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;\( \begin{align*}V(x)=\max_{a\in\mathcal A}\mathbb E\left[r(x,a)+\gamma\, V(X_{n+1})\mid x,a&amp;nbsp;\right] \end{align*} \)&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;rounded=1;fontSize=12;spacingTop=0;whiteSpace=wrap;noLabel=0;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="385" y="320" width="295" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-4" value="Markov Property&lt;div&gt;\(P(X_{n+1} | X_1, \dots, X_n) = P(X_{n+1} | X_n) \)&amp;nbsp;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;strokeColor=default;" vertex="1" parent="1">
+          <mxGeometry x="80" y="-80" width="270" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-5" value="Reward Function&lt;div&gt;\(r: \mathcal{S} \times \mathcal{A} \to \mathbb{R} \)&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="830" y="90" width="130" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-6" value="&lt;b&gt;&lt;font&gt;Markov Decision Process (MDP)&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="397.5" y="160" width="270" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-7" value="&lt;div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;&lt;b&gt;Controlled Itô Process&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="750" y="160" width="230" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-8" value="&lt;div&gt;Action space \(\mathcal{A}\)&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="620" y="90" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-9" value="&lt;div&gt;State space \(\mathcal{S}\)&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="530" y="90" width="70" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-11" value="&lt;div&gt;\(\begin{align*}V(x):=\sup_\pi \mathbb E\left[\sum_{n=0}^\infty \gamma^n r(X_n,a_n)\,\middle|\,X_0=x\right] \end{align*}\)&amp;nbsp;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="377.5" y="260" width="310" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-12" value="&lt;div&gt;\(\begin{align*}V(x):=\sup_\pi \mathbb E\left[\int_0^\infty e^{-\rho t} r(X_t,a_t)dt\,\middle|\,X_0=x\right] \end{align*}\)&amp;nbsp;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="700" y="260" width="310" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-13" value="&lt;div&gt;&amp;nbsp;\(X_{n+1} \sim P(X_{n+1} |X_n, a_n) \)&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="447.5" y="210" width="170" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-14" value="&lt;div&gt;&amp;nbsp;\(dX_t = f(X_t,a_t)\,dt + \Sigma(X_t,a_t)\,dW_t\)&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="720" y="210" width="270" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-15" value="&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;\( \begin{align*}\rho V=\max_{a\in\mathcal A}\left\{r(x,a)+ \nabla V^\top f + \tfrac{1}{2}\text{Tr}(\Sigma\Sigma^\top\nabla^2 V)\right\}&amp;nbsp; \end{align*} \)&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;rounded=1;fontSize=12;spacingTop=0;whiteSpace=wrap;noLabel=0;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="670" y="320" width="370" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-16" value="&lt;div&gt;&lt;font style=&quot;font-size: 14px; color: rgb(0, 0, 0);&quot;&gt;&lt;b style=&quot;&quot;&gt;Controlled ODE&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="-220" width="230" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-17" value="&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;\(\dot X_t = f(t, X_t,a_t)\)&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1155" y="-170" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-18" value="&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;\( \begin{align*}\partial_t V(x,t)=\max_{a\in\mathcal A}\left\{r(x,a)+ \nabla V(x)^\top f(x,a)\right\}-\rho V(x)&amp;nbsp; &amp;nbsp;\end{align*} \)&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;rounded=1;fontSize=12;spacingTop=0;whiteSpace=wrap;noLabel=0;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1121.25" y="10" width="285" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-19" value="&lt;div&gt;\(\begin{align*}V(x):=\sup_\pi \int_0^\infty e^{-\rho t} r(X_n,a_n) dt \end{align*}\)&amp;nbsp;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1121.25" y="-65" width="257.5" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-23" value="Policy&lt;div&gt;\( \pi:&amp;nbsp; \mathcal{S} \to \mathcal{P}(A) \)&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="700" y="90" width="130" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-24" value="Deterministic Policy&lt;div&gt;\( \pi: [0,T] \times \mathcal{S} \to A \)&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="-110" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-25" value="Transition Probability" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="310" y="215" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-27" value="Value Function" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="310" y="260" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-28" value="Bellman Equation" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="310" y="320" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-33" value="&lt;div&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;&lt;b&gt;Controlled Itô Process&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="160" width="230" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-34" value="&lt;div&gt;\(\begin{align*}V(x,t):=\sup_\pi \mathbb E\left[\int_s^\infty e^{-\rho s} r(s,X_s,a_s)ds\,\middle|\,X_t=x\right] \end{align*}\)&amp;nbsp;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1130" y="320" width="310" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-35" value="&lt;div&gt;&amp;nbsp;\(dX_t = f(t, X_t,a_t)\,dt + \Sigma(t, X_t,a_t)\,dW_t\)&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1150" y="210" width="270" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-36" value="&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;\( \begin{align*}\partial_t V=\max_{a\in\mathcal A}\left\{r(x,a)+ \nabla_x V^\top f + \tfrac{1}{2}\text{Tr}(\Sigma\Sigma^\top\nabla^2_x V)\right\} -\rho V&amp;nbsp; \end{align*} \)&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;rounded=1;fontSize=12;spacingTop=0;whiteSpace=wrap;noLabel=0;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="385" width="370" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-37" value="Policy&lt;div&gt;\( \pi: [0,T] \times \mathcal{S} \to \Delta(A) \)&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="275" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="exdRLjsYiT4XdOwJ8kc0-40" value="Optimal&lt;div&gt;Control&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1;fontSize=20;" vertex="1" parent="1">
+          <mxGeometry x="270" y="80" width="150" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
