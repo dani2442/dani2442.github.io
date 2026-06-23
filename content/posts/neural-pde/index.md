@@ -22,7 +22,9 @@ A *Neural ODE* [[1]](#references) replaces the right-hand side of an ordinary
 differential equation by a neural network and trains it to reproduce observed
 data. A *Neural PDE* does the same for an evolution equation in space and time:
 the unknown coefficient — typically a reaction or source term — becomes a neural
-network embedded inside a partial differential equation.
+network embedded inside a partial differential equation. This is the same
+PDE-embedded learning viewpoint as DPM [[5]](#references), where a neural network
+augments known PDE physics and is trained through the PDE constraint.
 
 The two constructions are the same idea applied to a finite- and an
 infinite-dimensional state. The goal of this post is to make that parallel
@@ -93,18 +95,44 @@ diffusion $\mathcal A$, the (monotone) reaction $d$, the boundary nonlinearity
 $b$ and datum $g$ are given. In Tröltzsch's equation (5.8) the right-hand side is
 the *distributed control* $v$; here we set $v=f_\theta(x,t,y)$, a neural feedback.
 
-The two problems line up term by term: the finite-dimensional vector field
+### 1.3 Neural PDE (Elliptic)
+
+Dropping the time dependence gives the **steady-state** counterpart — the
+stationary problem solved by the equilibria of (PDE). On the same domain
+$\Omega$ with boundary $\Gamma=\partial\Omega$, the state $y(x)$ solves the
+semilinear elliptic problem (Tröltzsch [[3]](#references), §2.5, with the
+distributed control replaced by the network $f_\theta$)
+
+$$
+\begin{aligned}
+\mathcal{A}y + c_0(x)\,y &= f_\theta\big(x,y\big) && \text{in } \Omega,\\
+\partial_{\nu_{\mathcal A}} y + \alpha(x)\,y &= g && \text{on } \Gamma,
+\end{aligned}\tag{PDE-E}
+$$
+
+with $\mathcal A$ the same divergence-form elliptic operator as in (PDE), a
+nonnegative potential $c_0\in L^\infty(\Omega)$, and a *boundary condition of the
+third kind* (Robin) with nonnegative coefficient $\alpha\in L^\infty(\Gamma)$ and
+datum $g\in L^2(\Gamma)$. As before the **learnable component is the source term**
+$f_\theta(x,y)$ — in Tröltzsch's elliptic control problem (2.37) the right-hand
+side is the distributed control $\beta_\Omega v$, and here we set
+$v=f_\theta(x,y)$. There is no time, no initial condition, and no terminal cost:
+the parabolic ingredients $\partial_t y$ and $y(\cdot,0)=y_0$ simply drop out.
+
+The three problems line up term by term: the finite-dimensional vector field
 $f_\theta$ stays the learnable right-hand side, the derivative $\dot y$ becomes
 $\partial_t y$, and the new ingredients are the spatial operator $\mathcal A$
-(with a boundary condition) and a fixed reaction $d$.
+(with a boundary condition) and a fixed reaction $d$. Setting $\partial_t y=0$
+then collapses the parabolic problem (PDE) onto the elliptic problem (PDE-E),
+with the reaction $d$ playing the role of the potential $c_0$.
 
-| | Neural ODE | Neural PDE |
-|---|---|---|
-| state | $y(t)\in\mathbb{R}^n$ | $y(\cdot,t)\in L^2(\Omega)$ |
-| evolution | $\dot y = f_\theta(y,t)$ | $\partial_t y = -\mathcal A y - d(x,t,y) + f_\theta(x,t,y)$ |
-| learnable | $f_\theta$ | $f_\theta$ |
-| boundary | — | $\partial_{\nu_{\mathcal A}}y + b = g$ |
-| well-posed by | Picard–Lindelöf | Tröltzsch, §5.5 |
+| | Neural ODE | Neural PDE (Parabolic) | Neural PDE (Elliptic) |
+|---|---|---|---|
+| state | $y(t)\in\mathbb{R}^n$ | $y(\cdot,t)\in L^2(\Omega)$ | $y\in H^1(\Omega)$ |
+| equation | $\dot y = f_\theta(y,t)$ | $\partial_t y +\mathcal A y + d(x,t,y) = f_\theta(x,t,y)$ | $\mathcal A y + c_0\,y = f_\theta(x,y)$ |
+| boundary | — | $\partial_{\nu_{\mathcal A}}y + b = g$ | $\partial_{\nu_{\mathcal A}}y + \alpha\,y = g$ |
+| cost functional | $\int_0^T\!\varphi\,dt+\psi\big(y(T)\big)$ | $\iint_Q\varphi+\iint_\Sigma\psi+\int_\Omega\phi$ | $\int_\Omega\varphi+\int_\Gamma\psi$ |
+| well-posed by | Picard–Lindelöf | Tröltzsch, §5.5 | Tröltzsch, §2.5 |
 
 > **Does this make sense?** Yes. As a function of $(x,t)$ alone, $f_\theta$ is an
 > admissible distributed control/source and (PDE) is exactly Tröltzsch's (5.8).
@@ -127,7 +155,8 @@ objectives.
 $$
 J(\theta)=\int_0^T \varphi\big(y_\theta(t),t\big)\,dt
           +\psi\big(y_\theta(T)\big)
-          +\frac{\gamma}{2}\|\theta\|^2 . \tag{J_{\mathrm{ODE}}}
+          +\frac{\gamma}{2}\|\theta\|^2
+          \qquad \text{(J-ODE)}.
 $$
 
 **Neural PDE.** With a distributed cost $\varphi$ on $Q$, a boundary cost
@@ -137,8 +166,25 @@ $$
 J(\theta)=\iint_Q \varphi\big(x,t,y_\theta\big)\,dx\,dt
           +\iint_\Sigma \psi\big(x,t,y_\theta\big)\,ds\,dt
           +\int_\Omega \phi\big(x,y_\theta(\cdot,T)\big)\,dx
-          +\frac{\gamma}{2}\|\theta\|^2 . \tag{J_{\mathrm{PDE}}}
+          +\frac{\gamma}{2}\|\theta\|^2
+          \qquad \text{(J-PDE)}.
 $$
+
+**Neural PDE (Elliptic).** With a distributed cost $\varphi$ on $\Omega$ and a
+boundary cost $\psi$ on $\Gamma$ (no terminal term, since there is no time),
+
+$$
+J(\theta)=\int_\Omega \varphi\big(x,y_\theta\big)\,dx
+          +\int_\Gamma \psi\big(x,y_\theta\big)\,ds
+          +\frac{\gamma}{2}\|\theta\|^2
+          \qquad \text{(J-ELL)}.
+$$
+
+This is the regularized form of Tröltzsch's elliptic tracking objective (2.36),
+$\frac{\lambda_\Omega}{2}\|y-y_\Omega\|_{L^2(\Omega)}^2
++\frac{\lambda_\Gamma}{2}\|y-y_\Gamma\|_{L^2(\Gamma)}^2$, with
+$\varphi=\tfrac{\lambda_\Omega}{2}|y-y_\Omega|^2$ and
+$\psi=\tfrac{\lambda_\Gamma}{2}|y-y_\Gamma|^2$.
 
 ### 2.2 Data term
 
@@ -249,6 +295,29 @@ now sits on the right-hand side just as in (ODE): a backward evolution driven by
 the cost sensitivity $\varphi_y$, with the adjoint of the linearized dynamics,
 and a gradient pairing the costate against $\partial_\theta f_\theta$. For the
 data term, $\varphi_y=\omega\,(y_\theta-y^{\mathrm{obs}})$.
+
+### 3.3 Neural PDE (Elliptic) adjoint
+
+With no time direction the adjoint is itself a **steady** elliptic problem.
+Repeating the Lagrangian computation for the weak form of (PDE-E), the costate
+$p(x)$ solves
+
+$$
+\begin{aligned}
+\mathcal A^{*}p + \big(c_0-\partial_y f_\theta\big)\big(x,y_\theta\big)\,p &= \varphi_y\big(x,y_\theta\big) && \text{in } \Omega,\\
+\partial_{\nu_{\mathcal A^{*}}}p + \alpha\,p &= \psi_y\big(x,y_\theta\big) && \text{on } \Gamma,
+\end{aligned}\tag{A-ELL}
+$$
+
+and the gradient is
+
+$$
+\boxed{\;\nabla_\theta J=\int_\Omega p(x)\,\partial_\theta f_\theta\big(x,y_\theta\big)\,dx+\gamma\,\theta\;}
+$$
+
+This is (A-PDE) with the time derivative removed: the same linearized reaction
+$c_0-\partial_y f_\theta$ and the same conormal-plus-Robin boundary operator, but
+solved as a single boundary-value problem rather than marched backward in time.
 
 ## 4. Examples with code
 
@@ -428,6 +497,33 @@ of §2.3 — the finite-dimensional analogue of the convexity hypothesis on
 $\varphi,\psi$ in Theorem 5.7. In the example the fixed coercive diffusion
 $\mathcal A$ dominates on the resolved mesh.
 
+### A.3 Neural PDE (Elliptic) — Tröltzsch's elliptic theory
+
+For the *linear* problem ($f_\theta=f_\theta(x)$ independent of $y$) Tröltzsch
+[[3]](#references), §2.3 and §2.5, gives existence, uniqueness, and an a priori
+bound for the boundary condition of the third kind.
+
+> **Theorem 2.7** (Tröltzsch [[3]](#references)).
+> Let $\Omega\subset\mathbb{R}^N$ be a bounded Lipschitz domain and suppose
+> $c_0\in L^\infty(\Omega)$ and $\alpha\in L^\infty(\Gamma_1)$ satisfy
+> $c_0(x)\ge 0$ and $\alpha(x)\ge 0$ almost everywhere. If one of
+> **(i)** $|\Gamma_0|>0$ (a Dirichlet part of positive measure), or
+> **(ii)** $\Gamma_1=\Gamma$ and
+> $\int_\Omega c_0(x)^2\,dx+\int_\Gamma \alpha(x)^2\,ds(x)>0$,
+> holds, then for all $f\in L^2(\Omega)$ and $g\in L^2(\Gamma_1)$ the problem
+> (PDE-E) has a unique weak solution $y\in V$, and there is a constant
+> $c_{\mathcal A}>0$, depending on neither $f$ nor $g$, with
+> $$\|y\|_{H^1(\Omega)}\le c_{\mathcal A}\big(\|f\|_{L^2(\Omega)}+\|g\|_{L^2(\Gamma_1)}\big).$$
+
+Condition (i) or (ii) excludes the pure-Neumann constant null space (otherwise
+$y$ is determined only up to a constant): some zeroth-order term — a Dirichlet
+boundary, the potential $c_0$, or the Robin coefficient $\alpha$ — must pin the
+solution. For the *semilinear* case the source $f_\theta$ depends on $y$, so —
+exactly as in the parabolic case — the relevant nonlinearity is the effective
+reaction $c_0\,y-f_\theta(x,y)$, and the monotone structure is preserved provided
+$\partial_y\big(c_0\,y-f_\theta\big)\ge 0$; existence of a minimizer in $\theta$
+again comes from the Tikhonov coercivity of §2.3.
+
 ## References
 
 [1] Chen, Ricky T. Q., Yulia Rubanova, Jesse Bettencourt, and David Duvenaud.
@@ -443,3 +539,7 @@ Mathematical Society, 2010. (Semilinear parabolic optimal control: §5.5, proble
 
 [4] Lions, Jacques-Louis. *Optimal Control of Systems Governed by Partial
 Differential Equations.* Springer, 1971.
+
+[5] Freund, Jonathan B., Jonathan F. MacArt, and Justin Sirignano. "DPM: A deep
+learning PDE augmentation method (with application to large-eddy simulation)."
+*arXiv preprint* arXiv:1911.09145, 2019.
