@@ -1,6 +1,6 @@
 ---
 title: "Neural ODEs and Neural PDEs"
-date: 2026-03-28
+date: 2026-06-26
 tags: ["control theory", "PDEs"]
 categories: ["pde", "optimal control"]
 author: "Daniel López Montero"
@@ -18,17 +18,27 @@ editPost:
     appendFilePath: true # to append file path to Edit link
 ---
 
-A *Neural ODE* [[1]](#references) replaces the right-hand side of an ordinary
-differential equation by a neural network and trains it to reproduce observed
-data. A *Neural PDE* does the same for an evolution equation in space and time:
-the unknown coefficient — typically a reaction or source term — becomes a neural
-network embedded inside a partial differential equation. This is the same
-PDE-embedded learning viewpoint as DPM [[5]](#references), where a neural network
-augments known PDE physics and is trained through the PDE constraint.
+Classical data-driven methods in machine learning tend to be data-hungry because they discard expert modeling knowledge. However, during the last decade a different approach has taken hold under the name *physics-informed machine learning*: instead of throwing physics away, we fold it
+back into the model. 
+
+In 2017, *physics-informed
+neural networks* (PINNs) [[6]](#references) combined deep learning with prior
+knowledge of the governing equations by directly learning the solution using the PDE residual as a soft penalty
+in the loss. In 2018, *Neural ODEs* [[1]](#references) took a complementary
+route of embedding the physics in the *model* itself: the right-hand side of an
+ordinary differential equation $\dot y=f(y,t)$ is replaced by a neural network
+$f\approx f_\theta$, trained to reproduce observed data. The same principle was
+soon extended to stochastic differential equations [[7]](#references) and to
+partial differential equations [[5]](#references) — the latter is what we call
+here a *Neural PDE*.
+
+A *Neural PDE* applies the Neural-ODE construction to an evolution equation in
+space and time: the unknown coefficient — typically a reaction or source term —
+becomes a neural network embedded inside a partial differential equation [[5]](#references).
 
 The two constructions are the same idea applied to a finite- and an
 infinite-dimensional state. The goal of this post is to make that parallel
-precise. We
+precise within the physics-informed framework. We
 
 1. state both **problem formulations** in a single notation;
 2. define the **learning problem** (loss, data term, and the regularizer that
@@ -38,9 +48,18 @@ precise. We
    Neural ODE, and explicit Euler in time with $P_1$ finite elements in space
    for the Neural PDE.
 
-Well-posedness of the forward problems (Picard–Lindelöf for the ODE; the
-parabolic existence theory of Tröltzsch [[3]](#references) for the PDE) is
-collected in the [appendix](#appendix-well-posedness).
+
+
+> **A brief note on geometric deep learning.** Embedding knowledge into the model is one
+> instance of a broader trend. *Geometric deep learning* [[8]](#references)
+> pursues the same goal with a different prior: it builds geometric structure —
+> symmetries, invariances, and the shape of the data domain — directly into the
+> architecture. Many successful models are special cases of this principle:
+> convolutional networks encode translation equivariance (1998), graph neural
+> networks respect permutation symmetry (2008), and transformers can be read as
+> attention on a fully connected graph (2017). Where physics-informed learning
+> constrains the model with a governing equation, geometric deep learning
+> constrains it with a symmetry group.
 
 ## 1. Problem formulation
 
@@ -52,14 +71,14 @@ is a neural network (smooth, e.g. $\tanh$ activations). Time runs over $[0,T]$.
 The state $y(t)\in\mathbb{R}^n$ solves the initial-value problem
 
 $$
-\dot y(t) = f_\theta\big(y(t),t\big)\quad\text{in }(0,T],
+\dot y = f_\theta\big(y,t\big)\quad\text{in }(0,T],
 \qquad y(0)=y_0, \tag{ODE}
 $$
 
 with $f_\theta:\mathbb{R}^n\times[0,T]\to\mathbb{R}^n$. We write $y_\theta$ for
-the solution map $\theta\mapsto y(\,\cdot\,;\theta)$.
+the solution map $\theta\mapsto y(\,\cdot\,;\theta)$ where we use a discretization scheme such as explicit Euler.
 
-### 1.2 Neural PDE
+### 1.2 Neural PDE (Parabolic)
 
 Let $\Omega\subset\mathbb{R}^m$ be a bounded Lipschitz domain with boundary
 $\Gamma=\partial\Omega$, and set the space–time cylinder and lateral boundary
@@ -68,16 +87,14 @@ $$
 Q=\Omega\times(0,T),\qquad \Sigma=\Gamma\times(0,T).
 $$
 
-The state $y(x,t)$ solves the semilinear parabolic problem (the controlled
-equation (5.8) of Tröltzsch [[3]](#references), with the distributed control
-replaced by the network $f_\theta$)
+The state $y(x,t)$ solves the semilinear parabolic problem
 
 $$
 \begin{aligned}
 \partial_t y + \mathcal{A}y + d\big(x,t,y\big) &= f_\theta\big(x,t,y\big) && \text{in } Q,\\
 \partial_{\nu_{\mathcal A}} y + b\big(x,t,y\big) &= g && \text{on } \Sigma,\\
 y(\cdot,0) &= y_0 && \text{in } \Omega,
-\end{aligned}\tag{PDE}
+\end{aligned}\tag{PDE-P}
 $$
 
 where $\mathcal{A}$ is the second-order elliptic operator in divergence form
@@ -89,11 +106,8 @@ $$
 $$
 
 with $(a_{ij})$ symmetric, bounded, and uniformly elliptic, and $\nu$ the outer
-normal. The **learnable component is the source term** $f_\theta(x,t,y)$ — the
-same symbol, and the same role, as the right-hand side in (ODE) — while the
-diffusion $\mathcal A$, the (monotone) reaction $d$, the boundary nonlinearity
-$b$ and datum $g$ are given. In Tröltzsch's equation (5.8) the right-hand side is
-the *distributed control* $v$; here we set $v=f_\theta(x,t,y)$, a neural feedback.
+normal. The most common example is the Laplace operator $\mathcal{A} = -\Delta$.
+The learnable component is the source term $f_\theta(x,t,y)$.
 
 ### 1.3 Neural PDE (Elliptic)
 
@@ -129,10 +143,12 @@ with the reaction $d$ playing the role of the potential $c_0$.
 | | Neural ODE | Neural PDE (Parabolic) | Neural PDE (Elliptic) |
 |---|---|---|---|
 | state | $y(t)\in\mathbb{R}^n$ | $y(\cdot,t)\in L^2(\Omega)$ | $y\in H^1(\Omega)$ |
-| equation | $\dot y = f_\theta(y,t)$ | $\partial_t y +\mathcal A y + d(x,t,y) = f_\theta(x,t,y)$ | $\mathcal A y + c_0\,y = f_\theta(x,y)$ |
-| boundary | — | $\partial_{\nu_{\mathcal A}}y + b = g$ | $\partial_{\nu_{\mathcal A}}y + \alpha\,y = g$ |
-| cost functional | $\int_0^T\!\varphi\,dt+\psi\big(y(T)\big)$ | $\iint_Q\varphi+\iint_\Sigma\psi+\int_\Omega\phi$ | $\int_\Omega\varphi+\int_\Gamma\psi$ |
-| well-posed by | Picard–Lindelöf | Tröltzsch, §5.5 | Tröltzsch, §2.5 |
+| equation | $\begin{cases}\dot y = f_\theta(y,t)\\ y(0)=y_0\end{cases}$ | $\begin{cases}\partial_t y +\mathcal A y + d = f_\theta & \text{in } Q\\ \partial_{\nu_{\mathcal A}}y + b = g & \text{on } \Sigma\\ y(\cdot,0)=y_0 & \text{in } \Omega\end{cases}$ | $\begin{cases}\mathcal A y + c_0\,y = f_\theta & \text{in } \Omega\\ \partial_{\nu_{\mathcal A}}y + \alpha\,y = g & \text{on } \Gamma\end{cases}$ |
+| cost functional $J$ | $\int_0^T\!\varphi\,dt+\psi\big(y(T)\big)$ | $\iint_Q\varphi+\iint_\Sigma\psi+\int_\Omega\phi$ | $\int_\Omega\varphi+\int_\Gamma\psi$ |
+| adjoint equation | $\begin{cases}-\dot p = (\partial_y f_\theta)^{\!\top}p+\varphi_y\\ p(T)=\psi_y\end{cases}$ | $\begin{cases}-\partial_t p+\mathcal A^{*}p+(d_y-\partial_y f_\theta)\,p=\varphi_y & \text{in } Q\\ \partial_{\nu_{\mathcal A^{*}}}p+b_y\,p=\psi_y & \text{on } \Sigma\\ p(\cdot,T)=\phi_y & \text{in } \Omega\end{cases}$ | $\begin{cases}\mathcal A^{*}p+(c_0-\partial_y f_\theta)\,p=\varphi_y & \text{in } \Omega\\ \partial_{\nu_{\mathcal A^{*}}}p+\alpha\,p=\psi_y & \text{on } \Gamma\end{cases}$ |
+| gradient $\nabla_\theta J$ | $\int_0^T(\partial_\theta f_\theta)^{\!\top}p\,dt+\gamma\theta$ | $\iint_Q p\,\partial_\theta f_\theta\,dx\,dt+\gamma\theta$ | $\int_\Omega p\,\partial_\theta f_\theta\,dx+\gamma\theta$ |
+| well-posedness | Picard–Lindelöf | Tröltzsch, §5.5 | Tröltzsch, §2.5 (Thm 2.7) |
+| existence of optimal solutions | Tikhonov coercivity (§2.3) | Tröltzsch, Thm 5.7 + coercivity | Tikhonov coercivity (§2.3) |
 
 > **Does this make sense?** Yes. As a function of $(x,t)$ alone, $f_\theta$ is an
 > admissible distributed control/source and (PDE) is exactly Tröltzsch's (5.8).
@@ -543,3 +559,17 @@ Differential Equations.* Springer, 1971.
 [5] Freund, Jonathan B., Jonathan F. MacArt, and Justin Sirignano. "DPM: A deep
 learning PDE augmentation method (with application to large-eddy simulation)."
 *arXiv preprint* arXiv:1911.09145, 2019.
+
+[6] Raissi, Maziar, Paris Perdikaris, and George E. Karniadakis. "Physics-informed
+neural networks: A deep learning framework for solving forward and inverse problems
+involving nonlinear partial differential equations." *Journal of Computational
+Physics* 378 (2019): 686–707. (First posted as arXiv:1711.10561, 2017.)
+
+[7] Li, Xuechen, Ting-Kam Leonard Wong, Ricky T. Q. Chen, and David Duvenaud.
+"Scalable Gradients for Stochastic Differential Equations." *Proceedings of the
+23rd International Conference on Artificial Intelligence and Statistics (AISTATS)*,
+2020.
+
+[8] Bronstein, Michael M., Joan Bruna, Taco Cohen, and Petar Veličković.
+"Geometric Deep Learning: Grids, Groups, Graphs, Geodesics, and Gauges."
+*arXiv preprint* arXiv:2104.13478, 2021.
