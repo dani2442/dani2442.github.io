@@ -18,8 +18,7 @@ editPost:
     appendFilePath: true # to append file path to Edit link
 ---
 
-Classical data-driven methods in machine learning tend to be data-hungry because they discard expert modeling knowledge. However, during the last decade a different approach has taken hold under the name *physics-informed machine learning*: instead of throwing physics away, we fold it
-back into the model. 
+Classical data-driven methods in machine learning tend to be data-hungry because they discard expert modeling knowledge. However, during the last decade a different approach has taken hold under the name *physics-informed machine learning*. 
 
 In 2017, *physics-informed
 neural networks* (PINNs) [[6]](#references) combined deep learning with prior
@@ -44,8 +43,8 @@ precise within the physics-informed framework. We
 2. define the **learning problem** (loss, data term, and the regularizer that
    makes it coercive);
 3. derive the **adjoint equations** that give the gradient of the loss; and
-4. **fit data** in both settings with pure PyTorch — explicit Euler for the
-   Neural ODE, and explicit Euler in time with $P_1$ finite elements in space
+4. **fit data** using explicit Euler for the
+   Neural ODE, and explicit Euler in time with finite elements in space
    for the Neural PDE.
 
 
@@ -64,7 +63,7 @@ precise within the physics-informed framework. We
 ## 1. Problem formulation
 
 Throughout, $\theta\in\mathbb{R}^p$ denotes the network parameters and $f_\theta$
-is a neural network (smooth, e.g. $\tanh$ activations). Time runs over $[0,T]$.
+is a neural network (smooth, e.g. $\tanh$ activations).
 
 ### 1.1 Neural ODE
 
@@ -107,15 +106,13 @@ $$
 
 with $(a_{ij})$ symmetric, bounded, and uniformly elliptic, and $\nu$ the outer
 normal. The most common example is the Laplace operator $\mathcal{A} = -\Delta$.
-The learnable component is the source term $f_\theta(x,t,y)$.
+The learnable component is the source term $f_\theta(x,t,y)$ or a boundary term $g_\theta(x,t,y)$.
 
 ### 1.3 Neural PDE (Elliptic)
 
-Dropping the time dependence gives the **steady-state** counterpart — the
-stationary problem solved by the equilibria of (PDE). On the same domain
+On the same domain
 $\Omega$ with boundary $\Gamma=\partial\Omega$, the state $y(x)$ solves the
-semilinear elliptic problem (Tröltzsch [[3]](#references), §2.5, with the
-distributed control replaced by the network $f_\theta$)
+semilinear elliptic problem
 
 $$
 \begin{aligned}
@@ -124,20 +121,17 @@ $$
 \end{aligned}\tag{PDE-E}
 $$
 
-with $\mathcal A$ the same divergence-form elliptic operator as in (PDE), a
+with $\mathcal A$ the same divergence-form elliptic operator as before, a
 nonnegative potential $c_0\in L^\infty(\Omega)$, and a *boundary condition of the
 third kind* (Robin) with nonnegative coefficient $\alpha\in L^\infty(\Gamma)$ and
-datum $g\in L^2(\Gamma)$. As before the **learnable component is the source term**
-$f_\theta(x,y)$ — in Tröltzsch's elliptic control problem (2.37) the right-hand
-side is the distributed control $\beta_\Omega v$, and here we set
-$v=f_\theta(x,y)$. There is no time, no initial condition, and no terminal cost:
-the parabolic ingredients $\partial_t y$ and $y(\cdot,0)=y_0$ simply drop out.
+datum $g\in L^2(\Gamma)$. As before the learnable component is the source term
+$f_\theta(x,y)$.
 
 The three problems line up term by term: the finite-dimensional vector field
 $f_\theta$ stays the learnable right-hand side, the derivative $\dot y$ becomes
 $\partial_t y$, and the new ingredients are the spatial operator $\mathcal A$
 (with a boundary condition) and a fixed reaction $d$. Setting $\partial_t y=0$
-then collapses the parabolic problem (PDE) onto the elliptic problem (PDE-E),
+then collapses the parabolic problem (PDE-P) onto the elliptic problem (PDE-E),
 with the reaction $d$ playing the role of the potential $c_0$.
 
 | | Neural ODE | Neural PDE (Parabolic) | Neural PDE (Elliptic) |
@@ -150,12 +144,6 @@ with the reaction $d$ playing the role of the potential $c_0$.
 | well-posedness | Picard–Lindelöf | Tröltzsch, §5.5 | Tröltzsch, §2.5 (Thm 2.7) |
 | existence of optimal solutions | Tikhonov coercivity (§2.3) | Tröltzsch, Thm 5.7 + coercivity | Tikhonov coercivity (§2.3) |
 
-> **Does this make sense?** Yes. As a function of $(x,t)$ alone, $f_\theta$ is an
-> admissible distributed control/source and (PDE) is exactly Tröltzsch's (5.8).
-> When $f_\theta$ also depends on $y$ (state feedback), it is absorbed into the
-> reaction: the equation is well-posed provided the *effective* nonlinearity
-> $d-f_\theta$ still satisfies Assumption 5.6 (Appendix A.2) — in particular the
-> monotonicity $\partial_y(d-f_\theta)\ge 0$.
 
 ## 2. The learning problem
 
@@ -175,7 +163,7 @@ J(\theta)=\int_0^T \varphi\big(y_\theta(t),t\big)\,dt
           \qquad \text{(J-ODE)}.
 $$
 
-**Neural PDE.** With a distributed cost $\varphi$ on $Q$, a boundary cost
+**Neural PDE (Parabolic).** With a distributed cost $\varphi$ on $Q$, a boundary cost
 $\psi$ on $\Sigma$, and a terminal cost $\phi$ on $\Omega$,
 
 $$
@@ -196,11 +184,11 @@ J(\theta)=\int_\Omega \varphi\big(x,y_\theta\big)\,dx
           \qquad \text{(J-ELL)}.
 $$
 
-This is the regularized form of Tröltzsch's elliptic tracking objective (2.36),
+<!-- This is the regularized form of Tröltzsch's elliptic tracking objective (2.36),
 $\frac{\lambda_\Omega}{2}\|y-y_\Omega\|_{L^2(\Omega)}^2
 +\frac{\lambda_\Gamma}{2}\|y-y_\Gamma\|_{L^2(\Gamma)}^2$, with
 $\varphi=\tfrac{\lambda_\Omega}{2}|y-y_\Omega|^2$ and
-$\psi=\tfrac{\lambda_\Gamma}{2}|y-y_\Gamma|^2$.
+$\psi=\tfrac{\lambda_\Gamma}{2}|y-y_\Gamma|^2$. -->
 
 ### 2.2 Data term
 
@@ -231,9 +219,8 @@ $$
 
 ### 2.3 Regularization and coercivity
 
-The Tikhonov term $\frac{\gamma}{2}\|\theta\|^2$ ($\gamma>0$) is not cosmetic.
-The data term alone need not be coercive in $\theta$ — large changes of the
-parameters can leave the fit almost unchanged (overparameterization), so a
+The Tikhonov term $\frac{\gamma}{2}\|\theta\|^2$ is not merely cosmetic — the data term alone need not be coercive in $\theta$ — changes of the
+parameters can leave the fit almost unchanged, so a
 minimizing sequence may run off to infinity. Adding $\frac{\gamma}{2}\|\theta\|^2$
 makes the reduced functional **coercive**,
 
@@ -241,12 +228,12 @@ $$
 J(\theta)\ \ge\ \frac{\gamma}{2}\|\theta\|^2\ \xrightarrow[\ \|\theta\|\to\infty\ ]{}\ \infty ,
 $$
 
-so sublevel sets are bounded; together with weak lower semicontinuity of
-$\theta\mapsto J(\theta)$ this yields existence of a minimizer. (In the
+so sublevel sets are bounded; together with weak lower semicontinuity of $\theta\mapsto J(\theta)$ this yields existence of a minimizer.
+<!--  (In the
 infinite-dimensional control reading of (PDE), the same term restores
 coercivity of the reduced objective and is the standard device for
 well-posedness of the *optimization* problem [[3]](#references).) We use
-$\varphi$, $\psi$, $\phi$, $\gamma$ with exactly these meanings in the code.
+$\varphi$, $\psi$, $\phi$, $\gamma$ with exactly these meanings in the code. -->
 
 ## 3. Adjoint equations
 
@@ -282,10 +269,9 @@ For the data term, $\partial_y\varphi(y_\theta,t)=\sum_k\big(y_\theta(t_k)-y^{\m
 i.e. the adjoint receives a jump of size $y_\theta(t_k)-y^{\mathrm{obs}}_k$ at each
 observation time.
 
-### 3.2 Neural PDE adjoint
+### 3.2 Neural PDE (Parabolic) adjoint
 
-Let $\mathcal A^{*}$ be the formal adjoint of $\mathcal A$ (with $\mathcal A^{*}=\mathcal A$
-when $(a_{ij})$ is symmetric). Repeating the Lagrangian computation with the weak
+Let $\mathcal A^{*}$ be the adjoint of $\mathcal A$. Repeating the Lagrangian computation with the weak
 form of (PDE) and integrating by parts in time (terminal data, since
 $\delta y(0)=0$) and in space (Green's identity), the costate $p(x,t)$ solves the
 **backward** parabolic problem
@@ -344,10 +330,9 @@ the backward solves.
 
 ### 4.1 Neural ODE
 
-Ground truth is the nonlinear spiral of [[1]](#references),
-$\dot y = (y^{\odot 3})A^\top$ with
-$A=\big[\begin{smallmatrix}-0.1 & 2\\ -2 & -0.1\end{smallmatrix}\big]$
-($y^{\odot 3}$ componentwise). We integrate it with explicit Euler, add Gaussian
+Ground truth is the nonlinear (cubic) spiral of [[1]](#references),
+$\dot y = A^{\top}y$ with
+$A=\big[\begin{smallmatrix}-0.1 & 2\\ -2 & -0.1\end{smallmatrix}\big]$ (the cube acting componentwise). We integrate it with explicit Euler, add Gaussian
 noise to obtain the data $\mathcal D_{\mathrm{ODE}}$, and fit a two–hidden–layer
 $\tanh$ network $f_\theta$ by minimizing $J_{\mathrm{ODE}}$ with the regularizer
 of §2.3. The Euler step is
@@ -356,27 +341,79 @@ $$
 y^{(k+1)}=y^{(k)}+\Delta t\,f_\theta\big(y^{(k)},t_k\big).
 $$
 
-Optimizing one long, stiff $1200$-step rollout directly is ill-conditioned, so
+Optimizing one long, full step rollout directly is ill-conditioned, so
 we use the standard Neural-ODE trick [[1]](#references): each gradient step is a
 stochastic estimate of the data term computed from a mini-batch of short
 *sub-trajectories* started at points along the data; we keep the checkpoint with
 the lowest full-trajectory error.
 
+In schematic form, the whole method is the vector field $f_\theta$, the Euler
+integrator, and a training loop in which `loss.backward()` is the discrete
+adjoint of (A-ODE):
+
+```python
+class ODEFunc(nn.Module):                       # f_theta: a tanh MLP on R^2
+    def __init__(self, dim=2, hidden=64):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(dim, hidden), nn.Tanh(),
+            nn.Linear(hidden, hidden), nn.Tanh(),
+            nn.Linear(hidden, dim))
+    def forward(self, y, t):
+        return self.net(y)
+
+def euler_rollout(f, y0, t):                     # explicit Euler: y += dt * f(y, t)
+    ys, y = [y0], y0
+    for k in range(len(t) - 1):
+        y = y + (t[k+1] - t[k]) * f(y, t[k])
+        ys.append(y)
+    return torch.stack(ys)
+
+for it in range(ITERS):                          # minimize J(theta)
+    y0_b, t_b, y_target = get_batch()            # short sub-trajectories from data
+    y_pred = euler_rollout(func, y0_b, t_b)
+    data = 0.5 * ((y_pred - y_target) ** 2).sum(-1).mean()
+    reg  = 0.5 * GAMMA * sum((p ** 2).sum() for p in func.parameters())
+    opt.zero_grad(); (data + reg).backward(); opt.step()   # discrete adjoint
+```
+
 ![Neural ODE — data vs. fitted trajectory](neural_ode_fit.png)
 
 ![Neural ODE — training loss](neural_ode_loss.png)
 
-### 4.2 Neural PDE
+### 4.2 Neural PDE (Parabolic)
 
-Ground truth is a 1-D reaction–diffusion equation on $\Omega=(0,1)$ with
+Ground truth is a 1D reaction–diffusion equation on $\Omega=(0,1)$ with
 homogeneous Neumann (conormal) data, $\mathcal A y=-\nu\,\partial_{xx}y$, known
-reaction $d\equiv 0$, and Fisher–KPP source $f_{\mathrm{true}}(y)=5\,y(1-y)$. We
-learn the source $f_\theta(y)$ — a $\tanh$ network acting on nodal values — and
-keep $\mathcal A$ and the boundary condition fixed. Since $d\equiv 0$, the
-network recovers the reaction directly: $f_\theta(y)\approx r(y)$.
+reaction $d\equiv 0$, and source $f_{\mathrm{true}}(y)=5\,y(1-y)$. The state
+$y(x,t)$ solves
+
+$$
+\begin{aligned}
+\partial_t y - \nu\,\partial_{xx} y &= f_\theta(y) && \text{in } Q=(0,1)\times(0,T),\\
+\partial_x y &= 0 && \text{on } \{0,1\}\times(0,T),\\
+y(\cdot,0) &= y_0 && \text{in } \Omega.
+\end{aligned}
+$$
+
+We learn the source $f_\theta(y)$ using a $\tanh$ network acting on nodal values.
+
+**Weak formulation.** Multiplying by a test function $v\in H^1(\Omega)$,
+integrating over $\Omega$, and integrating the diffusion term by parts, the
+boundary term $\nu\,\partial_x y\,v\big|_0^1$ vanishes by the homogeneous Neumann
+condition. We seek $y(t)\in H^1(\Omega)$ with
+
+$$
+\int_\Omega \partial_t y\,v\,dx + \int_\Omega \nu\,\partial_x y\,\partial_x v\,dx
+= \int_\Omega f_\theta(y)\,v\,dx
+\qquad \forall\,v\in H^1(\Omega),
+$$
+
+which is exactly the form the $P_1$ finite-element discretization below
+discretizes.
 
 A reaction can only be identified where the data lives, so we simulate **several
-initial conditions** whose trajectories together sweep $y\in[0,\approx1.2]$;
+initial conditions**;
 without this coverage the recovered $f_\theta$ is accurate only on the narrow
 range a single trajectory visits.
 
@@ -407,12 +444,90 @@ $$
 We generate data by simulating $f_{\mathrm{true}}$ from each initial condition,
 add noise, subsample in time to obtain $\mathcal D_{\mathrm{PDE}}$, and fit
 $f_\theta$ by minimizing $J_{\mathrm{PDE}}$. The rightmost panel shows that the
-learned source matches the Fisher–KPP nonlinearity across the shaded range of
+learned source matches the true nonlinearity across the shaded range of
 states visited by the data.
+
+The schematic mirrors the Neural-ODE one: the only changes are that the
+integrator carries the assembled discrete operator $L=\nu M_L^{-1}K$, the state
+$Y$ is a batch of nodal vectors (one per initial condition), and $f_\theta$ acts
+pointwise on nodal values:
+
+```python
+A_DISC = NU * (1.0 / Mlump)[:, None] * K         # L = nu * M_L^{-1} K  (discrete A)
+
+def fem_euler(source, Y0, t):                    # M_L Y' + nu K Y = M_L f(Y)
+    Ys, Y = [Y0], Y0                             # Y0: (n_ic, N_nodes)
+    for k in range(len(t) - 1):
+        Y = Y + (t[k+1] - t[k]) * (-(Y @ A_DISC.t()) + source(Y))
+        Ys.append(Y)
+    return torch.stack(Ys)
+
+class Source(nn.Module):                         # f_theta(y), applied at each node
+    def __init__(self, hidden=64):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(1, hidden), nn.Tanh(),
+            nn.Linear(hidden, hidden), nn.Tanh(),
+            nn.Linear(hidden, 1))
+    def forward(self, Y):
+        return self.net(Y.unsqueeze(-1)).squeeze(-1)
+
+for epoch in range(EPOCHS):                      # fit all initial conditions jointly
+    Y_pred = fem_euler(model, Y0, t_grid)
+    data = 0.5 * ((Y_pred[obs_idx] - Y_obs[obs_idx]) ** 2).sum(-1).mean()
+    reg  = 0.5 * GAMMA * sum((p ** 2).sum() for p in model.parameters())
+    opt.zero_grad(); (data + reg).backward(); opt.step()
+```
 
 ![Neural PDE — data, fit, and recovered reaction](neural_pde_fit.png)
 
 ![Neural PDE — training loss](neural_pde_loss.png)
+
+
+
+
+
+
+## References
+
+[1] Chen, Ricky T. Q., Yulia Rubanova, Jesse Bettencourt, and David Duvenaud.
+"Neural Ordinary Differential Equations." *Advances in Neural Information
+Processing Systems* 31 (2018).
+
+[2] Pontryagin, Lev S. *Mathematical Theory of Optimal Processes.* Wiley, 1962.
+
+[3] Tröltzsch, Fredi. *Optimal Control of Partial Differential Equations:
+Theory, Methods and Applications.* Graduate Studies in Mathematics 112, American
+Mathematical Society, 2010. (Semilinear parabolic optimal control: §5.5, problem
+(5.7)–(5.9), Assumption 5.6 and Theorem 5.7.)
+
+[4] Lions, Jacques-Louis. *Optimal Control of Systems Governed by Partial
+Differential Equations.* Springer, 1971.
+
+[5] Freund, Jonathan B., Jonathan F. MacArt, and Justin Sirignano. "DPM: A deep
+learning PDE augmentation method (with application to large-eddy simulation)."
+*arXiv preprint* arXiv:1911.09145, 2019.
+
+[6] Raissi, Maziar, Paris Perdikaris, and George E. Karniadakis. "Physics-informed
+neural networks: A deep learning framework for solving forward and inverse problems
+involving nonlinear partial differential equations." *Journal of Computational
+Physics* 378 (2019): 686–707. (First posted as arXiv:1711.10561, 2017.)
+
+[7] Li, Xuechen, Ting-Kam Leonard Wong, Ricky T. Q. Chen, and David Duvenaud.
+"Scalable Gradients for Stochastic Differential Equations." *Proceedings of the
+23rd International Conference on Artificial Intelligence and Statistics (AISTATS)*,
+2020.
+
+[8] Bronstein, Michael M., Joan Bruna, Taco Cohen, and Petar Veličković.
+"Geometric Deep Learning: Grids, Groups, Graphs, Geodesics, and Gauges."
+*arXiv preprint* arXiv:2104.13478, 2021.
+
+
+
+
+
+
+
 
 ## Appendix: well-posedness
 
@@ -539,37 +654,3 @@ exactly as in the parabolic case — the relevant nonlinearity is the effective
 reaction $c_0\,y-f_\theta(x,y)$, and the monotone structure is preserved provided
 $\partial_y\big(c_0\,y-f_\theta\big)\ge 0$; existence of a minimizer in $\theta$
 again comes from the Tikhonov coercivity of §2.3.
-
-## References
-
-[1] Chen, Ricky T. Q., Yulia Rubanova, Jesse Bettencourt, and David Duvenaud.
-"Neural Ordinary Differential Equations." *Advances in Neural Information
-Processing Systems* 31 (2018).
-
-[2] Pontryagin, Lev S. *Mathematical Theory of Optimal Processes.* Wiley, 1962.
-
-[3] Tröltzsch, Fredi. *Optimal Control of Partial Differential Equations:
-Theory, Methods and Applications.* Graduate Studies in Mathematics 112, American
-Mathematical Society, 2010. (Semilinear parabolic optimal control: §5.5, problem
-(5.7)–(5.9), Assumption 5.6 and Theorem 5.7.)
-
-[4] Lions, Jacques-Louis. *Optimal Control of Systems Governed by Partial
-Differential Equations.* Springer, 1971.
-
-[5] Freund, Jonathan B., Jonathan F. MacArt, and Justin Sirignano. "DPM: A deep
-learning PDE augmentation method (with application to large-eddy simulation)."
-*arXiv preprint* arXiv:1911.09145, 2019.
-
-[6] Raissi, Maziar, Paris Perdikaris, and George E. Karniadakis. "Physics-informed
-neural networks: A deep learning framework for solving forward and inverse problems
-involving nonlinear partial differential equations." *Journal of Computational
-Physics* 378 (2019): 686–707. (First posted as arXiv:1711.10561, 2017.)
-
-[7] Li, Xuechen, Ting-Kam Leonard Wong, Ricky T. Q. Chen, and David Duvenaud.
-"Scalable Gradients for Stochastic Differential Equations." *Proceedings of the
-23rd International Conference on Artificial Intelligence and Statistics (AISTATS)*,
-2020.
-
-[8] Bronstein, Michael M., Joan Bruna, Taco Cohen, and Petar Veličković.
-"Geometric Deep Learning: Grids, Groups, Graphs, Geodesics, and Gauges."
-*arXiv preprint* arXiv:2104.13478, 2021.
