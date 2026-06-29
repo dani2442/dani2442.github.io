@@ -141,13 +141,13 @@
         <mxCell id="8MgNg1-QrqkBx0CAZNhr-11" value="&lt;div&gt;\(y\in H^1(\Omega)\)&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;strokeColor=none;" vertex="1" parent="1">
           <mxGeometry x="875" y="560" width="170" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="8MgNg1-QrqkBx0CAZNhr-12" value="&lt;b&gt;&lt;font&gt;Neural ODE&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="8MgNg1-QrqkBx0CAZNhr-12" value="&lt;b&gt;&lt;font&gt;Neural ODE&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;" vertex="1" parent="1">
           <mxGeometry x="315" y="520" width="270" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="8MgNg1-QrqkBx0CAZNhr-13" value="&lt;b&gt;&lt;font&gt;Neural PDE (Parabolic)&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="8MgNg1-QrqkBx0CAZNhr-13" value="&lt;b&gt;&lt;font&gt;Neural PDE (Parabolic)&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;" vertex="1" parent="1">
           <mxGeometry x="551.25" y="520" width="270" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="8MgNg1-QrqkBx0CAZNhr-14" value="&lt;b&gt;&lt;font&gt;Neural PDE (Elliptic)&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="8MgNg1-QrqkBx0CAZNhr-14" value="&lt;b&gt;&lt;font&gt;Neural PDE (Elliptic)&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;" vertex="1" parent="1">
           <mxGeometry x="835" y="520" width="210" height="30" as="geometry" />
         </mxCell>
         <mxCell id="8MgNg1-QrqkBx0CAZNhr-15" value="\(&amp;nbsp;\begin{cases}\dot y = f_\theta(y,t)&amp;amp; \text{in }(0,T)\\ y(0)=y_0\end{cases}\)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">

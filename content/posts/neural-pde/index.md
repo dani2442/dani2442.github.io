@@ -1,11 +1,11 @@
 ---
 title: "Neural ODEs and Neural PDEs"
-date: 2026-06-26
+date: 2026-06-29
 tags: ["control theory", "PDEs"]
 categories: ["pde", "optimal control"]
 author: "Daniel López Montero"
 showToc: true
-draft: true
+draft: false
 description: "A unified, rigorous formulation of Neural ODEs and Neural PDEs."
 ShowWordCount: false
 ShowReadingTime: true
@@ -18,7 +18,9 @@ editPost:
     appendFilePath: true # to append file path to Edit link
 ---
 
-Classical data-driven methods in machine learning tend to be data-hungry because they discard expert modeling knowledge. However, during the last decade a different approach has taken hold under the name *physics-informed machine learning*. 
+![Neural ODEs and Neural PDEs](continuous_rl-neural-pde.drawio.svg)
+
+Classical data-driven methods in machine learning tend to be data-inefficient and  they discard expert modeling knowledge. However, during the last decade a different approach has emerged under the name *physics-informed machine learning*. 
 
 In 2017, *physics-informed
 neural networks* (PINNs) [[6]](#references) combined deep learning with prior
@@ -33,7 +35,9 @@ here a *Neural PDE*.
 
 A *Neural PDE* applies the Neural-ODE construction to an evolution equation in
 space and time: the unknown coefficient — typically a reaction or source term —
-becomes a neural network embedded inside a partial differential equation [[5]](#references).
+becomes a neural network embedded inside a partial differential equation [[5]](#references), i.e.,
+
+$$\partial_t y -\Delta y = f_\theta\big(x,t,y\big) $$
 
 The two constructions are the same idea applied to a finite- and an
 infinite-dimensional state. The goal of this post is to make that parallel
@@ -80,23 +84,22 @@ the solution map $\theta\mapsto y(\,\cdot\,;\theta)$ where we use a discretizati
 ### 1.2 Neural PDE (Parabolic)
 
 Let $\Omega\subset\mathbb{R}^m$ be a bounded Lipschitz domain with boundary
-$\Gamma=\partial\Omega$, and set the space–time cylinder and lateral boundary
-
-$$
-Q=\Omega\times(0,T),\qquad \Sigma=\Gamma\times(0,T).
-$$
-
-The state $y(x,t)$ solves the semilinear parabolic problem
+$\Gamma=\partial\Omega$, and let $T>0$ be a finite time horizon. Over the
+space–time cylinder $\Omega\times(0,T)$ and its lateral boundary
+$\Gamma\times(0,T)$, the state $y(x,t)$ solves the semilinear parabolic problem
 
 $$
 \begin{aligned}
-\partial_t y + \mathcal{A}y + d\big(x,t,y\big) &= f_\theta\big(x,t,y\big) && \text{in } Q,\\
-\partial_{\nu_{\mathcal A}} y + b\big(x,t,y\big) &= g && \text{on } \Sigma,\\
+\partial_t y + \mathcal{A}y + d\big(x,t,y\big) &= f_\theta\big(x,t,y\big) && \text{in } \Omega\times(0,T),\\
+\partial_{\nu_{\mathcal A}} y + b\big(x,t,y\big) &= g && \text{on } \Gamma\times(0,T),\\
 y(\cdot,0) &= y_0 && \text{in } \Omega,
 \end{aligned}\tag{PDE-P}
 $$
 
-where $\mathcal{A}$ is the second-order elliptic operator in divergence form
+where $\mathcal{A}$ is the second-order elliptic operator in divergence form and
+$\partial_{\nu_{\mathcal A}}y$ is its associated *conormal derivative* — the
+boundary flux that goes with $\mathcal A$, i.e. the outward normal component of the
+flux $a_{ij}\,\partial_{x_i}y$ that $\mathcal A$ takes the divergence of,
 
 $$
 \mathcal{A}y = -\sum_{i,j=1}^{m}\partial_{x_j}\!\big(a_{ij}(x)\,\partial_{x_i} y\big),
@@ -105,7 +108,10 @@ $$
 $$
 
 with $(a_{ij})$ symmetric, bounded, and uniformly elliptic, and $\nu$ the outer
-normal. The most common example is the Laplace operator $\mathcal{A} = -\Delta$.
+normal. When $\mathcal A=-\Delta$ we have $a_{ij}=\delta_{ij}$, so the conormal
+derivative reduces to the ordinary normal derivative
+$\partial_{\nu_{\mathcal A}}y=\sum_i\partial_{x_i}y\,\nu_i=\nabla y\cdot\nu=\partial_\nu y$ —
+the most common example.
 The learnable component is the source term $f_\theta(x,t,y)$ or a boundary term $g_\theta(x,t,y)$.
 
 ### 1.3 Neural PDE (Elliptic)
@@ -137,12 +143,12 @@ with the reaction $d$ playing the role of the potential $c_0$.
 | | Neural ODE | Neural PDE (Parabolic) | Neural PDE (Elliptic) |
 |---|---|---|---|
 | state | $y(t)\in\mathbb{R}^n$ | $y(\cdot,t)\in L^2(\Omega)$ | $y\in H^1(\Omega)$ |
-| equation | $\begin{cases}\dot y = f_\theta(y,t)\\ y(0)=y_0\end{cases}$ | $\begin{cases}\partial_t y +\mathcal A y + d = f_\theta & \text{in } Q\\ \partial_{\nu_{\mathcal A}}y + b = g & \text{on } \Sigma\\ y(\cdot,0)=y_0 & \text{in } \Omega\end{cases}$ | $\begin{cases}\mathcal A y + c_0\,y = f_\theta & \text{in } \Omega\\ \partial_{\nu_{\mathcal A}}y + \alpha\,y = g & \text{on } \Gamma\end{cases}$ |
-| cost functional $J$ | $\int_0^T\!\varphi\,dt+\psi\big(y(T)\big)$ | $\iint_Q\varphi+\iint_\Sigma\psi+\int_\Omega\phi$ | $\int_\Omega\varphi+\int_\Gamma\psi$ |
-| adjoint equation | $\begin{cases}-\dot p = (\partial_y f_\theta)^{\!\top}p+\varphi_y\\ p(T)=\psi_y\end{cases}$ | $\begin{cases}-\partial_t p+\mathcal A^{*}p+(d_y-\partial_y f_\theta)\,p=\varphi_y & \text{in } Q\\ \partial_{\nu_{\mathcal A^{*}}}p+b_y\,p=\psi_y & \text{on } \Sigma\\ p(\cdot,T)=\phi_y & \text{in } \Omega\end{cases}$ | $\begin{cases}\mathcal A^{*}p+(c_0-\partial_y f_\theta)\,p=\varphi_y & \text{in } \Omega\\ \partial_{\nu_{\mathcal A^{*}}}p+\alpha\,p=\psi_y & \text{on } \Gamma\end{cases}$ |
-| gradient $\nabla_\theta J$ | $\int_0^T(\partial_\theta f_\theta)^{\!\top}p\,dt+\gamma\theta$ | $\iint_Q p\,\partial_\theta f_\theta\,dx\,dt+\gamma\theta$ | $\int_\Omega p\,\partial_\theta f_\theta\,dx+\gamma\theta$ |
+| equation | $\begin{cases}\dot y = f_\theta(y,t)\\ y(0)=y_0\end{cases}$ | $\begin{cases}\partial_t y +\mathcal A y + d = f_\theta & \text{in } \Omega\times(0,T)\\ \partial_{\nu_{\mathcal A}}y + b = g & \text{on } \Gamma\times(0,T)\\ y(\cdot,0)=y_0 & \text{in } \Omega\end{cases}$ | $\begin{cases}\mathcal A y + c_0\,y = f_\theta & \text{in } \Omega\\ \partial_{\nu_{\mathcal A}}y + \alpha\,y = g & \text{on } \Gamma\end{cases}$ |
+| cost functional $J$ | $\int_0^T\!\varphi\,dt+\phi\big(y(T)\big)$ | $\iint_{\Omega\times(0,T)}\varphi+\iint_{\Gamma\times(0,T)}\psi+\int_\Omega\phi$ | $\int_\Omega\varphi+\int_\Gamma\psi$ |
+| adjoint equation | $\begin{cases}-\dot p = (\partial_y f_\theta)^{\!\top}p+\varphi_y\\ p(T)=\phi_y\end{cases}$ | $\begin{cases}-\partial_t p+\mathcal A^{*}p+(d_y-\partial_y f_\theta)\,p=\varphi_y & \text{in } \Omega\times(0,T)\\ \partial_{\nu_{\mathcal A^{*}}}p+b_y\,p=\psi_y & \text{on } \Gamma\times(0,T)\\ p(\cdot,T)=\phi_y & \text{in } \Omega\end{cases}$ | $\begin{cases}\mathcal A^{*}p+(c_0-\partial_y f_\theta)\,p=\varphi_y & \text{in } \Omega\\ \partial_{\nu_{\mathcal A^{*}}}p+\alpha\,p=\psi_y & \text{on } \Gamma\end{cases}$ |
+| gradient $\nabla_\theta J$ | $\int_0^T(\partial_\theta f_\theta)^{\!\top}p\,dt$ | $\iint_{\Omega\times(0,T)} p\,\partial_\theta f_\theta\,dx\,dt$ | $\int_\Omega p\,\partial_\theta f_\theta\,dx$ |
 | well-posedness | Picard–Lindelöf | Tröltzsch, §5.5 | Tröltzsch, §2.5 (Thm 2.7) |
-| existence of optimal solutions | Tikhonov coercivity (§2.3) | Tröltzsch, Thm 5.7 + coercivity | Tikhonov coercivity (§2.3) |
+| existence of optimal solutions | Filippov-Cesari Thm + coercivity | Tröltzsch, Thm 5.7 + coercivity | Tröltzsch, Thm 4.15 + coercivity |
 
 
 ## 2. The learning problem
@@ -154,21 +160,21 @@ objectives.
 
 ### 2.1 Cost functionals
 
-**Neural ODE.** With a running cost $\varphi$ and terminal cost $\psi$,
+**Neural ODE.** With a running cost $\varphi$ and terminal cost $\phi$,
 
 $$
 J(\theta)=\int_0^T \varphi\big(y_\theta(t),t\big)\,dt
-          +\psi\big(y_\theta(T)\big)
+          +\phi\big(y_\theta(T)\big)
           +\frac{\gamma}{2}\|\theta\|^2
           \qquad \text{(J-ODE)}.
 $$
 
-**Neural PDE (Parabolic).** With a distributed cost $\varphi$ on $Q$, a boundary cost
-$\psi$ on $\Sigma$, and a terminal cost $\phi$ on $\Omega$,
+**Neural PDE (Parabolic).** With a distributed cost $\varphi$ on $\Omega\times(0,T)$, a boundary cost
+$\psi$ on $\Gamma\times(0,T)$, and a terminal cost $\phi$ on $\Omega$,
 
 $$
-J(\theta)=\iint_Q \varphi\big(x,t,y_\theta\big)\,dx\,dt
-          +\iint_\Sigma \psi\big(x,t,y_\theta\big)\,ds\,dt
+J(\theta)=\iint_{\Omega\times(0,T)} \varphi\big(x,t,y_\theta\big)\,dx\,dt
+          +\iint_{\Gamma\times(0,T)} \psi\big(x,t,y_\theta\big)\,ds\,dt
           +\int_\Omega \phi\big(x,y_\theta(\cdot,T)\big)\,dx
           +\frac{\gamma}{2}\|\theta\|^2
           \qquad \text{(J-PDE)}.
@@ -248,7 +254,7 @@ code can simply call `loss.backward()`.
 Introduce the costate $p:[0,T]\to\mathbb{R}^n$ and the Lagrangian
 
 $$
-\mathcal L=\int_0^T\varphi(y,t)\,dt+\psi(y(T))+\frac{\gamma}{2}\|\theta\|^2
+\mathcal L=\int_0^T\varphi(y,t)\,dt+\phi(y(T))+\frac{\gamma}{2}\|\theta\|^2
           -\int_0^T p^\top\!\big(\dot y-f_\theta(y,t)\big)\,dt .
 $$
 
@@ -256,7 +262,7 @@ Stationarity with respect to $y$ gives the **backward** adjoint IVP
 
 $$
 -\dot p(t)=\Big(\partial_y f_\theta\big(y_\theta,t\big)\Big)^{\!\top} p(t)+\partial_y\varphi\big(y_\theta,t\big),
-\qquad p(T)=\partial_y\psi\big(y_\theta(T)\big), \tag{A-ODE}
+\qquad p(T)=\partial_y\phi\big(y_\theta(T)\big), \tag{A-ODE}
 $$
 
 and the gradient is
@@ -278,8 +284,8 @@ $\delta y(0)=0$) and in space (Green's identity), the costate $p(x,t)$ solves th
 
 $$
 \begin{aligned}
--\partial_t p + \mathcal A^{*}p + \big(d_y-\partial_y f_\theta\big)\big(x,t,y_\theta\big)\,p &= \varphi_y\big(x,t,y_\theta\big) && \text{in } Q,\\
-\partial_{\nu_{\mathcal A^{*}}}p + b_y\big(x,t,y_\theta\big)\,p &= \psi_y\big(x,t,y_\theta\big) && \text{on } \Sigma,\\
+-\partial_t p + \mathcal A^{*}p + \big(d_y-\partial_y f_\theta\big)\big(x,t,y_\theta\big)\,p &= \varphi_y\big(x,t,y_\theta\big) && \text{in } \Omega\times(0,T),\\
+\partial_{\nu_{\mathcal A^{*}}}p + b_y\big(x,t,y_\theta\big)\,p &= \psi_y\big(x,t,y_\theta\big) && \text{on } \Gamma\times(0,T),\\
 p(\cdot,T) &= \phi_y\big(x,y_\theta(\cdot,T)\big) && \text{in } \Omega,
 \end{aligned}\tag{A-PDE}
 $$
@@ -289,7 +295,7 @@ $\partial_y f_\theta$ that of the learned source — they enter the linearized
 dynamics as the combined reaction $d-f_\theta$. The gradient is
 
 $$
-\boxed{\;\nabla_\theta J=\iint_Q p(x,t)\,\partial_\theta f_\theta\big(x,t,y_\theta\big)\,dx\,dt+\gamma\,\theta\;}
+\boxed{\;\nabla_\theta J=\iint_{\Omega\times(0,T)} p(x,t)\,\partial_\theta f_\theta\big(x,t,y_\theta\big)\,dx\,dt+\gamma\,\theta\;}
 $$
 
 The structure mirrors (A-ODE) exactly — including the $+$ sign, since $f_\theta$
@@ -323,7 +329,7 @@ solved as a single boundary-value problem rather than marched backward in time.
 
 ## 4. Examples with code
 
-The code is in [`code/neural-pde/`](https://github.com/dani2442/dani2442.github.io/tree/main/code/neural-pde),
+The code is in [`neural-pde/`](https://github.com/dani2442/dani2442_code/tree/main/neural-pde),
 pure PyTorch. We differentiate through the unrolled integrators with autograd
 (the discrete adjoint), so the gradients of §3 are obtained without hand-coding
 the backward solves.
@@ -390,7 +396,7 @@ $y(x,t)$ solves
 
 $$
 \begin{aligned}
-\partial_t y - \nu\,\partial_{xx} y &= f_\theta(y) && \text{in } Q=(0,1)\times(0,T),\\
+\partial_t y - \nu\,\partial_{xx} y &= f_\theta(y) && \text{in } (0,1)\times(0,T),\\
 \partial_x y &= 0 && \text{on } \{0,1\}\times(0,T),\\
 y(\cdot,0) &= y_0 && \text{in } \Omega.
 \end{aligned}
@@ -558,8 +564,8 @@ control problem with a distributed control $v$ and a boundary control $u$,
 
 $$
 \min_{v,u}\ J(y,v,u):=\int_\Omega \phi\big(x,y(x,T)\big)\,dx
-+\iint_Q \varphi\big(x,t,y,v\big)\,dx\,dt
-+\iint_\Sigma \psi\big(x,t,y,u\big)\,ds\,dt,
++\iint_{\Omega\times(0,T)} \varphi\big(x,t,y,v\big)\,dx\,dt
++\iint_{\Gamma\times(0,T)} \psi\big(x,t,y,u\big)\,ds\,dt,
 \tag{5.7}
 $$
 
@@ -567,8 +573,8 @@ subject to the state equation
 
 $$
 \begin{aligned}
-y_t-\Delta y + d(x,t,y) &= v && \text{in } Q,\\
-\partial_\nu y + b(x,t,y) &= u && \text{on } \Sigma,\\
+y_t-\Delta y + d(x,t,y) &= v && \text{in } \Omega\times(0,T),\\
+\partial_\nu y + b(x,t,y) &= u && \text{on } \Gamma\times(0,T),\\
 y(0) &= y_0 && \text{in }\Omega,
 \end{aligned}\tag{5.8}
 $$
@@ -576,37 +582,58 @@ $$
 and the control constraints
 
 $$
-v_a\le v\le v_b\ \text{ a.e. in } Q,\qquad
-u_a\le u\le u_b\ \text{ a.e. in } \Sigma.\tag{5.9}
+v_a\le v\le v_b\ \text{ a.e. in } \Omega\times(0,T),\qquad
+u_a\le u\le u_b\ \text{ a.e. in } \Gamma\times(0,T).\tag{5.9}
 $$
 
-Our (PDE) is exactly (5.8) with $\mathcal A=-\Delta$ and the control taken to be
-the network $v=f_\theta$ (and $u=g$, $b$ given). We state the book's hypotheses
-and existence result verbatim.
+Our (PDE-P) is exactly the state equation (5.8) with $\mathcal A=-\Delta$ and the
+right-hand sides taken to be the network $f_\theta$ in the interior and $g$ on the
+boundary (here $b$ is given). **State well-posedness** — the solution map being
+well-defined, which is what §2 needs — is Tröltzsch's Theorem 5.5.
+
+> **Theorem 5.5** (Tröltzsch [[3]](#references)).
+> Suppose that Assumptions 5.1 and 5.4 hold. Then the semilinear parabolic
+> initial–boundary value problem
+> $$y_t+\mathcal A y+d(x,t,y)=f \ \text{ in } \Omega\times(0,T),\qquad
+> \partial_{\nu_{\mathcal A}}y+b(x,t,y)=g \ \text{ on } \Gamma\times(0,T),\qquad
+> y(0)=y_0 \ \text{ in }\Omega$$
+> has a unique weak solution $y\in W(0,T)\cap C(\overline{\Omega\times(0,T)})$ for any triple
+> $f\in L^r(\Omega\times(0,T))$, $g\in L^s(\Gamma\times(0,T))$, and $y_0\in C(\overline\Omega)$ with
+> $r>N/2+1$ and $s>N+1$. Moreover, there is a constant $c_\infty>0$, which is
+> independent of $d$, $b$, $f$, $g$, and $y_0$, such that
+> $$\|y\|_{W(0,T)}+\|y\|_{C(\overline{\Omega\times(0,T)})}\le
+> c_\infty\big(\|f-d(\cdot,0)\|_{L^r(\Omega\times(0,T))}+\|g-b(\cdot,0)\|_{L^s(\Gamma\times(0,T))}+\|y_0\|_{C(\overline\Omega)}\big).\tag{5.6}$$
+
+Assumptions 5.1 and 5.4 are the structural hypotheses on $\mathcal A$, $d$, and
+$b$ (measurability, boundedness/Lipschitz, and the monotonicity $d_y\ge 0$,
+$b_y\ge 0$); the integrability thresholds $r>N/2+1$ and $s>N+1$ buy the continuous
+representative $y\in C(\overline{\Omega\times(0,T)})$. For **existence of an optimal solution** the
+problem (5.7)–(5.9) strengthens these to the twice-differentiable Assumption 5.6,
+which we state together with the existence result verbatim.
 
 > **Assumption 5.6** (Tröltzsch [[3]](#references)).
 > **(i)** $\Omega\subset\mathbb{R}^N$ is a bounded Lipschitz domain.
 >
 > **(ii)** The functions
-> $$d=d(x,t,y):Q\times\mathbb{R}\to\mathbb{R},\qquad \phi=\phi(x,y):\Omega\times\mathbb{R}\to\mathbb{R},$$
-> $$\varphi=\varphi(x,t,y,v):Q\times\mathbb{R}^2\to\mathbb{R},\qquad b=b(x,t,y):\Sigma\times\mathbb{R}\to\mathbb{R},$$
-> $$\psi=\psi(x,t,y,u):\Sigma\times\mathbb{R}^2\to\mathbb{R}$$
+> $$d=d(x,t,y):(\Omega\times(0,T))\times\mathbb{R}\to\mathbb{R},\qquad \phi=\phi(x,y):\Omega\times\mathbb{R}\to\mathbb{R},$$
+> $$\varphi=\varphi(x,t,y,v):(\Omega\times(0,T))\times\mathbb{R}^2\to\mathbb{R},\qquad b=b(x,t,y):(\Gamma\times(0,T))\times\mathbb{R}\to\mathbb{R},$$
+> $$\psi=\psi(x,t,y,u):(\Gamma\times(0,T))\times\mathbb{R}^2\to\mathbb{R}$$
 > are measurable with respect to $(x,t)$ for all $y,v,u\in\mathbb{R}$ and, for
-> almost every $(x,t)$ in $Q$ or $\Sigma$, twice differentiable with respect to
+> almost every $(x,t)$ in $\Omega\times(0,T)$ or $\Gamma\times(0,T)$, twice differentiable with respect to
 > $y$, $v$, and $u$. Moreover, they satisfy the boundedness and local Lipschitz
 > conditions (4.24)–(4.25) of order $k=2$; this means that for $\varphi$, for
 > example, there exist some $K>0$ and a constant $L(M)>0$ for any $M>0$ such that,
 > with the objects $\nabla\varphi$ and $\varphi''$ explained in the book,
 > $$|\varphi(x,t,0,0)|+|\nabla\varphi(x,t,0,0)|+|\varphi''(x,t,0,0)|\le K,$$
 > $$|\varphi''(x,t,y_1,v_1)-\varphi''(x,t,y_2,v_2)|\le L(M)\big\{|y_1-y_2|+|v_1-v_2|\big\},$$
-> for almost every $(x,t)\in Q$ and any $y_i,v_i\in[-M,M]$, $i=1,2$.
+> for almost every $(x,t)\in \Omega\times(0,T)$ and any $y_i,v_i\in[-M,M]$, $i=1,2$.
 >
-> **(iii)** We have $d_y(x,t,y)\ge 0$ for almost every $(x,t)\in Q$ and
-> $b_y(x,t,y)\ge 0$ for almost every $(x,t)\in\Sigma$. Moreover,
+> **(iii)** We have $d_y(x,t,y)\ge 0$ for almost every $(x,t)\in \Omega\times(0,T)$ and
+> $b_y(x,t,y)\ge 0$ for almost every $(x,t)\in\Gamma\times(0,T)$. Moreover,
 > $y_0\in C(\overline\Omega)$.
 >
 > **(iv)** The bounds $u_a,u_b$ and $v_a,v_b:E\to\mathbb{R}$ belong to
-> $L^\infty(E)$ for $E=\Sigma$ and $E=Q$, respectively, and $u_a(x,t)\le u_b(x,t)$
+> $L^\infty(E)$ for $E=\Gamma\times(0,T)$ and $E=\Omega\times(0,T)$, respectively, and $u_a(x,t)\le u_b(x,t)$
 > and $v_a(x,t)\le v_b(x,t)$ for almost every $(x,t)\in E$.
 
 > **Theorem 5.7** (Tröltzsch [[3]](#references)).
@@ -622,7 +649,7 @@ control is the network $v=f_\theta$, so the relevant nonlinearity is the
 $\partial_y(d-f_\theta)\ge 0$ together with the order-$2$ boundedness/Lipschitz
 bounds — automatic on bounded sets for $\tanh$ networks except for the
 monotonicity, which one keeps by (i) letting $f_\theta$ depend only on $(x,t)$
-(genuine control, $v\in L^\infty(Q)$), or (ii) penalizing $\partial_y f_\theta$.
+(genuine control, $v\in L^\infty(\Omega\times(0,T))$), or (ii) penalizing $\partial_y f_\theta$.
 Existence of a minimizer in $\theta$ comes instead from the Tikhonov coercivity
 of §2.3 — the finite-dimensional analogue of the convexity hypothesis on
 $\varphi,\psi$ in Theorem 5.7. In the example the fixed coercive diffusion
@@ -649,8 +676,55 @@ bound for the boundary condition of the third kind.
 Condition (i) or (ii) excludes the pure-Neumann constant null space (otherwise
 $y$ is determined only up to a constant): some zeroth-order term — a Dirichlet
 boundary, the potential $c_0$, or the Robin coefficient $\alpha$ — must pin the
-solution. For the *semilinear* case the source $f_\theta$ depends on $y$, so —
-exactly as in the parabolic case — the relevant nonlinearity is the effective
-reaction $c_0\,y-f_\theta(x,y)$, and the monotone structure is preserved provided
-$\partial_y\big(c_0\,y-f_\theta\big)\ge 0$; existence of a minimizer in $\theta$
-again comes from the Tikhonov coercivity of §2.3.
+solution.
+
+For the *semilinear* problem the source depends on $y$, and Tröltzsch
+[[3]](#references), §4.2, gives well-posedness under the following hypotheses.
+The boundary value problem is
+$$\mathcal A y + c_0\,y + d(x,y) = f \ \text{ in } \Omega,\qquad
+\partial_{\nu_{\mathcal A}}y + \alpha\,y + b(x,y) = g \ \text{ on } \Gamma,\tag{4.5}$$
+associated with the bilinear form
+$$a[y,v]:=\int_\Omega\sum_{i,j=1}^N a_{ij}(x)\,D_i y\,D_j v\,dx
++\int_\Omega c_0\,y\,v\,dx+\int_\Gamma\alpha\,y\,v\,ds.\tag{4.7}$$
+
+> **Assumption 4.2** (Tröltzsch [[3]](#references)).
+> **(i)** $\Omega\subset\mathbb{R}^N$, $N\ge 2$, is a bounded Lipschitz domain
+> with boundary $\Gamma$, and $\mathcal A$ is an elliptic differential operator of
+> the form (2.19) with bounded and measurable coefficient functions $a_{ij}$ that
+> satisfy the symmetry condition and the condition (2.20) of uniform ellipticity.
+>
+> **(ii)** The functions $c_0:\Omega\to\mathbb{R}$ and $\alpha:\Gamma\to\mathbb{R}$
+> are bounded, measurable and almost everywhere nonnegative. At least one of these
+> functions does not vanish almost everywhere, that is,
+> $\|c_0\|_{L^\infty(\Omega)}+\|\alpha\|_{L^\infty(\Gamma)}>0$.
+>
+> **(iii)** The functions $d=d(x,y):\Omega\times\mathbb{R}\to\mathbb{R}$ and
+> $b=b(x,y):\Gamma\times\mathbb{R}\to\mathbb{R}$ are bounded and measurable with
+> respect to $x\in\Omega$ and $x\in\Gamma$, respectively, for every fixed
+> $y\in\mathbb{R}$. Moreover, they are continuous and monotone increasing in $y$
+> for almost every $x\in\Omega$ and $x\in\Gamma$, respectively.
+>
+> In particular $d(x,0)$ and $b(x,0)$ are then bounded and measurable in $\Omega$
+> and $\Gamma$.
+
+> **Assumption 4.3** (Tröltzsch [[3]](#references)).
+> For almost every $x\in\Omega$ (respectively, $x\in\Gamma$) we have $d(x,0)=0$
+> (respectively, $b(x,0)=0$). Moreover, $b$ and $d$ are globally bounded, that is,
+> there is a constant $M>0$ such that for any $y\in\mathbb{R}$ we have
+> $$|b(x,y)|\le M\ \text{ for a.e. } x\in\Gamma,\qquad
+> |d(x,y)|\le M\ \text{ for a.e. } x\in\Omega.\tag{4.6}$$
+
+> **Theorem 4.4** (Tröltzsch [[3]](#references)).
+> Suppose that Assumptions 4.2 and 4.3 hold. Then the elliptic boundary value
+> problem (4.5) has for any pair $f\in L^2(\Omega)$ and $g\in L^2(\Gamma)$ of
+> right-hand sides a unique weak solution $y\in H^1(\Omega)$. Moreover, there is
+> some constant $c_M>0$, which is independent of $d$, $b$, $f$, and $g$, such that
+> $$\|y\|_{H^1(\Omega)}\le c_M\big(\|f\|_{L^2(\Omega)}+\|g\|_{L^2(\Gamma)}\big).\tag{4.9}$$
+
+The **monotonicity** of $d$ and $b$ in (iii) is the structural condition behind
+well-posedness, exactly as in the parabolic case. In our learning problem the
+source is the network, so the relevant nonlinearity is the effective reaction
+$d-f_\theta$ (with $d\equiv 0$ in the example): to stay inside this theory we need
+$\partial_y\big(d-f_\theta\big)\ge 0$, which one keeps by letting $f_\theta$
+depend only on $x$ or by penalizing $\partial_y f_\theta$. Existence of a
+minimizer in $\theta$ again comes from the Tikhonov coercivity of §2.3.
