@@ -22,7 +22,7 @@ editPost:
 
 Classical data-driven methods in machine learning tend to be data-inefficient and  they discard expert modeling knowledge. However, during the last decade a different approach has emerged under the name *physics-informed machine learning*. 
 
-In 2017, *physics-informed
+First posted in 2017 and published in 2019, *physics-informed
 neural networks* (PINNs) [[6]](#references) combined deep learning with prior
 knowledge of the governing equations by directly learning the solution using the PDE residual as a soft penalty
 in the loss. In 2018, *Neural ODEs* [[1]](#references) took a complementary
@@ -232,7 +232,8 @@ $\varphi$, $\psi$, $\phi$, $\gamma$ with exactly these meanings in the code. -->
 
 ## 3. Adjoint equations
 
-To minimize $J$ we need $\nabla_\theta J$. The adjoint (costate) method computes
+To minimize $J$ we need $\nabla_\theta J$. The adjoint (costate) method, classical
+in optimal control [[2]](#references) and PDE-constrained control [[4]](#references), computes
 it at the cost of one backward solve, independent of $p=\dim\theta$. We give the
 continuous adjoint in both settings; the discrete adjoint is what reverse-mode
 autodiff computes when we differentiate through the integrator, which is why the
@@ -325,7 +326,7 @@ the backward solves.
 
 ### 4.1 Neural ODE
 
-Ground truth is the nonlinear (cubic) spiral of [[1]](#references),
+Ground truth follows the nonlinear (cubic) spiral example in `torchdiffeq` [[10]](#references),
 $\dot y = A^{\top}y$ with
 $A=\big[\begin{smallmatrix}-0.1 & 2\\ -2 & -0.1\end{smallmatrix}\big]$ (the cube acting componentwise). We integrate it with explicit Euler, add Gaussian
 noise to obtain the data $\mathcal D_{\mathrm{ODE}}$, and fit a two–hidden–layer
@@ -337,7 +338,7 @@ y^{(k+1)}=y^{(k)}+\Delta t\,f_\theta\big(y^{(k)},t_k\big).
 $$
 
 Optimizing one long, full step rollout directly is ill-conditioned, so
-we use the standard Neural-ODE trick [[1]](#references): each gradient step is a
+we use the standard Neural-ODE demo trick [[10]](#references): each gradient step is a
 stochastic estimate of the data term computed from a mini-batch of short
 *sub-trajectories* started at points along the data; we keep the checkpoint with
 the lowest full-trajectory error.
@@ -485,33 +486,42 @@ for epoch in range(EPOCHS):                      # fit all initial conditions jo
 
 ## References
 
-[1] Chen, Ricky T. Q., Yulia Rubanova, Jesse Bettencourt, and David Duvenaud.
+[1] Chen, Ricky T. Q., Yulia Rubanova, Jesse Bettencourt, and David K. Duvenaud.
 "Neural Ordinary Differential Equations." *Advances in Neural Information
 Processing Systems* 31 (2018).
 
-[2] Pontryagin, Lev S. *Mathematical Theory of Optimal Processes.* Wiley, 1962.
+[2] Pontryagin, L. S., V. G. Boltyanskii, R. V. Gamkrelidze, and E. F.
+Mishchenko. *The Mathematical Theory of Optimal Processes.* Translated by K. N.
+Trirogoff, edited by L. W. Neustadt, Interscience Publishers (John Wiley &
+Sons), 1962.
 
 [3] Tröltzsch, Fredi. *Optimal Control of Partial Differential Equations:
 Theory, Methods and Applications.* Graduate Studies in Mathematics 112, American
-Mathematical Society, 2010. (Semilinear parabolic optimal control: §5.5, problem
-(5.7)–(5.9), Assumption 5.6 and Theorem 5.7.)
+Mathematical Society, 2010. Translated by Jürgen Sprekels. (Semilinear
+parabolic optimal control: §5.5, problem (5.7)–(5.9), Theorems 5.5 and 5.7,
+Assumption 5.6. Semilinear elliptic theory: §2.3, §2.5, and §4.2, Theorems 2.7
+and 4.4, Assumptions 4.2 and 4.3.)
 
 [4] Lions, Jacques-Louis. *Optimal Control of Systems Governed by Partial
-Differential Equations.* Springer, 1971.
+Differential Equations.* Translated by S. K. Mitter. Grundlehren der
+mathematischen Wissenschaften 170, Springer-Verlag, 1971.
 
-[5] Freund, Jonathan B., Jonathan F. MacArt, and Justin Sirignano. "DPM: A deep
-learning PDE augmentation method (with application to large-eddy simulation)."
-*arXiv preprint* arXiv:1911.09145, 2019.
+[5] Sirignano, Justin, Jonathan F. MacArt, and Jonathan B. Freund. "DPM: A deep
+learning PDE augmentation method with application to large-eddy simulation."
+*Journal of Computational Physics* 423 (2020): 109811.
+https://doi.org/10.1016/j.jcp.2020.109811. (First posted as arXiv:1911.09145 in
+2019 under the author order Freund, MacArt, Sirignano.)
 
 [6] Raissi, Maziar, Paris Perdikaris, and George E. Karniadakis. "Physics-informed
 neural networks: A deep learning framework for solving forward and inverse problems
 involving nonlinear partial differential equations." *Journal of Computational
-Physics* 378 (2019): 686–707. (First posted as arXiv:1711.10561, 2017.)
+Physics* 378 (2019): 686–707. https://doi.org/10.1016/j.jcp.2018.10.045.
+(First posted as arXiv:1711.10561, 2017.)
 
 [7] Li, Xuechen, Ting-Kam Leonard Wong, Ricky T. Q. Chen, and David Duvenaud.
 "Scalable Gradients for Stochastic Differential Equations." *Proceedings of the
 23rd International Conference on Artificial Intelligence and Statistics (AISTATS)*,
-2020.
+PMLR 108:3870–3882, 2020.
 
 [8] Bronstein, Michael M., Joan Bruna, Taco Cohen, and Petar Veličković.
 "Geometric Deep Learning: Grids, Groups, Graphs, Geodesics, and Gauges."
@@ -520,6 +530,10 @@ Physics* 378 (2019): 686–707. (First posted as arXiv:1711.10561, 2017.)
 [9] Le, Quoc-Tung, Elisa Riccietti, and Rémi Gribonval. "Does a sparse ReLU
 network training problem always admit an optimum?" *Advances in Neural
 Information Processing Systems* 36 (NeurIPS 2023).
+
+[10] Chen, Ricky T. Q. `torchdiffeq`: differentiable ODE solvers with full GPU
+support and O(1)-memory backpropagation. GitHub repository,
+https://github.com/rtqichen/torchdiffeq, example `examples/ode_demo.py`.
 
 
 
