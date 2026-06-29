@@ -44,8 +44,7 @@ infinite-dimensional state. The goal of this post is to make that parallel
 precise within the physics-informed framework. We
 
 1. state both **problem formulations** in a single notation;
-2. define the **learning problem** (loss, data term, and the regularizer that
-   makes it coercive);
+2. define the **learning problem** (loss, data term, and the regularizer);
 3. derive the **adjoint equations** that give the gradient of the loss; and
 4. **fit data** using explicit Euler for the
    Neural ODE, and explicit Euler in time with finite elements in space
@@ -227,7 +226,8 @@ $$
 
 The Tikhonov term $\frac{\gamma}{2}\|\theta\|^2$ is not merely cosmetic — the data term alone need not be coercive in $\theta$ — changes of the
 parameters can leave the fit almost unchanged, so a
-minimizing sequence may run off to infinity. Adding $\frac{\gamma}{2}\|\theta\|^2$
+minimizing sequence may run off to infinity — and indeed network training
+problems need not attain an optimum at all [[9]](#references). Adding $\frac{\gamma}{2}\|\theta\|^2$
 makes the reduced functional **coercive**,
 
 $$
@@ -527,6 +527,10 @@ Physics* 378 (2019): 686–707. (First posted as arXiv:1711.10561, 2017.)
 [8] Bronstein, Michael M., Joan Bruna, Taco Cohen, and Petar Veličković.
 "Geometric Deep Learning: Grids, Groups, Graphs, Geodesics, and Gauges."
 *arXiv preprint* arXiv:2104.13478, 2021.
+
+[9] Le, Quoc-Tung, Elisa Riccietti, and Rémi Gribonval. "Does a sparse ReLU
+network training problem always admit an optimum?" *Advances in Neural
+Information Processing Systems* 36 (NeurIPS 2023).
 
 
 
