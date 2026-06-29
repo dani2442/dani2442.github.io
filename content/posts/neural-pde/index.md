@@ -139,17 +139,6 @@ $\partial_t y$, and the new ingredients are the spatial operator $\mathcal A$
 then collapses the parabolic problem (PDE-P) onto the elliptic problem (PDE-E),
 with the reaction $d$ playing the role of the potential $c_0$.
 
-| | Neural ODE | Neural PDE (Parabolic) | Neural PDE (Elliptic) |
-|---|---|---|---|
-| state | $y(t)\in\mathbb{R}^n$ | $y(\cdot,t)\in L^2(\Omega)$ | $y\in H^1(\Omega)$ |
-| equation | $\begin{cases}\dot y = f_\theta(y,t)\\ y(0)=y_0\end{cases}$ | $\begin{cases}\partial_t y +\mathcal A y + d = f_\theta & \text{in } \Omega\times(0,T)\\ \partial_{\nu_{\mathcal A}}y + b = g & \text{on } \Gamma\times(0,T)\\ y(\cdot,0)=y_0 & \text{in } \Omega\end{cases}$ | $\begin{cases}\mathcal A y + c_0\,y = f_\theta & \text{in } \Omega\\ \partial_{\nu_{\mathcal A}}y + \alpha\,y = g & \text{on } \Gamma\end{cases}$ |
-| cost functional $J$ | $\int_0^T\!\varphi\,dt+\phi\big(y(T)\big)$ | $\iint_{\Omega\times(0,T)}\varphi+\iint_{\Gamma\times(0,T)}\psi+\int_\Omega\phi$ | $\int_\Omega\varphi+\int_\Gamma\psi$ |
-| adjoint equation | $\begin{cases}-\dot p = (\partial_y f_\theta)^{\!\top}p+\varphi_y\\ p(T)=\phi_y\end{cases}$ | $\begin{cases}-\partial_t p+\mathcal A^{*}p+(d_y-\partial_y f_\theta)\,p=\varphi_y & \text{in } \Omega\times(0,T)\\ \partial_{\nu_{\mathcal A^{*}}}p+b_y\,p=\psi_y & \text{on } \Gamma\times(0,T)\\ p(\cdot,T)=\phi_y & \text{in } \Omega\end{cases}$ | $\begin{cases}\mathcal A^{*}p+(c_0-\partial_y f_\theta)\,p=\varphi_y & \text{in } \Omega\\ \partial_{\nu_{\mathcal A^{*}}}p+\alpha\,p=\psi_y & \text{on } \Gamma\end{cases}$ |
-| gradient $\nabla_\theta J$ | $\int_0^T(\partial_\theta f_\theta)^{\!\top}p\,dt$ | $\iint_{\Omega\times(0,T)} p\,\partial_\theta f_\theta\,dx\,dt$ | $\int_\Omega p\,\partial_\theta f_\theta\,dx$ |
-| well-posedness | Picard–Lindelöf | Tröltzsch, §5.5 | Tröltzsch, §2.5 (Thm 2.7) |
-| existence of optimal solutions | Filippov-Cesari Thm + coercivity | Tröltzsch, Thm 5.7 + coercivity | Tröltzsch, Thm 4.15 + coercivity |
-
-
 ## 2. The learning problem
 
 We are given **data**: noisy observations of the true state. We phrase fitting
