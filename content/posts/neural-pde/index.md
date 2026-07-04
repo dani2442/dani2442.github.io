@@ -30,7 +30,7 @@ route of embedding the physics in the *model* itself: the right-hand side of an
 ordinary differential equation $\dot y=f(y,t)$ is replaced by a neural network
 $f\approx f_\theta$, trained to reproduce observed data. The same principle was
 soon extended to stochastic differential equations [[7]](#references) and to
-partial differential equations [[5]](#references) — the latter is what we call
+partial differential equations [[5, 11, 12]](#references) — the latter is what we call
 here a *Neural PDE*.
 
 A *Neural PDE* applies the Neural-ODE construction to an evolution equation in
@@ -534,6 +534,15 @@ Information Processing Systems* 36 (NeurIPS 2023).
 [10] Chen, Ricky T. Q. `torchdiffeq`: differentiable ODE solvers with full GPU
 support and O(1)-memory backpropagation. GitHub repository,
 https://github.com/rtqichen/torchdiffeq, example `examples/ode_demo.py`.
+
+[11] Sun, Yifan, Linan Zhang, and Hayden Schaeffer. "NeuPDE: Neural Network Based
+Ordinary and Partial Differential Equations for Modeling Time-Dependent Data."
+*Proceedings of the First Mathematical and Scientific Machine Learning Conference
+(MSML)*, PMLR 107:352–372, 2020. (First posted as arXiv:1908.03190, 2019.)
+
+[12] Long, Zichao, Yiping Lu, Xianzhong Ma, and Bin Dong. "PDE-Net: Learning PDEs
+from Data." *Proceedings of the 35th International Conference on Machine Learning
+(ICML)*, PMLR 80:3208–3216, 2018. (First posted as arXiv:1710.09668, 2017.)
 
 
 
