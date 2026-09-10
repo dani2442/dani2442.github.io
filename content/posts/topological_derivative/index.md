@@ -18,48 +18,38 @@ editPost:
     appendFilePath: true # to append file path to Edit link
 ---
 
-Imagine designing a beam that spans a gap and carries a load at its centre.
-A solid block would do the job, but much of its material contributes little to
-its stiffness. Where can we remove material without making the beam bend too
-much? And if we are allowed to keep only 40% of the block, what shape should
-remain? This is the question behind **compliance minimization**: find a stiff
-structure within a prescribed material budget.
+Imagine we want to design a structure that carries a given load as well as
+possible while being as light as it can be, wasting no material. A solid block
+would certainly do the job, but at a needless cost in weight. The question is
+especially important in the design of lightweight structures for aircraft,
+spacecraft, cars, or trains, where every kilogram counts.
 
-Moving the outer boundary is one way to improve a design. A classical *shape
-derivative* tells us how the cost changes under that motion, but a smooth
-boundary deformation cannot open a new hole inside solid material. To discover
-a truss-like structure starting from a full block, we need a way to decide
-where holes should appear.
+Hence we may ask: where can we remove material without making the structure
+bend too much? The field that studies this question is called **shape and
+topology optimization**.
 
-The **topological derivative** answers a local version of that question: how
-much would the compliance increase if we made a very small hole here? It assigns
-a cost per unit removed area to each point. Removing material where this cost
-is small, then solving the elasticity problem again, lets us gradually uncover
-the parts that carry the load. Hole-insertion ideas appeared in Schumacher's
-1995 work [[1]](#references); Sokołowski and Żochowski formalized the
-topological derivative in 1999, including examples in plane elasticity.
-[Their paper](https://doi.org/10.1137/S0363012997323230) is one of the starting
-points for the theory used here.
+We can model this problem through a linear elasticity PDE, which turns
+the applied load into the stresses inside the body and, through them, into a
+single number measuring the stiffness of the design. The classical way to
+improve a shape is the *shape derivative*, which tells us how that number
+changes when we move the boundary. However, a smooth boundary motion is not
+enough to open a new hole inside solid material: we need an approach that can
+change the topology itself.
 
-In this post we derive that derivative for a circular, traction-free hole,
-check its coefficient against finite-element calculations, and use it to guide
-an optimization on a triangular mesh. At each iteration we solve for the
-displacement, compute and smooth the sensitivity, and retain the cells with
-the largest scores as the material budget decreases. The animation shows this
-process for a cantilever; later we turn to two bridges — one carrying its deck
-on top, one hanging it underneath — and see how the material budget and
-smoothing radius change their final configurations.
+The key tool is the **topological derivative**, which measures the
+change caused by introducing a small hole.
+Once the elasticity problem has been solved, it is inexpensive to evaluate
+throughout the material and therefore provides a natural guide for the
+optimization. Hole-insertion criteria date back to Schumacher's 1995 bubble
+method [[1]](#references); Sokołowski and Żochowski formalized the
+topological derivative in 1999 [[4]](#references), including examples in plane
+elasticity.
 
-![Cantilever optimization from a full block to a truss, with the filtered sensitivity and stiffness history at every iteration](td_optimization.gif)
+In this post, we first study the problem formally, deriving the topological
+derivative, and then solve it numerically with finite elements.
 
-*Left: the current material layout. Right: the filtered and temporally averaged
-sensitivity used to choose the next layout; darker regions have higher scores.
-The curves track material use and stiffness. All 91 frames are solved states,
-from iteration 0 to iteration 90. The triangular mesh stays fixed while cells
-switch between solid and a very weak substitute for void. The colour scale is
-fixed throughout, gamma-compressed, and clipped at the 98th percentile of
-positive scores over the run. The final frame is a computed design, with no
-guarantee of global optimality.*
+![Cantilever optimization from a full block to a truss, with the displacement magnitude and stiffness history at every iteration](td_optimization.gif)
+
 
 The state equation and notation come first (§1–§2), followed by the derivation
 (§3), discretization and verification (§4–§5), and the algorithm and examples
@@ -562,8 +552,8 @@ functional.
 *This is the raw $D_TJ$ before filtering: dark regions are expensive to
 perforate, pale regions are inexpensive. The colour scale is gamma-compressed
 and clipped at its 98th percentile to keep the large values near the clamp and
-loaded patch from hiding the interior pattern. The animation shows the
-filtered update score instead.*
+loaded patch from hiding the interior pattern. What the optimizer ranks is this
+field smoothed by the cone filter of §6.*
 
 ## 5. Numerical verification of the formula
 
@@ -733,10 +723,9 @@ middle of the clamped edge — pure boundary motion, which a shape derivative
 would do just as well. But a cluster of round holes has also opened *in the
 interior*, on the neutral axis ahead of the load, and that is the step a shape
 derivative cannot take: there was no boundary there to move. Comparing with the
-initial sensitivity field in the animation, all of it happens where $D_TJ$ is
-palest — the free corners carry almost no stress, and near the loaded end the
-bending moment is small, so the neutral-axis region there is nearly free to
-perforate.
+raw sensitivity field of §4, all of it happens where $D_TJ$ is palest — the
+free corners carry almost no stress, and near the loaded end the bending moment
+is small, so the neutral-axis region there is nearly free to perforate.
 
 **Step 15 ($|\Omega|=0.74$).** The holes have grown, new ones have nucleated
 further left as the stress field redistributes around the old ones, and they
@@ -796,18 +785,18 @@ and never on ersatz.
 
 The full-material compliance is $J_0=1.712$.
 
-![Three-pier bridge optimization from a full block to a two-span arch viaduct, with the filtered sensitivity and stiffness history at every iteration](td_bridge.gif)
+![Three-pier bridge optimization from a full block to a two-span arch viaduct, with the displacement magnitude and stiffness history at every iteration](td_bridge.gif)
 
-*Left: the current material layout. Right: the filtered and temporally averaged
-sensitivity used to choose the next layout; darker regions have higher scores.
-All 121 frames are solved states, from iteration 0 to iteration 120, and the
-last one is the design discussed below. The colour scale is built the same way
-as in the cantilever animation, from this run's own scores. Grey symbols mark
-displacement constraints ($\Gamma_D$); the orange bar is the loaded edge
-($\Gamma_N$) and the arrows give the direction of $g$. Unlike the clamped
-cantilever in §1, this benchmark constrains individual mesh nodes. These are
-discrete pin idealizations, not positive-length clamped boundaries covered by
-Theorem 1.1. A continuum model would use finite support patches with the
+*Left: the current material layout. Right: the displacement magnitude $|u|$ of
+the state solved on it; darker regions move further under the deck load. All
+121 frames are solved states, from iteration 0 to iteration 120, and the last
+one is the design discussed below. The colour scale is built the same way as in
+the cantilever animation, from this run's own displacements. Grey
+symbols mark displacement constraints ($\Gamma_D$); the orange bar is the
+loaded edge ($\Gamma_N$) and the arrows give the direction of $g$. Unlike the
+clamped cantilever in §1, this benchmark constrains individual mesh nodes. These
+are discrete pin idealizations, not positive-length clamped boundaries covered
+by Theorem 1.1. A continuum model would use finite support patches with the
 corresponding constrained displacement components.*
 
 **What comes out is a two-span arch viaduct.** Nothing in the algorithm knows
