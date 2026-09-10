@@ -46,8 +46,9 @@ check its coefficient against finite-element calculations, and use it to guide
 an optimization on a triangular mesh. At each iteration we solve for the
 displacement, compute and smooth the sensitivity, and retain the cells with
 the largest scores as the material budget decreases. The animation shows this
-process for a cantilever; later we turn to a three-pier bridge and see how the
-material budget and smoothing radius change its final configuration.
+process for a cantilever; later we turn to two bridges — one carrying its deck
+on top, one hanging it underneath — and see how the material budget and
+smoothing radius change their final configurations.
 
 ![Cantilever optimization from a full block to a truss, with the filtered sensitivity and stiffness history at every iteration](td_optimization.gif)
 
@@ -795,13 +796,18 @@ and never on ersatz.
 
 The full-material compliance is $J_0=1.712$.
 
-![Final three-pier bridge: two arches under a solid deck, with pinned supports at both abutments and at midspan and a uniform downward traction on the whole top edge](td_bridge.png)
+![Three-pier bridge optimization from a full block to a two-span arch viaduct, with the filtered sensitivity and stiffness history at every iteration](td_bridge.gif)
 
-*Grey symbols mark displacement constraints ($\Gamma_D$); the orange bar is the
-loaded edge ($\Gamma_N$) and the arrows give the direction of $g$. Unlike the
-clamped cantilever in §1, this benchmark constrains individual mesh nodes. These
-are discrete pin idealizations, not positive-length clamped boundaries covered
-by Theorem 1.1. A continuum model would use finite support patches with the
+*Left: the current material layout. Right: the filtered and temporally averaged
+sensitivity used to choose the next layout; darker regions have higher scores.
+All 121 frames are solved states, from iteration 0 to iteration 120, and the
+last one is the design discussed below. The colour scale is built the same way
+as in the cantilever animation, from this run's own scores. Grey symbols mark
+displacement constraints ($\Gamma_D$); the orange bar is the loaded edge
+($\Gamma_N$) and the arrows give the direction of $g$. Unlike the clamped
+cantilever in §1, this benchmark constrains individual mesh nodes. These are
+discrete pin idealizations, not positive-length clamped boundaries covered by
+Theorem 1.1. A continuum model would use finite support patches with the
 corresponding constrained displacement components.*
 
 **What comes out is a two-span arch viaduct.** Nothing in the algorithm knows
@@ -885,9 +891,131 @@ illustrates sensitivity to the parameters; it does not identify globally
 optimal bridges. The full compliance and volume histories, along with the
 parameters of every run, are available in [the numerical results](td_results.json).
 
-### 7.4 The L-bracket
+### 7.4 The same span, hanging
 
-The second load case uses an L-shaped design region: remove the upper-right
+Keep the span, the mesh, the material and the total load, and move both
+boundaries to the bottom. $\Gamma_N$ is now the **whole bottom edge**, carrying
+the same uniform downward traction $g=(0,-1/3)$ of total magnitude $1$: the deck
+is slung underneath rather than resting on top. Only the two end piers survive,
+at $x=0$ and $x=3$, still pinned in both components. Two cell rows of deck and
+the two pier heads stay solid ($366$ cells). The corner nodes are both loaded
+and pinned, so $0.6\%$ of the nodal load goes straight into the supports and
+does no work.
+
+The full-material compliance is $J_0=4.237$ — two and a half times the
+three-pier value, since one support has been removed and the span of $3$ is no
+longer split in two.
+
+![Final hanging bridge: an arch above a straight bottom deck, springing from pinned supports at the two bottom corners, with a fan of web members between deck and arch and a uniform downward traction on the whole bottom edge](td_hanging.png)
+
+*Grey symbols mark the two pinned piers ($\Gamma_D$); the orange bar is the
+loaded bottom edge ($\Gamma_N$) and the arrows leave it in the direction of $g$.
+Same caveat as in §7.2: these are discrete pin idealizations, not
+positive-length clamped boundaries covered by Theorem 1.1.*
+
+**The answer is a bowstring.** The same pointwise criterion that built a
+viaduct in §7.2 now builds an arch *above* the deck, springing from the two
+piers, with a fan of web members hanging the deck from it. The load path is
+inverted: there the spandrel struts pressed the deck's load down onto an arch
+beneath it, here the web carries it up to an arch overhead. Nothing changed
+except which edge carries $\Gamma_N$ and how many piers there are.
+
+Three things are worth measuring.
+
+*The thrust is much larger.* Each abutment carries $R_y=0.500$ — statics, since
+there are only two supports — and $R_x=0.325$, a reaction line inclined $33°$
+from the vertical against the $21°$ of the three-pier viaduct. A shallow arch
+pushes harder: for a parabolic funicular of rise $f=1$ over span $L=3$ under
+$w=1/3$ the thrust would be $wL^2/(8f)=0.375$, and the design sits just under
+that.
+
+*The deck is only a partial tie.* Cut the structure at midspan and integrate
+$\sigma_{xx}$ through the cut: the arch carries $0.399$ of compression, the deck
+$0.075$ of tension, and the difference — exactly $0.325$ — is what the abutments
+absorb. A genuine tied arch would balance those two internally and leave no
+horizontal reaction; here the pinned supports take four fifths of the job, and
+the optimizer spends almost no material making the deck into a tie.
+
+*The box truncates the arch.* Over $54$ of the $180$ columns, $x$ from $1.07$ to
+$1.95$, the material runs into the top edge of $\Omega_0$. The flat crown is a
+constraint, not a choice: the optimizer wants more rise than the design region
+allows, which is also why the thrust lands where it does.
+
+The result is $J=6.572$, i.e. $J/J_0=1.55$: $64\%$ of the full-block stiffness
+on $40\%$ of the material, against $77\%$ for the three-pier viaduct — and in
+absolute terms three times as compliant, $6.57$ against $2.23$. Both effects
+come from the missing middle pier, not from the load having moved. The mirror
+symmetry is also broken far more visibly than before, by $11.4\%$ of cells
+against $3.3\%$: the web members are nearly interchangeable, so tie-breaking in
+the sort decides where they land.
+
+![Nine hanging-bridge configurations: material fractions 0.30, 0.40 and 0.50 across columns, with filter radii 2.5, 3.5 and 5.5 cell widths down rows; every panel shows the two piers, the bottom-edge traction and the relative compliance](td_hanging_sweep.png)
+
+Repeating the sweep of §7.3 shows the arch surviving in all nine panels, but
+the web does not: at $r_{\min}/h=2.5$ it is a dense fan of thin diagonals, at
+$5.5$ four or five wide panels. The compliances spread further than they did
+for the viaduct — down the $V=0.30$ column, $J/J_0$ is $2.04$, $2.13$ and
+$2.23$ ($49\%$, $47\%$, $45\%$ of the full-block stiffness) against
+$1.56$/$1.58$/$1.65$ there — while at $V=0.50$ the filter again barely matters
+($1.31$, $1.32$, $1.33$).
+
+The greedy update is also markedly less stable in tension. At $V=0.40$,
+$r_{\min}/h=3.5$ the fixed-volume band is $2.1\%$; at $V=0.30$ it is $10\%$,
+$16\%$ and $48\%$ for the three radii. In the worst case, $V=0.30$ with
+$r_{\min}/h=5.5$, the compliance sits near $9.66$ but jumps above $11$ at
+eleven of the sixty fixed-volume iterations and once as high as $13.9$, always
+recovering within an update or two. A hanger is a single load path: deleting it
+disconnects a whole panel of deck from the arch. Removing one spandrel strut in
+§7.2 merely redistributed the load into its neighbours. Quoting the last
+iterate is more of a convention here than anywhere else in this post.
+
+### 7.5 The same bridge, upside down
+
+One more variant, and it is the most instructive of the three. Keep the load on
+the bottom edge as in §7.4, but put **three** piers back — this time along the
+**top** edge, at $x=0$, $1.5$ and $3$. The deck now hangs from three points
+above it instead of standing on three below. Two deck rows and the three pier
+heads stay solid, exactly as in §7.2.
+
+![Final suspended deck: two cables sagging from three pinned piers on the top edge down to a straight loaded deck at the bottom, with branching hangers between them](td_suspended.png)
+
+**This is §7.2 turned upside down, cell for cell.** Not approximately: the
+final designs differ in $0$ of the $10\,800$ cells from an exact reflection in
+$y$, and the two compliance histories agree to $1.3\times10^{-12}$ over all
+$121$ iterations, so $J_0=1.712$ and $J=2.232$ are the same numbers as in §7.2.
+That is not a coincidence, and it is worth spelling out why, because it is a
+property of the objective rather than of this code.
+
+*The mesh is genuinely mirror-symmetric.* Reflecting $y\mapsto 1-y$ flips the
+parity of $i+j$, which is exactly what turns a "/" union-jack diagonal into
+the "\\" its mirror image needs. The reflected triangulation is the original
+triangulation.
+
+*The compliance is even in the stress.* The reflected problem is the original
+one with $g$ reversed, and $J=\int_{\Gamma_N} g\cdot u$ is unchanged when both
+$g$ and $u$ change sign. The topological derivative inherits this: it depends
+on $\sigma$ only through $4\,\sigma\!:\!\sigma-(\operatorname{tr}\sigma)^2$,
+even in $\sigma$. Every quantity the algorithm looks at is blind to the sign.
+
+So the two structures carry the same forces with the signs reversed. At a cut
+through midspan of a span, the viaduct's arch carries $-0.0938$ — compression —
+and the suspended deck's cable carries $+0.0938$ — tension. Each abutment
+thrusts *outward* at $R_x=+0.0938$ in §7.2 and pulls *inward* at $-0.0938$
+here, with identical vertical reactions $0.245/0.510/0.245$.
+
+**And that is a real limitation, not a curiosity.** A masonry arch and a steel
+cable are not interchangeable structures: the arch can buckle and cannot take
+tension, the cable cannot take compression and needs anchorage. Linear
+compliance minimization prices neither. If you want one and not the other you
+have to say so in the model — with a stress constraint, a buckling constraint,
+or a material that behaves differently in tension and compression — because
+$D_TJ$ will never distinguish them. Sweeping the parameters here would simply
+reproduce [the grid in §7.3](td_bridge_sweep.png) upside down, so there is no
+second sweep to show.
+
+### 7.6 The L-bracket
+
+The last load case uses an L-shaped design region: remove the upper-right
 $(0.4,1)\times(0.4,1)$ block from the unit square, clamp the top of the vertical
 arm, and apply a downward traction on the upper face of the horizontal arm,
 over the last tenth of its length up to the right edge. The $120\times120$
@@ -928,6 +1056,13 @@ are all proved above and observed numerically.
   $3.3\cdot10^{-8}$, $0$ — exactly linear in $E_{\min}/E$, and three parts per
   million at the value used. Small, but not zero.
 - *Insertion is heuristic*, as discussed in §6.2.
+- *Tension and compression are indistinguishable.* Both $J$ and $D_TJ$ are
+  even in $\sigma$, so reversing the sign of every stress leaves them fixed.
+  §7.5 shows the consequence: the suspended deck is the arch viaduct of §7.2
+  reflected in $y$, cell for cell and to twelve digits of compliance, even
+  though one works entirely in compression and the other entirely in tension.
+  Buckling, anchorage and any tension–compression asymmetry of the material
+  have to enter through a different objective or constraint.
 - *Only compliance, only one load case.* Compliance is self-adjoint, so the
   sensitivity is free. Stress-constrained, multi-load, eigenvalue and
   compliant-mechanism objectives all have their own topological derivatives,
