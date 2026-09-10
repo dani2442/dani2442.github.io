@@ -6,7 +6,7 @@ categories: ["pde", "optimization"]
 author: "Daniel López Montero"
 showToc: true
 draft: true
-description: "A rigorous derivation of the topological derivative of structural compliance for a traction-free circular hole, verified numerically, and used to drive a from-scratch P1 finite-element topology optimization."
+description: "How the topological derivative guides material removal: linear elasticity, a derivation and numerical checks, an animated optimization, and bridge-like designs."
 ShowWordCount: false
 ShowReadingTime: true
 comments: true
@@ -18,84 +18,155 @@ editPost:
     appendFilePath: true # to append file path to Edit link
 ---
 
-Shape optimization asks how a cost functional responds when the boundary of a
-domain moves. The classical *shape derivative* answers that question: perturb
-$\partial\Omega$ along a vector field and you get a boundary integral whose
-density tells you where to push. What a shape derivative cannot do is change
-the topology. A boundary can be moved, smoothed, and even pinched off, but a
-hole cannot be *created* in the interior of a domain, because in the interior
-there is no boundary to move. Every hole in the final design has to have been
-present in the initial guess.
+Imagine designing a beam that spans a gap and carries a load at its centre.
+A solid block would do the job, but much of its material contributes little to
+its stiffness. Where can we remove material without making the beam bend too
+much? And if we are allowed to keep only 40% of the block, what shape should
+remain? This is the question behind **compliance minimization**: find a stiff
+structure within a prescribed material budget.
 
-The **topological derivative** removes that restriction. Punch a small hole of
-radius $\varepsilon$ at an interior point $\hat x$, and ask for the leading
-term of the resulting change in the cost. For a suitable class of functionals
-that change is $O(\varepsilon^{d})$ in $\mathbb R^d$, and the coefficient is a
-pointwise field computed entirely from the *unperturbed* state — no extra solve
-is needed. Thresholding that field is then a legitimate way to decide where
-to nucleate holes. The idea goes back to Schumacher's "bubble method"
-[[1]](#references) and was put on a rigorous footing by Sokołowski and
-Żochowski and by Céa, Garreau, Guillaume and Masmoudi
-[[2, 3, 4]](#references); it is now standard, either on its own
-[[5, 6]](#references) or coupled to a level-set shape derivative
-[[11]](#references).
+Moving the outer boundary is one way to improve a design. A classical *shape
+derivative* tells us how the cost changes under that motion, but a smooth
+boundary deformation cannot open a new hole inside solid material. To discover
+a truss-like structure starting from a full block, we need a way to decide
+where holes should appear.
 
-![Topological gradient of the compliance](td_gradient.png)
+The **topological derivative** answers a local version of that question: how
+much would the compliance increase if we made a very small hole here? It assigns
+a cost per unit removed area to each point. Removing material where this cost
+is small, then solving the elasticity problem again, lets us gradually uncover
+the parts that carry the load. Hole-insertion ideas appeared in Schumacher's
+1995 work [[1]](#references); Sokołowski and Żochowski formalized the
+topological derivative in 1999, including examples in plane elasticity.
+[Their paper](https://doi.org/10.1137/S0363012997323230) is one of the starting
+points for the theory used here.
 
-*The topological gradient $D_TJ$ of the compliance on a cantilever design
-domain, derived in §3 and computed in §7. Dark means expensive to perforate,
-pale means nearly free — and the pale regions are where the optimizer will open
-holes. The colour scale is gamma-compressed and clipped at the 98th percentile,
-because $D_TJ$ is genuinely singular at the clamped corners and at the ends of
-the loaded patch; see §3.6.*
+In this post we derive that derivative for a circular, traction-free hole,
+check its coefficient against finite-element calculations, and use it to guide
+an optimization on a triangular mesh. At each iteration we solve for the
+displacement, compute and smooth the sensitivity, and retain the cells with
+the largest scores as the material budget decreases. The animation shows this
+process for a cantilever; later we turn to a bridge-like beam and see how the
+material budget and smoothing radius change its final configuration.
 
-The flagship application is **structural compliance minimization**: make a
-load-bearing structure as stiff as possible with a given amount of material.
-This post does the following, in order.
+![Cantilever optimization from a full block to a truss, with the filtered sensitivity and stiffness history at every iteration](td_optimization.gif)
 
-1. State the elasticity problem and the compliance functional, and record the
-   energy identities that make compliance special (§1–§2).
-2. Prove an **exact** difference identity for $J(\Omega_\varepsilon)-J(\Omega)$
-   from Betti reciprocity — no asymptotics in it at all (§3.2).
-3. Solve the **exterior (Kirsch) problem** with Muskhelishvili potentials and
-   read off the topological derivative, with its constant (§3.3–§3.4).
-4. Reconcile the two forms of the result that circulate in the literature — the
-   "stress-only" form and the polarization-tensor form — and clear up which
-   one the coefficient $1-3\nu$ belongs to (§3.5).
-5. Discretize with **P1 (constant-strain) triangles** on a triangulated design
-   domain (§4).
-6. **Verify** the formula numerically against domains in which a hole is
-   actually meshed, for both plane models (§5).
-7. Run the optimization and look at **five steps** of it (§6–§7).
+*Left: the current material layout. Right: the filtered and temporally averaged
+sensitivity used to choose the next layout; darker regions have higher scores.
+The curves track material use and stiffness. All 91 frames are solved states,
+from iteration 0 to iteration 90. The triangular mesh stays fixed while cells
+switch between solid and a very weak substitute for void. The colour scale is
+fixed throughout, gamma-compressed, and clipped at the 98th percentile of
+positive scores over the run. The final frame is a computed design, with no
+guarantee of global optimality.*
 
-All the code is in
+The state equation and notation come first (§1–§2), followed by the derivation
+(§3), discretization and verification (§4–§5), and the algorithm and examples
+(§6–§7). All the code is in
 [`code/topological_derivative/`](https://github.com/dani2442/dani2442.github.io/tree/main/code/topological_derivative):
-`numpy` + `scipy.sparse` + `matplotlib`, no finite-element library, no mesh
-generator, no optimizer.
+`numpy` + `scipy.sparse` + `matplotlib`, with Pillow for the GIF.
 
 ## 1. The state problem
 
-Let $\Omega\subset\mathbb R^2$ be a bounded Lipschitz domain whose boundary
-splits, up to sets of one-dimensional measure zero, as
-$$\partial\Omega=\Gamma_D\cup\Gamma_N\cup\Gamma_0,\qquad
-\mathcal H^1(\Gamma_D)>0 .\tag{1.1}$$
-The structure is clamped on $\Gamma_D$, loaded by a traction $g\in
-L^2(\Gamma_N;\mathbb R^2)$ on $\Gamma_N$, and traction free on $\Gamma_0$. Put
-$$V(\Omega):=\big\{v\in H^1(\Omega;\mathbb R^2)\ :\ v|_{\Gamma_D}=0\big\},\qquad
-\varepsilon(v):=\tfrac12\big(\nabla v+\nabla v^\top\big),$$
-$$a_\Omega[u,v]:=\int_\Omega \sigma(u):\varepsilon(v)\,dx,\qquad
-\ell[v]:=\int_{\Gamma_N} g\cdot v\,ds,\qquad \sigma(v):=\mathbb C\,\varepsilon(v).$$
+We use **static, small-strain linear elasticity**, with no body force and unit
+out-of-plane thickness. Let $\Omega\subset\mathbb R^2$ be a bounded, connected
+Lipschitz domain occupied by material. Its boundary splits into a clamped part,
+a loaded part, and a free part:
 
-The **weak form** of
-$$-\operatorname{div}\sigma(u)=0\ \text{ in }\Omega,\qquad
-u=0\ \text{ on }\Gamma_D,\qquad
-\sigma(u)\,n=g\ \text{ on }\Gamma_N,\qquad
-\sigma(u)\,n=0\ \text{ on }\Gamma_0 \tag{1.2}$$
-is: find $u\in V(\Omega)$ with $a_\Omega[u,v]=\ell[v]$ for all $v\in V(\Omega)$.
+$$
+\partial\Omega=\Gamma_D\cup\Gamma_N\cup\Gamma_0,
+\qquad \mathcal H^1(\Gamma_D)>0 .\tag{1.1}
+$$
+
+The pieces are disjoint up to sets of boundary length zero. The unknown is the
+**displacement** $u(x)$: the vector by which the material point $x$ moves under
+the load. Its symmetric gradient is the small-strain tensor,
+$\varepsilon(u)=\tfrac12(\nabla u+\nabla u^\top)$. The stress is given by
+Hooke's law, $\sigma(u)=\mathbb C\varepsilon(u)$, where **$\mathbb C$ is the
+fourth-order elasticity tensor**. It maps strain to stress and contains the
+material's stiffness parameters; it is not the compliance $J$.
+
+For a prescribed $g\in L^2(\Gamma_N;\mathbb R^2)$, the governing equation and
+boundary conditions, in **strong form**, are
+
+$$
+\boxed{
+\begin{aligned}
+-\operatorname{div}\!\big(\mathbb C\varepsilon(u)\big)&=0
+&&\text{in }\Omega,\\
+u&=0 &&\text{on }\Gamma_D,\\
+\big(\mathbb C\varepsilon(u)\big)n&=g &&\text{on }\Gamma_N,\\
+\big(\mathbb C\varepsilon(u)\big)n&=0 &&\text{on }\Gamma_0.
+\end{aligned}
+}\tag{1.2}
+$$
+
+The first line expresses force balance inside the material. On $\Gamma_D$ we
+prescribe zero displacement; on $\Gamma_N$ we prescribe the traction $g$,
+meaning force per unit boundary length in this unit-thickness model. The
+remaining boundary carries no traction. Thus $\Gamma_D$ and $\Gamma_N$ are
+boundary sets, not forces: the orange arrows in the figures represent $g$.
+
+### Notation at a glance
+
+| Symbol | Meaning |
+|---|---|
+| $\Omega$, $\Omega_0$ | Current material domain and the fixed region in which a design may be placed. |
+| $\Gamma_D$, $\Gamma_N$, $\Gamma_0$ | Boundary with prescribed displacement, applied traction, and zero traction, respectively. |
+| $u$, $v$ | Displacement and a virtual displacement (test function). |
+| $n$, $g$ | Outward unit normal and prescribed boundary traction. On a hole, §3.2 explicitly specifies the normal orientation. |
+| $\varepsilon(u)$, $\sigma(u)$ | Symmetric strain tensor and symmetric stress tensor. |
+| $\mathbb C$, $D$ | Elasticity tensor and its $3\times3$ matrix representation in engineering Voigt notation. |
+| $E$, $\nu$ | Young's modulus (stiffness scale) and Poisson's ratio (lateral contraction). |
+| $\mu$, $\lambda^\ast$ | Shear modulus and effective Lamé coefficient for the chosen plane model. |
+| $I$, $\operatorname{tr}A$, $A:B$ | Identity tensor, trace, and tensor inner product $A:B=\sum_{i,j}A_{ij}B_{ij}$. |
+| $V(\Omega)$, $a_\Omega[u,v]$, $\ell[v]$ | Admissible displacement space, elastic bilinear form, and work of the load. |
+| $\ell$ | Scalar multiplier for the material constraint in §6; distinct from the load functional $\ell[v]$. |
+| $J(\Omega)$ | Compliance: the work of the prescribed load at equilibrium. Smaller means stiffer for this load. |
+| $\hat x$, $\varepsilon$, $B_\varepsilon(\hat x)$ | Hole centre, hole radius, and the disk removed there. The scalar radius $\varepsilon$ is distinct from the strain $\varepsilon(u)$. |
+| $D_TJ$, $G_k$ | Topological derivative per unit removed area, and the filtered, averaged cell score used at iteration $k$. |
+| $V$, $\chi_e$ | Target material fraction and the binary material indicator of cell $e$. The scalar $V$ is distinct from the space $V(\Omega)$. |
+| $h$, $r_{\min}$, $\mathrm{er}$ | Background cell width, filter radius, and fraction of material removed per scheduled update. |
+| $\kappa$, $E_{\min}$ | Muskhelishvili constant used in the hole calculation, and the small modulus assigned to void cells in the numerical model. |
+
+### From force balance to the weak form
+
+To solve (1.2) with finite elements, multiply force balance by a test function
+$v$ that vanishes on $\Gamma_D$ and integrate by parts. The boundary conditions
+leave only the work of $g$:
+
+$$
+\int_\Omega \mathbb C\varepsilon(u):\varepsilon(v)\,dx
+=\int_{\Gamma_N}g\cdot v\,ds.
+$$
+
+More precisely, define
+
+$$
+V(\Omega):=\big\{v\in H^1(\Omega;\mathbb R^2):v|_{\Gamma_D}=0\big\},
+$$
+$$
+a_\Omega[u,v]:=\int_\Omega\sigma(u):\varepsilon(v)\,dx,
+\qquad \ell[v]:=\int_{\Gamma_N}g\cdot v\,ds.
+$$
+
+The **weak problem** is to find $u\in V(\Omega)$ such that
+$a_\Omega[u,v]=\ell[v]$ for every $v\in V(\Omega)$. It expresses the same force
+balance without requiring classical second derivatives of $u$.
+
+### The material law
 
 For an isotropic plane material the elasticity tensor acts on symmetric
 $2\times2$ tensors as
 $$\mathbb C\,\xi=2\mu\,\xi+\lambda^\ast\,(\operatorname{tr}\xi)\,I .\tag{1.3}$$
+With constant coefficients, substituting this law into the first line of
+(1.2) gives the displacement equation explicitly:
+
+$$
+-\mu\Delta u-(\lambda^\ast+\mu)\nabla(\operatorname{div}u)=0
+\qquad\text{in }\Omega.
+$$
+
 Decomposing $\xi=\xi^D+\tfrac12(\operatorname{tr}\xi)I$ into deviatoric and
 hydrostatic parts gives $|\xi|^2=|\xi^D|^2+\tfrac12(\operatorname{tr}\xi)^2$ and
 $$\mathbb C\,\xi:\xi=2\mu\,|\xi^D|^2+(\lambda^\ast+\mu)\,(\operatorname{tr}\xi)^2
@@ -485,6 +556,14 @@ per element. No recovery or smoothing is needed to evaluate it — which is a
 small but real advantage of the lowest-order element for this particular
 functional.
 
+![Unfiltered topological derivative on the full-material cantilever, with its clamped edge and loaded patch](td_gradient.png)
+
+*This is the raw $D_TJ$ before filtering: dark regions are expensive to
+perforate, pale regions are inexpensive. The colour scale is gamma-compressed
+and clipped at its 98th percentile to keep the large values near the clamp and
+loaded patch from hiding the interior pattern. The animation shows the
+filtered update score instead.*
+
 ## 5. Numerical verification of the formula
 
 Deriving (3.9) and using it are different things; before letting it drive an
@@ -592,7 +671,7 @@ solve      K(E) u = f          with  E_e = E_min + (E - E_min) chi_e
 stress     sigma_e = D(E, nu) B_e u_e        (SOLID moduli; constant per triangle)
 gradient   G_e = k [ 4 sigma_e:sigma_e - (tr sigma_e)^2 ] * chi_e
 filter     G <- H G                          (cone kernel, radius r_min)
-average    G <- (G + G_prev)/2               (two-iteration smoothing)
+average    G <- (G + G_prev)/2; G_prev <- G   (recursive temporal smoothing)
 volume     V_{k+1} = max(V_target, V_k (1 - er))
 update     chi = 1 on the V_{k+1} fraction of cells with largest G, else 0
            chi = 1 on the protected cells (under the load, at point supports)
@@ -623,27 +702,29 @@ the sort and be re-filled. That is a practical device, not a derived quantity.
 The rigorous counterpart is the topological derivative with respect to an
 inclusion of finite contrast, derived by Amstutz [[7]](#references).
 
-**The update itself.** Thresholding at the volume quantile with two-iteration
-sensitivity averaging is the BESO update of Huang and Xie
-[[13]](#references). It is a greedy descent on (6.3), not a convergent
+**The update itself.** Thresholding at the volume quantile with temporal
+sensitivity averaging follows the BESO update of Huang and Xie
+[[13]](#references); the code stores the previously averaged score, so its
+smoothing is recursive. It is a greedy descent on (6.3), not a convergent
 algorithm: there is no line search, no guarantee of monotone decrease at fixed
 volume, and no claim of global optimality.
 
-## 7. Five steps of the optimization
+## 7. Watching the design evolve
+
+### 7.1 The cantilever
 
 The test case is the classic cantilever: $\Omega_0=(0,2)\times(0,1)$ meshed with
 $150\times75$ cells — $11\,476$ nodes, $22\,500$ triangles, $22\,952$ degrees of
 freedom — clamped along the whole left edge, loaded by a downward traction of
 total magnitude $1$ on a patch of height $0.12$ centred on the right edge. Plane
 stress, $E=1$, $\nu=0.3$, target volume fraction $V=0.4$, $90$ iterations with
-an evolution rate $\text{er}=2\%$ (so the volume target is reached at iteration
-$45$ and held for the remaining $45$).
+an evolution rate $\text{er}=2\%$. The rounded cell-count schedule first reaches
+the target at iteration $46$, followed by $44$ updates at fixed volume.
 
 The full-material compliance is $J_0=38.729$.
 
-![Five steps of the topological-derivative optimization](td_steps.png)
-
-Read left to right, top to bottom:
+The animation at the beginning follows every iteration. These are a few
+milestones in that sequence:
 
 **Step 6 ($|\Omega|=0.89$).** Two different things have happened. The top-right
 and bottom-right corners have been trimmed and a wedge has been cut into the
@@ -651,7 +732,7 @@ middle of the clamped edge — pure boundary motion, which a shape derivative
 would do just as well. But a cluster of round holes has also opened *in the
 interior*, on the neutral axis ahead of the load, and that is the step a shape
 derivative cannot take: there was no boundary there to move. Comparing with the
-gradient field at the top of this post, all of it happens where $D_TJ$ is
+initial sensitivity field in the animation, all of it happens where $D_TJ$ is
 palest — the free corners carry almost no stress, and near the loaded end the
 bending moment is small, so the neutral-axis region there is nearly free to
 perforate.
@@ -677,7 +758,9 @@ regularization, the second is the topological derivative.
 $J/J_0=1.90$. In stiffness terms: **the structure retains $53\%$ of the
 full-material stiffness using $40\%$ of the material.**
 
-The convergence panel plots two dimensionless quantities on one scale: the
+![Material fraction and relative stiffness over the 90 cantilever updates](td_convergence.png)
+
+The convergence plot shows two dimensionless quantities on one scale: the
 volume fraction $|\Omega_k|/|\Omega_0|$ and the relative stiffness
 $J_0/J(\Omega_k)$. Two details there are worth reading carefully rather than
 waving at.
@@ -698,16 +781,90 @@ states rather than taking a step along a search direction, exact monotonicity
 at fixed volume is not available and should not be claimed — the band is the
 honest convergence statement.
 
-The same code, with only the boundary conditions and the hold-all changed,
-gives the two other canonical benchmarks:
+### 7.2 A bridge-like beam
 
-![Two further load cases](td_examples.png)
+The first additional example is a **simply supported beam**, usually called the
+MBB benchmark in topology optimization. Its span and arch-and-tie layout make
+it a useful simplified picture of a bridge carrying a central load. We model a
+single two-dimensional load case here; a bridge deck, moving traffic, self-weight
+and buckling are outside this example. The MBB problem is also used in
+[DTU's educational topology-optimization code](https://www.topopt.mek.dtu.dk/apps-and-software/a-99-line-topology-optimization-code-written-in-matlab).
 
-The MBB beam recovers the textbook arch-and-tie topology. The L-bracket is the
-more interesting one: the material fans out from the re-entrant corner along
-diagonals, and the corner itself is rounded off — the design responds to the
-stress singularity there, which is also, by §3.6, exactly the point where the
-asymptotic expansion behind $D_TJ$ is least trustworthy.
+The design region is $(0,3)\times(0,1)$, with $180\times60$ cells. A pin at the
+bottom-left corner fixes $u_x=u_y=0$, while a roller at the bottom-right fixes
+only $u_y=0$, allowing horizontal motion. A downward traction with total
+magnitude $1$ acts over a short patch at the centre of the top edge. The small
+regions touching the load and supports remain solid throughout the run.
+
+![Final bridge-like beam with a pin at the left, a roller at the right, and downward traction on the central top patch](td_bridge.png)
+
+*Grey symbols mark displacement constraints ($\Gamma_D$); orange marks the
+loaded patch ($\Gamma_N$) and the direction of $g$. Unlike the clamped
+cantilever in §1, this benchmark imposes constraints at individual mesh nodes.
+These are discrete pin/roller idealizations, not positive-length clamped
+boundaries covered by Theorem 1.1. A continuum model would use finite support
+patches with the corresponding constrained displacement components.*
+
+Material arranges itself into an upper arch, a lower tie, and connecting
+members that transmit the central load to the supports. The geometry is
+computed from the same sensitivity rule as the cantilever; no arch or truss
+members are prescribed in advance.
+
+### 7.3 How the bridge changes with the parameters
+
+There is no single final geometry independent of the algorithm's settings.
+The grid below changes two parameters: the **material budget** $V$ across
+columns and the **filter radius** $r_{\min}/h$ down rows. Each panel is a
+separate run starting from the full block, using the same mesh, supports,
+traction, plane-stress material ($E=1$, $\nu=0.3$), ersatz modulus
+$E_{\min}=10^{-6}$, evolution rate $2\%$, and $120$ updates. The centre panel
+uses the same parameters as the beam shown above.
+
+![Nine bridge configurations: material fractions 0.30, 0.40 and 0.50 across columns, with filter radii 2.5, 3.5 and 5.5 cell widths down rows; every panel shows supports, traction and relative compliance](td_bridge_sweep.png)
+
+*The span and height are identical in every panel. $J_0$ is the compliance of
+the same full-material beam, so the displayed $J/J_0$ values share a common
+reference. Smaller $J/J_0$ means greater stiffness under this load.*
+
+[Open the full-size comparison](td_bridge_sweep.png) to inspect the members and
+support labels.
+
+The material budget controls how much solid can remain, while the filter
+radius controls the spatial averaging of the sensitivity. A small radius lets
+nearby thin members compete separately; a larger radius averages over a wider
+neighbourhood and favours coarser layouts. It does not impose a strict minimum
+member thickness. Comparing down a column holds material use fixed, making
+that change in geometry easier to see. Comparing across a row shows the
+trade-off between material use and stiffness for a given filter.
+
+For example, at $V=0.30$ the largest radius removes the internal connecting
+members and leaves a simpler arch-and-tie layout. Its relative compliance is
+$J/J_0=2.57$, compared with $2.30$ and $2.31$ for the two smaller radii:
+about $39\%$ of the full beam's stiffness instead of $43\%$, with the same
+amount of material. At $V=0.40$, the three layouts differ visibly while their
+relative compliances are much closer: $1.78$, $1.80$ and $1.81$.
+
+These are final configurations after a fixed iteration budget. The comparison
+illustrates sensitivity to the parameters; it does not identify globally
+optimal bridges. The full compliance and volume histories, along with the
+parameters of every run, are available in [the numerical results](td_results.json).
+
+### 7.4 The L-bracket
+
+The second load case uses an L-shaped design region: remove the upper-right
+$(0.4,1)\times(0.4,1)$ block from the unit square, clamp the top of the vertical
+arm, and apply a downward traction near the tip of the horizontal arm. The
+$120\times120$ background grid stays fixed; the removed block is permanently
+void and excluded from the material budget. We retain $40\%$ of the L-shaped
+region, with $r_{\min}/h=3.5$ and $90$ updates.
+
+![Final L-bracket with the top of the vertical arm clamped on Gamma D and a downward traction at the right-hand tip on Gamma N](td_lbracket.png)
+
+Here material fans out along diagonals between the loaded tip and the top
+clamp, and the free boundary around the re-entrant corner changes as cells are
+removed. That corner is also a stress singularity in the initial domain: as
+§3.6 explains, the small-hole expansion must be used away from such boundary
+points.
 
 ## 8. What this does and does not establish
 
