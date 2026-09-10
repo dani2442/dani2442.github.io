@@ -16,9 +16,9 @@ UseHugoToc: true
 
 A physics-informed neural network approximates a PDE solution by minimizing a residual loss. The **strong formulation** evaluates the differential equation directly. A **weak formulation** tests the equation against functions and can move derivatives from the network onto those tests through integration by parts. These are the starting points of [PINNs](https://maziarraissi.github.io/PINNs/) and [variational PINNs](https://arxiv.org/abs/1912.00873), respectively.
 
-There are two separate choices: **which norm measures the residual**, and **how much of that residual is observed**. The full weak residual measures the PDE defect in a weaker topology; finitely many weak tests can additionally leave entire error directions undetected. This distinction explains both the potential optimization benefit and the danger of a very small training loss.
+Two separate choices are hiding in that description: **which norm measures the residual**, and **how much of that residual is observed**. The full weak residual measures the PDE defect in a weaker topology; finitely many weak tests can additionally leave entire error directions undetected. The first choice explains the potential optimization benefit, the second explains why a very small training loss can be meaningless.
 
-We first make these statements precise for Poisson, then compare neural training and ablate the number and weighting of test functions. The [code and saved measurements](https://github.com/dani2442/dani2442_code/tree/main/strong-weak-pinns) reproduce all figures. For an introduction to PINNs, see the [earlier post]({{< ref "/posts/pinns" >}}).
+We make both statements exact for Poisson, then compare neural training and ablate the number and weighting of test functions. The [code and saved measurements](https://github.com/dani2442/dani2442_code/tree/main/strong-weak-pinns) reproduce every figure and number below. For an introduction to PINNs, see the [earlier post]({{< ref "/posts/pinns" >}}).
 
 ## 1. Strong and weak residuals
 
@@ -39,6 +39,10 @@ $$
 
 Poincaré's inequality makes this a Hilbert norm, equivalent to the usual $H^1$ norm on $V$. Assume the approximation $u_\theta\in V$ satisfies the boundary condition exactly, and write $e=u_\theta-u^\star$.
 
+> **The metric used in every figure.** Unqualified, *energy* always means this norm, and the **relative energy error**
+> $$\varepsilon_1=\frac{\|e\|_V}{\|u^\star\|_V}=\frac{\|\nabla u_\theta-\nabla u^\star\|_{L^2}}{\|\nabla u^\star\|_{L^2}}$$
+> is the common accuracy metric every plot below reports. Since $u_\theta\equiv0$ gives $\varepsilon_1=1$, a value above $100\%$ means the approximation carries *more* energy error than the zero function.
+
 **Strong loss.** If $\Delta u_\theta\in L^2$, define
 
 $$
@@ -47,7 +51,7 @@ r_\theta=-\Delta u_\theta-f=-\Delta e,
 \mathcal L_s(u_\theta)=\frac12\|r_\theta\|_{L^2}^2.
 $$
 
-Here the Laplacian is understood distributionally; $H^2\cap H_0^1$ is a sufficient trial space. Pointwise implementations use a sufficiently smooth network and spatial quadrature or collocation.
+Taking $u_\theta\in H^2\cap H_0^1$ suffices; pointwise implementations use a sufficiently smooth network with spatial quadrature or collocation.
 
 **Weak loss.** For any $u_\theta\in V$, define the functional
 
@@ -67,28 +71,32 @@ $$
 \qquad
 \|\mathcal R_\theta\|_{V'}
 =\sup_{v\ne0}\frac{|\mathcal R_\theta(v)|}{\|v\|_V}
-=\|e\|_V.
+=\|e\|_V,
 $$
 
-The last equality follows from Cauchy–Schwarz, with equality at $v=e$ when $e\ne0$. Thus
+by Cauchy–Schwarz, with equality at $v=e$ when $e\ne0$. Thus
 
 $$
-\boxed{\mathcal L_w(u_\theta)=\frac12\|\nabla e\|_{L^2}^2.}
+\boxed{\ \mathcal L_w(u_\theta)=\frac12\|\nabla e\|_{L^2}^2=\frac12\|u^\star\|_V^2\,\varepsilon_1^2.\ }
 $$
 
-This exact identity uses the energy norm chosen above. It is not an identity for every convention for the $H^{-1}$ norm, every PDE, or every weak loss.
+The same Riesz argument applied to $f$ itself gives one more identity we use for normalization later:
+
+$$
+\|f\|_{V'}=\sup_{v\ne0}\frac{\int_\Omega fv}{\|v\|_V}=\sup_{v\ne0}\frac{(u^\star,v)_V}{\|v\|_V}=\|u^\star\|_V .
+$$
+
+These are identities for the energy norm chosen above. They are not identities for every convention for the $H^{-1}$ norm, every PDE, or every weak loss.
 
 ### Does the full weak residual lose information?
 
-For $r\in L^2$, the map $r\mapsto[v\mapsto\int rv]$ is injective because $H_0^1$ is dense in $L^2$. Knowing all weak tests therefore determines $r$. Both full losses vanish only at the solution, under our boundary conditions.
-
-However,
+For $r\in L^2$, the map $r\mapsto[v\mapsto\int rv]$ is injective because $H_0^1$ is dense in $L^2$. Knowing all weak tests therefore determines $r$, and both full losses vanish only at the solution. But
 
 $$
 \|r\|_{V'}\le C_P\|r\|_{L^2},
 $$
 
-and no uniform reverse bound holds on all of $L^2$. A weaker norm changes sensitivity to errors without making nonzero residuals invisible. Actual invisibility enters when we restrict the tests.
+with no uniform reverse bound on $L^2$. A weaker norm changes *sensitivity* to errors without making nonzero residuals invisible. Actual invisibility enters only when we restrict the tests.
 
 ## 2. Conditioning depends on the residual norm
 
@@ -107,28 +115,26 @@ H_s=\operatorname{diag}(\lambda_k^2),
 \qquad H_w=\operatorname{diag}(\lambda_k).
 $$
 
-For $(0,1)$, $\lambda_k=(k\pi)^2$, giving exactly
+For $\Omega=(0,1)$, $\lambda_k=(k\pi)^2$, giving exactly
 
 $$
 \kappa(H_s)=N^4,\qquad \kappa(H_w)=N^2.
 $$
 
-This is a conditioning statement in specified coordinates, not an intrinsic condition number of a functional. In energy-orthonormal coordinates, the weak Hessian is the identity.
+This is a conditioning statement in specified coordinates, not an intrinsic condition number of a functional: in energy-orthonormal coordinates the weak Hessian is the identity.
 
-If $A:V\to V'$ denotes the weak Dirichlet Laplacian, it is also the Riesz map for this energy inner product. Consequently,
+If $A:V\to V'$ denotes the weak Dirichlet Laplacian, it is also the Riesz map for the energy inner product, so
 
 $$
 \|\mathcal R\|_{V'}^2
 =\langle\mathcal R,A^{-1}\mathcal R\rangle_{V',V}.
 $$
 
-The inverse elliptic operator reweights the residual. In this sense, the energy-dual weak loss acts as **operator preconditioning**.
+The inverse elliptic operator reweights the residual: the energy-dual weak loss acts as **operator preconditioning**.
 
 ### What survives neural parameterization?
 
-Both full losses are strictly convex quadratics in the admissible function $u$. Composing with a nonlinear network $u_\theta$ generally gives nonconvex objectives in $\theta$.
-
-For a discretized residual vector $r(\theta)$ and a fixed positive-definite weight matrix $M$,
+Both full losses are strictly convex quadratics in the admissible function $u$. Composing with a nonlinear network $u_\theta$ generally gives nonconvex objectives in $\theta$. For a discretized residual vector $r(\theta)$ and a fixed positive-definite weight matrix $M$,
 
 $$
 \mathcal L(\theta)=\frac12r(\theta)^\top M r(\theta),
@@ -138,15 +144,13 @@ $$
 +\sum_i(Mr)_i\nabla_\theta^2r_i.
 $$
 
-The first term is the Gauss–Newton matrix. The second vanishes at zero residual and is small near it if the residual Hessians remain bounded. Changing $M$ can improve conditioning, but the network Jacobian, parameter redundancies, and optimizer also matter. The modal calculation does **not** guarantee a better-conditioned parameter Hessian or faster neural training.
+The first term is the Gauss–Newton matrix; the second vanishes at zero residual and is small near it when the residual Hessians stay bounded. Changing $M$ can improve conditioning, but the network Jacobian, parameter redundancies, and optimizer also matter. The modal calculation does **not** guarantee a better-conditioned parameter Hessian or faster neural training.
 
-Integration by parts provides another benefit: the weak Poisson loss requires first spatial derivatives of the network; the strong loss requires second derivatives. This can reduce differentiation cost. It does not by itself establish smoother parameter losses, lower sampling variance, or better convergence.
-
-For this symmetric problem, the full weak loss also equals the excess Dirichlet energy $E(u_\theta)-E(u^\star)$, where $E(u)=\tfrac12\|u\|_V^2-\int fu$. Minimizing that energy directly is another option; the experiments below instead isolate **finite tested residuals**.
+Integration by parts gives one further, purely computational benefit: the weak Poisson loss needs only first spatial derivatives of the network, the strong loss needs second. That reduces differentiation cost. It does not by itself establish smoother parameter losses, lower sampling variance, or better convergence.
 
 ## 3. Finite tests: normalization and missing directions
 
-Choose linearly independent tests $v_1,\ldots,v_m\in V$ and let $V_m$ be their span. Define
+Choose linearly independent tests $v_1,\ldots,v_m\in V$, let $V_m$ be their span, and define
 
 $$
 b_i=\mathcal R_\theta(v_i),\qquad G_{ij}=(v_i,v_j)_V.
@@ -175,9 +179,9 @@ $$
 \widetilde b^\top\widetilde G^{-1}\widetilde b=b^\top G^{-1}b.
 $$
 
-The loss depends on the test **space**, not its basis. The unweighted alternative $\tfrac12 b^\top b$ lacks this invariance, except for special basis changes.
+The loss depends on the test **space**, not on its basis. The unweighted alternative $\tfrac12 b^\top b$ lacks this invariance except for special basis changes.
 
-For $v_k=\phi_k=\sqrt2\sin(k\pi x)$, $b_k=\lambda_ke_k$ and $G_{kk}=\lambda_k$. Therefore
+For $v_k=\phi_k=\sqrt2\sin(k\pi x)$ we have $b_k=\lambda_ke_k$ and $G_{kk}=\lambda_k$, so
 
 $$
 \mathcal L_{w,m}=\frac12\sum_{k\le m}\lambda_k e_k^2,
@@ -185,7 +189,7 @@ $$
 \mathcal L_{\mathrm{raw},m}=\frac12\sum_{k\le m}\lambda_k^2 e_k^2.
 $$
 
-Unweighted sine tests retain the strong loss's modal stiffness on the observed modes, despite using only first network derivatives. Rescaling the tests by $1/k$ changes that unweighted stiffness from $k^4$ to $k^2$. Gram weighting already accounts for the rescaling and gives the same objective in either basis.
+Unweighted sine tests therefore retain the strong loss's modal stiffness on the observed modes, despite using only first network derivatives. Rescaling the tests by $1/k$ changes that unweighted stiffness from $k^4$ to $k^2$; Gram weighting already accounts for the rescaling and gives the same objective in either basis.
 
 ### What a finite projection cannot see
 
@@ -195,39 +199,49 @@ $$
 \mathcal L_{w,m}=\frac12\|P_me\|_V^2,
 \qquad
 \mathcal L_w-\mathcal L_{w,m}
-=\frac12\|(I-P_m)e\|_V^2.
+=\frac12\|(I-P_m)e\|_V^2 .
 $$
 
-Thus $\mathcal L_{w,m}\le\mathcal L_w$, and zero tested loss need not mean zero error. With the first $m$ sine tests, any error $e=a\phi_K$ with $K>m$ is invisible. For nested dense test spaces the projected losses converge upwards to the full loss **for a fixed error**; this does not guarantee monotone error across separately trained networks.
+Dividing by $\tfrac12\|u^\star\|_V^2$ makes the consequence concrete, and is exactly how the experiments are normalized:
 
-On a prescribed linear trial-error space $E_h$, a useful stability quantity is
+$$
+\underbrace{\frac{b^\top G^{-1}b}{\|f\|_{V'}^2}}_{\text{what training sees}}
+=\frac{\|P_me\|_V^2}{\|u^\star\|_V^2},
+\qquad
+\underbrace{\varepsilon_1^2}_{\text{true error}}
+=\frac{\|P_me\|_V^2+\|(I-P_m)e\|_V^2}{\|u^\star\|_V^2}.
+$$
+
+**The tested loss is the squared relative energy error, restricted to the test space.** It is bounded by $\varepsilon_1^2$, and everything in the orthogonal complement is free. With the first $m$ sine tests, any error $e=a\phi_K$ with $K>m$ is exactly invisible. For nested dense test spaces the projected losses converge upwards to the full loss **for a fixed error**; this does not guarantee monotone error across separately trained networks.
+
+On a prescribed *linear* trial-error space $E_h$, the gap is controlled by
 
 $$
 \beta_{h,m}
 =\inf_{e\in E_h\setminus\{0\}}
-\frac{\|P_me\|_V}{\|e\|_V}.
+\frac{\|P_me\|_V}{\|e\|_V},
+\qquad\text{giving}\qquad
+\|e\|_V\le\frac{\sqrt{2\mathcal L_{w,m}}}{\beta_{h,m}}\ \ \text{when }\beta_{h,m}>0 .
 $$
 
-If $\beta_{h,m}>0$, then $\|e\|_V\le\sqrt{2\mathcal L_{w,m}}/\beta_{h,m}$. In energy-orthonormal trial coordinates this constant is the smallest singular value of the Gram-normalized test matrix. Otherwise the relevant trial and test Gram matrices must both be included. Over all of $V$, any finite test space has $\beta=0$.
-
-A finite-parameter neural network is not generally a finite-dimensional **linear function space**. For neural models, such a bound must be established on their attainable error set, or locally on tangent directions; counting parameters and tests is insufficient. Likewise, finitely sampled strong losses can miss errors between collocation points. Both formulations need independent validation.
+Over all of $V$, any finite test space has $\beta=0$. A finite-parameter neural network is not generally a finite-dimensional linear function space, so such a bound must be established on its attainable error set, or locally on tangent directions; counting parameters and tests is not enough. Finitely sampled strong losses can likewise miss errors between collocation points. Both formulations need independent validation.
 
 ## 4. Experiments
 
 ### 4.1 A controlled conditioning calculation
 
-First, optimize coefficients directly in the first 16 sine modes, with initial error coefficients $e_k^{(0)}=1/k$. For each quadratic, use gradient descent with step size $1/\lambda_{\max}(H)$:
+Before any network, take the trial space to be the first $N=16$ sine modes and optimize the coefficients $e_k$ directly. The initial error is $e_k^{(0)}=1/k$, chosen so that every mode starts with the *same* energy, $\lambda_k|e_k^{(0)}|^2=\pi^2$: no mode is favored, and the decay of the energy error reflects conditioning alone. Each quadratic runs 2,000 gradient descent steps at its own stable step size $1/\lambda_{\max}(H)$, so
 
 $$
 e_k^{(t)}=\left(1-\frac{h_k}{\max_j h_j}\right)^t e_k^{(0)},
-\qquad h_k=\lambda_k^2\ \text{or}\ \lambda_k.
+\qquad h_k=\lambda_k^2\ \text{(strong) or}\ \lambda_k\ \text{(weak)} .
 $$
 
-This gives an exact, reproducible calculation without neural parameterization, quadrature, or stochasticity. Each objective uses its own curvature-based step size, so overall loss scaling cannot explain the comparison.
+This is exact and deterministic: no neural parameterization, quadrature, or stochasticity. Because each objective uses its own curvature-based step size, overall loss scaling cannot explain the comparison.
 
 ![Modal Hessian growth, gradient descent energy error, and the effect of test-basis rescaling.](conditioning.png)
 
-*The condition numbers are 65,536 and 256 at $N=16$. The common energy error decays faster under the weak quadratic. The right panel changes only the basis scaling within the same test space; Gram weighting preserves the objective.*
+*Left and right: modal curvature $h_k$ normalized by the first mode, so the curves are $k^4$ and $k^2$. Middle: energy error relative to its initial value, $\|e^{(t)}\|_V/\|e^{(0)}\|_V$ (there is no $u^\star$ here, only an error to contract). The condition numbers at $N=16$ are $16^4=65{,}536$ and $16^2=256$. Mode $k$ contracts by the factor $1-(k/16)^p$ per step, with $p=4$ strong and $p=2$ weak, so the asymptotic rate is set by the slowest mode $k=1$: after 2,000 updates the strong run has cleared all but the two lowest modes yet shrunk mode 1 by only $3\%$, stalling near $0.3$, while the weak run has contracted every mode including $k=1$. The right panel changes only the basis scaling within one fixed test space: the two raw curves differ, while Gram weighting gives the same objective in either basis.*
 
 ### 4.2 Neural Poisson benchmark
 
@@ -239,7 +253,7 @@ u^\star(x)=\sin(\pi x)+0.1\sin(8\pi x),
 f(x)=\pi^2\sin(\pi x)+6.4\pi^2\sin(8\pi x).
 $$
 
-The second mode has small displacement amplitude but substantial derivative energy. We use
+The $k=8$ component has small displacement amplitude but carries $0.64/1.64\approx39\%$ of the energy. We use
 
 $$
 u_\theta(x)=x(1-x)N_\theta(2x-1),
@@ -247,9 +261,9 @@ $$
 
 where $N_\theta$ is a tanh network with two hidden layers of width 32 (1,153 parameters). The boundary condition is exact, so no boundary-penalty weight enters the comparison.
 
-All methods use the same 128-point Gauss–Legendre quadrature, CPU float64, full-batch Adam at learning rate $10^{-3}$, and 3,000 updates. Seeds 0, 1, and 2 are paired across methods: each seed gives identical initial parameters for every loss. We report the final iterate, without selecting checkpoints using the exact solution.
+All methods share the same 128-point Gauss–Legendre quadrature, CPU float64, full-batch Adam at learning rate $10^{-3}$, and 3,000 updates. Seeds 0, 1, and 2 are paired across methods: each seed gives identical initial parameters for every loss. We report the final iterate, never a checkpoint selected using the exact solution.
 
-The methods are strong training, Gram-weighted sine tests with $m\in\{2,4,8,16,32\}$, and unweighted sine tests with $m=16$. To remove overall forcing scale, the implemented objectives are
+The methods are strong training, Gram-weighted sine tests with $m\in\{2,4,8,16,32\}$, and unweighted sine tests with $m=16$. Dividing out the forcing scale, the implemented objectives are
 
 $$
 \widehat{\mathcal L}_s=\frac{\|r\|_{L^2}^2}{\|f\|_{L^2}^2},
@@ -259,27 +273,25 @@ $$
 \widehat{\mathcal L}_{\mathrm{raw},m}=\frac{b^\top b}{\|f\|_{L^2}^2}.
 $$
 
-The weak denominator is fixed across all $m$. It is computed from the forcing's first 32 sine coefficients, which contain its complete spectrum in this example. These objectives are all dimensionless, but still measure different quantities.
+The weak denominator $\|f\|_{V'}^2=\sum_k\langle f,\phi_k\rangle^2/\lambda_k$ is fixed across all $m$, computed from the forcing's first 32 sine coefficients, which are its complete spectrum here. The first two normalizations turn the losses into squared relative errors, made precise below; the third admits no such reading, which is the point of §3.
 
-On an independent 512-point Gauss–Legendre rule, we measure three common diagnostics:
+On an independent 512-point Gauss–Legendre rule we measure three diagnostics — the energy error $\varepsilon_1$ of §1, plus
 
 $$
 \varepsilon_0=\frac{\|u_\theta-u^\star\|_{L^2}}{\|u^\star\|_{L^2}},
 \qquad
-\varepsilon_1=\frac{\|u_\theta'-u^{\star\prime}\|_{L^2}}{\|u^{\star\prime}\|_{L^2}},
-\qquad
-\rho=\frac{\|-u_\theta''-f\|_{L^2}}{\|f\|_{L^2}}.
+\rho=\frac{\|-u_\theta''-f\|_{L^2}}{\|f\|_{L^2}} .
 $$
 
-For this problem, $\varepsilon_1^2$ is exactly the normalized **full** weak loss. It is available as a diagnostic because the exact solution is known; training uses only the forcing and tested residuals.
+By construction $\widehat{\mathcal L}_s=\rho^2$ exactly, and $\widehat{\mathcal L}_{w,m}=\varepsilon_1^2$ restricted to the tested modes, converging to $\varepsilon_1^2$ as $m\to\infty$. Both $\varepsilon_0$ and $\varepsilon_1$ require the exact solution; training uses only the forcing and the tested residuals.
 
 ![Strong, weighted weak, and unweighted weak training objectives, with common energy errors versus updates and training time.](training.png)
 
-*Lines show medians over three seeds; shading shows the full range. The left panel tracks each method's own objective. The other panels use the same error metric. Time includes optimization steps and excludes diagnostics; curves use median cumulative training time at each recorded update.*
+*Four representative methods; the full sweep over $m$ is in §4.3. Lines show medians over three seeds, shading the full range. The left panel tracks each method's own objective — these are not comparable to each other. The middle and right panels use the common metric $\varepsilon_1$. Time includes optimization steps only, excluding diagnostics, and uses median cumulative training time at each recorded update.*
 
-Final medians are:
+Final medians over three seeds:
 
-| Objective | Own loss | Relative L2 | Relative energy | Relative residual | Training (s) |
+| Objective | Training loss $\widehat{\mathcal L}$ | $L^2$ error $\varepsilon_0$ | Energy error $\varepsilon_1$ | Residual $\rho$ | Time (s) |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | strong | 6.02e-04 | 0.44% | 0.71% | 2.45% | 7.39 |
 | weak-2 | 3.75e-34 | 10.19% | 62.71% | 98.95% | 5.66 |
@@ -289,17 +301,19 @@ Final medians are:
 | weak-32 | 1.09e-04 | 0.06% | 1.27% | 8.82% | 4.49 |
 | raw-16 | 1.53e-02 | 18.83% | 53.26% | 194.97% | 4.69 |
 
-The strong formulation has the lowest median energy and strong-residual errors. The 32-test weak formulation has the lowest median $L^2$ error and a lower measured training cost. There is no single winner independent of the error norm.
+The identities above make the first column directly readable. For strong, $\sqrt{6.02\text{e-}4}=2.45\%=\rho$. For weak-32, $\sqrt{1.09\text{e-}4}=1.04\%$ is the energy error *inside* the 32-mode test space, against a true $\varepsilon_1$ of $1.27\%$; the untested remainder is $\sqrt{1.27^2-1.04^2}=0.73\%$. For weak-16, the tested energy error is $2\times10^{-11}$ while the true one is $6.68\%$ — essentially all of the error sits outside the test space.
 
-Gram-weighted training improves markedly over unweighted training at $m=16$ under this shared Adam configuration. Yet its almost-zero tested loss coexists with 6.68% energy error. Successful optimization of the projected objective does not certify the full PDE solution.
+The strong formulation attains the lowest median energy and strong-residual error. The 32-test weak formulation attains the lowest median $L^2$ error at roughly $60\%$ of the training time. There is no single winner independent of the error norm.
+
+Gram-weighted training also improves markedly over unweighted training at $m=16$ under this shared Adam configuration ($6.68\%$ versus $53.26\%$ energy error). Yet its almost-zero tested loss coexists with that $6.68\%$. **Successfully optimizing the projected objective does not certify the PDE solution.**
 
 ### 4.3 Ablation: how many tests are enough?
 
 ![Weak test-count ablation showing final tested losses, independent errors, energy-error histories, and final solutions.](projection.png)
 
-*Markers and error bars show medians and full ranges over three seeds. Solution curves use the prespecified seed 0. All weak runs share the same network, initialization seeds, optimizer, quadrature, and loss normalization.*
+*Markers and error bars show medians and full ranges over three seeds. Top left is each run's own tested objective; top right is the three independent diagnostics. Solution curves use the prespecified seed 0, never the best run. All weak runs share the same network, initialization seeds, optimizer, quadrature, and loss normalization.*
 
-With $m=2$ or $4$, the forcing's eighth mode is unobserved. The tested losses approach numerical zero while relative energy errors remain near 62.5%. For comparison, omitting just the true eighth solution mode gives
+With $m=2$ or $4$, the forcing's eighth mode is never tested. The tested losses reach numerical zero while $\varepsilon_1$ stays near $62.5\%$ — exactly the value obtained by simply omitting the true eighth mode:
 
 $$
 \varepsilon_0=\frac{0.1}{\sqrt{1.01}}\approx9.95\%,
@@ -307,39 +321,53 @@ $$
 \varepsilon_1=\sqrt{\frac{0.64}{1.64}}\approx62.47\%.
 $$
 
-At $m=8$, the tests include every mode present in the exact solution, but the trained network develops substantial error outside the tested space. The relative energy error exceeds 100% despite a tiny tested loss. **Covering the forcing's frequencies is insufficient:** the tests must also constrain unwanted frequencies the trial model can generate.
+The bottom-right panel confirms this: the weak-4 solution is the smooth first mode alone.
 
-Increasing to 16 and then 32 tests reduces the unobserved error in these runs. The 32-test training objective is larger than the 16-test objective, even though its solution is more accurate. A harder-to-minimize loss can be a more informative one.
+At $m=8$ the tests cover every mode present in the exact solution, yet training is *worse*: $\varepsilon_1=118.70\%$, above the $100\%$ the zero function would achieve. A tested loss of $3\times10^{-12}$ means $\|P_8e\|_V\approx2\times10^{-6}\|u^\star\|_V$, so *all* of that $118.70\%$ lives above the eighth mode; the solution panel shows it as visible high-frequency oscillation, which the tests cannot penalize and the optimizer has no reason to avoid. **Covering the forcing's frequencies is not sufficient:** the tests must also constrain the unwanted frequencies the trial model can generate.
 
-### 4.4 Numerical checks and limits
+Increasing to 16 and then 32 tests removes most of that unobserved error. Note that the 32-test *training objective* is four orders of magnitude larger than the 16-test one while its solution is an order of magnitude more accurate. A harder-to-minimize loss can be the more informative one, and comparing training losses across test spaces is meaningless.
 
-For every final network, doubling diagnostic quadrature from 512 to 1,024 points changes the reported errors by less than $10^{-5}$ relatively. Recomputing the training objective with 256 instead of 128 points changes its normalized value by less than $2.2\times10^{-8}$ absolutely. The script also checks the manufactured PDE, integration by parts, Gram invariance under a nonorthogonal basis change, an analytically invisible mode, and parameter gradients against finite differences.
+### 4.4 Limits of this evidence
 
-These checks separate the observed projection failure from detectable quadrature error in this benchmark. They do not establish stability for arbitrary networks or test spaces. Three seeds on one smooth one-dimensional PDE are an illustration, not a general performance ranking. Learning rates were shared rather than tuned per method; timings depend on this CPU implementation, and no neural Hessian spectrum was measured.
+The verification checks are listed in [Appendix B](#appendix-b-verification-and-reproduction). Under quadrature refinement the three diagnostics move by less than $5\times10^{-14}$ relatively, twelve orders of magnitude below the differences reported in §4.2 and §4.3, so the projection failure is not a quadrature artifact. These checks do not establish stability for arbitrary networks or test spaces. Three seeds on one smooth one-dimensional PDE are an illustration, not a general performance ranking. Learning rates were shared rather than tuned per method, timings reflect this single-threaded CPU implementation, and no neural Hessian spectrum was measured.
 
 ## 5. Practical conclusions
 
-A weak formulation changes both the derivatives needed to compute a residual and, depending on the chosen test norm, its spectral weighting. For Poisson, the full energy-dual norm turns squared Laplacian error into gradient error. This improves conditioning in a fixed modal parameterization without making neural training convex.
+A weak formulation changes two things: the derivatives needed to compute a residual, and — depending on the test norm — its spectral weighting. For Poisson, the full energy-dual norm turns squared Laplacian error into gradient error, improving conditioning in a fixed modal parameterization without making neural training convex.
 
-Finite tests introduce a separate approximation. Gram weighting removes arbitrary basis dependence; it cannot recover directions outside the test space. The useful comparison therefore reports the training objective alongside common solution and residual errors, varies test-space resolution, and checks quadrature independently. In this example, the most misleading result would have been to declare the smallest training loss the best solution.
+Finite tests then introduce a separate and larger approximation. Gram weighting removes arbitrary basis dependence but cannot recover directions outside the test space, and the tested loss is blind to them by construction. A useful comparison therefore reports the training objective alongside common solution and residual errors, varies the test-space resolution, and checks quadrature independently. In this example, the most misleading conclusion available would have been to declare the smallest training loss the best solution.
 
-## Reproduce the figures
+## Appendix A: the Dirichlet energy and the Ritz alternative
 
-From the repository root, using an environment with NumPy, Matplotlib, and CPU PyTorch:
+A third object is often called an energy, and it is worth separating from the norm of §1. With the **Dirichlet energy** $E(u)=\tfrac12\|u\|_V^2-\int_\Omega fu$, expanding about $u^\star$ and using $(u^\star,e)_V=\int fe$ gives
+
+$$
+E(u_\theta)-E(u^\star)=\tfrac12\|e\|_V^2=\mathcal L_w(u_\theta).
+$$
+
+So for this symmetric problem the full weak loss *is* the excess Dirichlet energy, and minimizing $E$ directly — the [Deep Ritz](https://arxiv.org/abs/1710.00211) approach — needs no test functions at all. We exclude it from the comparison deliberately: it has no notion of an untested direction, since $E$ sees all of $e$, so it cannot exhibit the failure mode §4.3 is built to expose. The identity depends on the operator being symmetric. For nonsymmetric problems such as advection–diffusion no such energy functional exists, while the weak residual formulation of §1 still applies.
+
+## Appendix B: verification and reproduction
+
+Every run is checked twice against a refined quadrature. Doubling the diagnostic rule from 512 to 1,024 Gauss–Legendre points changes $\varepsilon_0$, $\varepsilon_1$, and $\rho$ by less than $5\times10^{-14}$ relatively. Doubling the training rule from 128 to 256 points changes the normalized objective by less than $2.2\times10^{-8}$ absolutely; that worst case is raw-16, whose objective is $1.5\times10^{-2}$, and each weak run's own gap stays far below its own reported loss. The script additionally asserts, to $10^{-9}$ or tighter:
+
+- the manufactured pair satisfies $-u^{\star\prime\prime}=f$;
+- integration by parts holds discretely on the quadrature rule, so $b$ computed from $u'$ matches $b$ computed from $-u''$;
+- the sine Gram matrix equals $\operatorname{diag}(\lambda_k)$, and $b^\top G^{-1}b$ is invariant under a random nonorthogonal change of basis;
+- the analytically invisible mode $e=0.1\sin(8\pi x)$ gives $b_{1:4}=0$ while $b^\top G^{-1}b$ equals its true energy;
+- parameter gradients of all three training objectives match central finite differences, here to a relative $10^{-5}$ set by the accuracy of the difference itself.
+
+To reproduce, from the repository root with NumPy, Matplotlib, and CPU PyTorch:
 
 ```bash
-python code/strong-weak-pinns/experiment.py
+python code/strong-weak-pinns/experiment.py              # 21 runs, checks, figures
+python code/strong-weak-pinns/experiment.py --plot-only  # figures from committed measurements
 ```
 
-This runs all 21 neural experiments, performs the numerical checks, writes histories and a summary under `code/strong-weak-pinns/results/`, and regenerates the figures in this post's directory. To rebuild figures from the committed measurements without retraining:
-
-```bash
-python code/strong-weak-pinns/experiment.py --plot-only
-```
-
-The [experiment README](https://github.com/dani2442/dani2442_code/blob/main/strong-weak-pinns/README.md) gives environment setup, output formats, and options for separate runs.
+The [experiment README](https://github.com/dani2442/dani2442_code/blob/main/strong-weak-pinns/README.md) covers environment setup, output formats, and options for separate runs.
 
 ## References
 
 - Raissi, M., Perdikaris, P., and Karniadakis, G. E. (2019). [Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations](https://doi.org/10.1016/j.jcp.2018.10.045). *Journal of Computational Physics*, 378, 686–707.
+- E, W. and Yu, B. (2018). [The Deep Ritz Method: A Deep Learning-Based Numerical Algorithm for Solving Variational Problems](https://arxiv.org/abs/1710.00211). *Communications in Mathematics and Statistics*, 6, 1–12. Discussed in Appendix A as the energy-minimization alternative excluded here.
 - Kharazmi, E., Zhang, Z., and Karniadakis, G. E. (2019). [Variational Physics-Informed Neural Networks for Solving Partial Differential Equations](https://arxiv.org/abs/1912.00873). The variational residual construction motivates the finite-test comparison; the Poisson identities and controlled ablations above are derived explicitly here.
