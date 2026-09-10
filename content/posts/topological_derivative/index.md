@@ -46,7 +46,7 @@ check its coefficient against finite-element calculations, and use it to guide
 an optimization on a triangular mesh. At each iteration we solve for the
 displacement, compute and smooth the sensitivity, and retain the cells with
 the largest scores as the material budget decreases. The animation shows this
-process for a cantilever; later we turn to a bridge-like beam and see how the
+process for a cantilever; later we turn to a three-pier bridge and see how the
 material budget and smoothing radius change its final configuration.
 
 ![Cantilever optimization from a full block to a truss, with the filtered sensitivity and stiffness history at every iteration](td_optimization.gif)
@@ -781,68 +781,104 @@ states rather than taking a step along a search direction, exact monotonicity
 at fixed volume is not available and should not be claimed — the band is the
 honest convergence statement.
 
-### 7.2 A bridge-like beam
+### 7.2 A three-pier bridge
 
-The first additional example is a **simply supported beam**, usually called the
-MBB benchmark in topology optimization. Its span and arch-and-tie layout make
-it a useful simplified picture of a bridge carrying a central load. We model a
-single two-dimensional load case here; a bridge deck, moving traffic, self-weight
-and buckling are outside this example. The MBB problem is also used in
-[DTU's educational topology-optimization code](https://www.topopt.mek.dtu.dk/apps-and-software/a-99-line-topology-optimization-code-written-in-matlab).
+The first additional example is a two-span bridge. The design region is
+$(0,3)\times(0,1)$ with $180\times60$ cells. Three piers on the bottom edge —
+the two abutments at $x=0$ and $x=3$, and one at midspan, $x=1.5$ — impose
+$u_x=u_y=0$. $\Gamma_N$ is the **whole top edge**: a uniform downward traction
+$g=(0,-1/3)$ of total magnitude $1$, a deck load spread over the full span
+rather than concentrated at a point. Two cell rows of deck and the three pier
+heads stay solid throughout ($396$ cells, $3.7\%$ of the domain and $9\%$ of the
+$V=0.40$ budget), so the traction and the reactions always act on real material
+and never on ersatz.
 
-The design region is $(0,3)\times(0,1)$, with $180\times60$ cells. A pin at the
-bottom-left corner fixes $u_x=u_y=0$, while a roller at the bottom-right fixes
-only $u_y=0$, allowing horizontal motion. A downward traction with total
-magnitude $1$ acts over a short patch at the centre of the top edge. The small
-regions touching the load and supports remain solid throughout the run.
+The full-material compliance is $J_0=1.712$.
 
-![Final bridge-like beam with a pin at the left, a roller at the right, and downward traction on the central top patch](td_bridge.png)
+![Final three-pier bridge: two arches under a solid deck, with pinned supports at both abutments and at midspan and a uniform downward traction on the whole top edge](td_bridge.png)
 
-*Grey symbols mark displacement constraints ($\Gamma_D$); orange marks the
-loaded patch ($\Gamma_N$) and the direction of $g$. Unlike the clamped
-cantilever in §1, this benchmark imposes constraints at individual mesh nodes.
-These are discrete pin/roller idealizations, not positive-length clamped
-boundaries covered by Theorem 1.1. A continuum model would use finite support
-patches with the corresponding constrained displacement components.*
+*Grey symbols mark displacement constraints ($\Gamma_D$); the orange bar is the
+loaded edge ($\Gamma_N$) and the arrows give the direction of $g$. Unlike the
+clamped cantilever in §1, this benchmark constrains individual mesh nodes. These
+are discrete pin idealizations, not positive-length clamped boundaries covered
+by Theorem 1.1. A continuum model would use finite support patches with the
+corresponding constrained displacement components.*
 
-Material arranges itself into an upper arch, a lower tie, and connecting
-members that transmit the central load to the supports. The geometry is
-computed from the same sensitivity rule as the cantilever; no arch or truss
-members are prescribed in advance.
+**What comes out is a two-span arch viaduct.** Nothing in the algorithm knows
+about arches; it deletes the cells with the smallest filtered $D_TJ$ and
+nothing else. Each span develops an arch springing from its piers, and the
+spandrel — the region between the arch and the deck above it — fills with a
+branching tree of struts that hand the deck load down onto the arch. Near each
+crown the arch merges into the deck: at $x=0.75$ the whole column holds only
+$0.083$ of material out of a depth of $1$. Over the central pier the material
+fans back out to nearly full depth ($0.88$ at $x=1.5$), which is where the two
+arches deliver their thrust.
+
+Fixing both components at every pier is what makes an arch available at all: an
+arch stands only if its supports can push back horizontally. In the final design
+each abutment carries a horizontal reaction of $0.094$ against a vertical
+reaction of $0.245$ — a reaction line inclined about $21°$ from the vertical —
+while the central pier carries $0.510$ vertically and, by symmetry, nothing
+horizontally. That $25/51/25$ split is *not* the $18.75/62.5/18.75$ of a slender
+continuous beam: each span here is only $1.5$ times its depth, so the structure
+behaves as a pair of deep beams, and the full block splits the load $25/50/25$
+as well.
+
+The result is $J=2.232$, i.e. $J/J_0=1.30$: **the bridge keeps $77\%$ of the
+full-block stiffness on $40\%$ of the material.** One caveat on symmetry. The
+problem is symmetric about $x=1.5$, but the discretization is not — the
+union-jack diagonals and the tie-breaking inside the sort differ between the two
+halves — and $3.3\%$ of the cells end up violating the mirror symmetry, even
+though the two halves hold the same amount of material to within $0.5\%$.
 
 ### 7.3 How the bridge changes with the parameters
 
 There is no single final geometry independent of the algorithm's settings.
 The grid below changes two parameters: the **material budget** $V$ across
 columns and the **filter radius** $r_{\min}/h$ down rows. Each panel is a
-separate run starting from the full block, using the same mesh, supports,
+separate run starting from the full block, using the same mesh, piers, deck
 traction, plane-stress material ($E=1$, $\nu=0.3$), ersatz modulus
 $E_{\min}=10^{-6}$, evolution rate $2\%$, and $120$ updates. The centre panel
-uses the same parameters as the beam shown above.
+uses the same parameters as the bridge shown above.
 
-![Nine bridge configurations: material fractions 0.30, 0.40 and 0.50 across columns, with filter radii 2.5, 3.5 and 5.5 cell widths down rows; every panel shows supports, traction and relative compliance](td_bridge_sweep.png)
+![Nine bridge configurations: material fractions 0.30, 0.40 and 0.50 across columns, with filter radii 2.5, 3.5 and 5.5 cell widths down rows; every panel shows the three piers, the deck traction and the relative compliance](td_bridge_sweep.png)
 
-*The span and height are identical in every panel. $J_0$ is the compliance of
-the same full-material beam, so the displayed $J/J_0$ values share a common
+*The span, height and load are identical in every panel. $J_0$ is the compliance
+of the same full-material block, so the displayed $J/J_0$ values share a common
 reference. Smaller $J/J_0$ means greater stiffness under this load.*
 
 [Open the full-size comparison](td_bridge_sweep.png) to inspect the members and
 support labels.
 
-The material budget controls how much solid can remain, while the filter
-radius controls the spatial averaging of the sensitivity. A small radius lets
-nearby thin members compete separately; a larger radius averages over a wider
-neighbourhood and favours coarser layouts. It does not impose a strict minimum
-member thickness. Comparing down a column holds material use fixed, making
-that change in geometry easier to see. Comparing across a row shows the
-trade-off between material use and stiffness for a given filter.
+The first thing to notice is what does *not* change. All nine panels are the
+same two-span arch. With the load spread over the whole deck the arch is a
+robust optimum, and neither the budget nor the filter radius displaces it; the
+parameters act on the spandrel instead. A small radius lets neighbouring struts
+compete separately and produces many thin ones; a larger radius averages the
+sensitivity over a wider neighbourhood and leaves fewer, thicker ones. It does
+not impose a strict minimum member thickness. Extra budget thickens the arch and
+its bracing rather than buying a different structure.
 
-For example, at $V=0.30$ the largest radius removes the internal connecting
-members and leaves a simpler arch-and-tie layout. Its relative compliance is
-$J/J_0=2.57$, compared with $2.30$ and $2.31$ for the two smaller radii:
-about $39\%$ of the full beam's stiffness instead of $43\%$, with the same
-amount of material. At $V=0.40$, the three layouts differ visibly while their
-relative compliances are much closer: $1.78$, $1.80$ and $1.81$.
+The compliances say the same thing. Down the $V=0.50$ column $J/J_0$ is $1.16$,
+$1.16$ and $1.17$ — the filter is nearly irrelevant. Down $V=0.40$ it is $1.29$,
+$1.30$ and $1.32$; down $V=0.30$ it spreads to $1.56$, $1.58$ and $1.65$, that
+is $64\%$, $63\%$ and $60\%$ of the full-block stiffness. The radius matters
+most where material is scarcest: at $V=0.30$ there is not enough of it to build
+the fine bracing a small radius wants, and the bluntest filter costs four points
+of stiffness for the same volume. Across a row at $r_{\min}/h=3.5$, raising the
+budget from $0.30$ to $0.40$ to $0.50$ buys $63\%\to77\%\to86\%$ — the usual
+diminishing return.
+
+The distributed load also exposes something the cantilever did not: the
+fixed-volume phase is not always quiet. At $V=0.40$, $r_{\min}/h=3.5$ the
+compliance stays within $0.5\%$ over the $74$ updates that follow the target,
+apart from a single excursion at iteration $56$ where it jumps by $12\%$ and
+falls back within five updates. At $V=0.30$, $r_{\min}/h=5.5$ it never settles
+at all: $J$ chatters between $2.81$ and $3.09$, a band of $10\%$, for the entire
+$60$-update fixed-volume phase. The update flips discrete cell states with no
+line search, so at the tightest budget and the bluntest filter it can swap a
+whole strut in and out from one iteration to the next. Reporting the last
+iterate as "the" answer is a convention here, not a convergence statement.
 
 These are final configurations after a fixed iteration budget. The comparison
 illustrates sensitivity to the parameters; it does not identify globally
@@ -853,15 +889,17 @@ parameters of every run, are available in [the numerical results](td_results.jso
 
 The second load case uses an L-shaped design region: remove the upper-right
 $(0.4,1)\times(0.4,1)$ block from the unit square, clamp the top of the vertical
-arm, and apply a downward traction near the tip of the horizontal arm. The
-$120\times120$ background grid stays fixed; the removed block is permanently
-void and excluded from the material budget. We retain $40\%$ of the L-shaped
-region, with $r_{\min}/h=3.5$ and $90$ updates.
+arm, and apply a downward traction on the upper face of the horizontal arm,
+over the last tenth of its length up to the right edge. The $120\times120$
+background grid stays fixed; the removed block is permanently void and
+excluded from the material budget. We retain $40\%$ of the L-shaped region,
+with $r_{\min}/h=3.5$ and $90$ updates.
 
-![Final L-bracket with the top of the vertical arm clamped on Gamma D and a downward traction at the right-hand tip on Gamma N](td_lbracket.png)
+![Final L-bracket with the top of the vertical arm clamped on Gamma D and a downward traction pressing on the upper face of the horizontal arm near its right end on Gamma N](td_lbracket.png)
 
-Here material fans out along diagonals between the loaded tip and the top
-clamp, and the free boundary around the re-entrant corner changes as cells are
+The traction is normal to the loaded face here rather than tangential to it.
+Material fans out along diagonals between the loaded patch and the top clamp,
+and the free boundary around the re-entrant corner changes as cells are
 removed. That corner is also a stress singularity in the initial domain: as
 §3.6 explains, the small-hole expansion must be used away from such boundary
 points.
