@@ -146,7 +146,7 @@ operator is the diffusion coefficient, the first-order part is the drift, a
 zeroth-order term is a killing rate, a source term is a running payoff, the
 boundary condition is a stopping rule — and a nonlinearity, when there is one,
 is a control, a game, a branching mechanism or an interaction between copies of
-the process. The tables below collect the correspondences in that order,
+the process. The dictionary below collects the correspondences in that order,
 writing
 $$
 \mathcal{L}\varphi=\tfrac12\operatorname{tr}\!\big(a\,D^2\varphi\big)+b\cdot\nabla\varphi,
@@ -162,32 +162,9 @@ $$
 so that $\mathbb{P}\big(\zeta>t\,\big\vert\,X\big)=e^{-\int_{t_0}^{t} V(X_r)dr}$: the discount
 factors below are survival probabilities.
 
-In brief — this is the content of the diagram `feynman_kac.drawio`, kept here in
-editable form:
+![Dictionary of Feynman-Kac correspondences: linear and semilinear parabolic and elliptic equations, Fokker-Planck, the principal eigenvalue problem and HJB, each with its stochastic object and its representation](feynman_kac-feynman-kac.png)
 
-| Feynman–Kac | Equation |  | Stochastic object | Representation |
-|---|---|---|---|---|
-| **Linear parabolic** | $\begin{cases}\partial_t u + \mathcal{L}u - Vu + f = 0 & \text{in } (0,T)\times\mathbb{R}^d\\ u(T,\cdot)=g & \text{in } \mathbb{R}^d\end{cases}$ | diffusion | $\begin{cases}dX_s=b(X_s)ds+\sigma(X_s)dW_s \\ X_t=x\end{cases}$ | $u(t,x)=\mathbb{E}\big[e^{-\int_t^T V}g(X_T)+\int_t^T e^{-\int_t^s V}f(s,X_s)ds \,\big\vert\, X_t=x\big]$ |
-| **Linear elliptic** | $\begin{cases}\mathcal{L}u - Vu + f = 0 & \text{in } \Omega\\ u=g & \text{on } \partial\Omega\end{cases}$ | diffusion stopped on exit | $\begin{cases}dX_t=b(X_t)dt+\sigma(X_t)dW_t\\ X_0=x\end{cases}$ | $u(x)=\mathbb{E}_x\big[e^{-\int_0^\tau V}g(X_\tau)+\int_0^\tau e^{-\int_0^t V}f(X_t)dt\big]$ |
-| **Semilinear elliptic** | $\begin{cases}\mathcal{L}u + f(x,u,\sigma^\top\nabla u) = 0 & \text{in } \Omega\\ u=g & \text{on } \partial\Omega\end{cases}$ | backward SDE started on exit along the diffusion | $\begin{cases}dY_t=-f(X_t,Y_t,Z_t)dt+Z_t\cdot dW_t \\ Y_\tau=g(X_\tau),\quad Z_t=\sigma^\top\nabla u(X_t)\end{cases}$ |  $u(x)=Y_0$ |
-| **Fokker–Planck** | $\begin{cases}\partial_t\rho = \mathcal{L}^{*}\rho & \text{in } (0,T)\times\mathbb{R}^d\\ \rho(0,\cdot)=\mu & \text{in } \mathbb{R}^d\end{cases}$ | diffusion from a random start | $\begin{cases}dX_t=b(X_t)dt+\sigma(X_t)dW_t\\ X_0\sim\mu\ \end{cases}$ | $\rho_t=\mathrm{Law}(X_t)$ |
-| **Principal eigenvalue** | $\begin{cases}\mathcal{L}\phi - V\phi = -\lambda_1\phi & \text{in } \Omega\\ \phi=0 & \text{on } \partial\Omega\end{cases}$ | diffusion stopped on exit | $\begin{cases}dX_t=b(X_t)dt+\sigma(X_t)dW_t\\ X_0=x\end{cases}$ |  $\lambda_1=-\lim_{t\to\infty}\tfrac1t\log\mathbb{E}_x\big[e^{-\int_0^t V}\mathbf{1}_{\{\tau>t\}}\big]$ |
-| **HJB** | $\begin{cases}\partial_t u + \inf_{\alpha\in\mathcal{A}}\left\{\mathcal{L}^{\alpha}u + \ell(x,\alpha)\right\} = 0 & \text{in } (0,T)\times\mathbb{R}^d\\ u(T,\cdot)=h & \text{in } \mathbb{R}^d\end{cases}$ | controlled diffusion | $\begin{cases}dX^\alpha_s=b(X^\alpha_s,\alpha_s)ds+\sigma(X^\alpha_s,\alpha_s)dW_s \\ X^\alpha_t=x\end{cases}$ | $u(t,x)=\inf_{\alpha}\mathbb{E}\big[\int_t^T \ell(X^\alpha_s,\alpha_s)ds + h(X^\alpha_T) \,\big\vert\, X^\alpha_t=x\big]$ |
-
-### 4.1 Linear equations
-
-| Name | PDE and side conditions | Stochastic object | Representation |
-|---|---|---|---|
-| Laplace / Dirichlet problem | $\Delta u=0$ in $\Omega$, $u=g$ on $\partial\Omega$ | Brownian motion stopped on exit | $u(x)=\mathbb{E}_x[g(B_\tau)]$ |
-| Poisson equation | $\tfrac12\Delta u=-f$ in $\Omega$, $u=g$ | Brownian motion, plus its occupation time before $\tau$ | $u(x)=\mathbb{E}_x\big[g(B_\tau)+\int_0^\tau f(B_t)dt\big]$ |
-| Elliptic equation with killing | $\mathcal{L}u-Vu=-f$ in $\Omega$, $u=g$ | diffusion killed at rate $V$ | $u(x)=\mathbb{E}_x\big[e^{-\int_0^\tau V}g(X_\tau)+\int_0^\tau e^{-\int_0^t V}f(X_t)dt\big]$ |
-| Backward Kolmogorov | $\partial_t u=\mathcal{L}u$, $u(0,\cdot)=g$ | transition semigroup $e^{t\mathcal{L}}$ | $u(t,x)=\mathbb{E}_x[g(X_t)]$ |
-| Heat equation with potential | $\partial_t u=\tfrac12\Delta u-Vu$, $u(0,\cdot)=g$ | Brownian motion reweighted by $e^{-\int V}$ | $u(t,x)=\mathbb{E}_x\big[e^{-\int_0^t V(B_s)ds}g(B_t)\big]$ — Kac's original formula |
-| Black–Scholes | $\partial_t u+\mathcal{L}u-ru=0$, $u(T,\cdot)=g$ | risk-neutral diffusion | $u(t,x)=e^{-r(T-t)}\,\mathbb{E}\big[g(X_T)\mid X_t=x\big]$ |
-| Fokker–Planck (forward Kolmogorov) | $\partial_t\rho=\mathcal{L}^*\rho$, $\rho_0=\mu$ | the law of the process | $\rho_t=\mathrm{Law}(X_t)$ — adjoint to the backward equation above |
-| Principal eigenvalue problem | $\mathcal{L}\phi=-\lambda_1\phi$ in $\Omega$, $\phi=0$ on $\partial\Omega$ | survival of the killed process | $\lambda_1=\lim_{t\to\infty}-\tfrac1t\log\mathbb{P}_x(\tau>t)$ |
-
-### 4.2 Boundary conditions, and operators that are not local
+### 4.1 Boundary conditions, and operators that are not local
 
 | Name | PDE ingredient | Stochastic object | Note |
 |---|---|---|---|
@@ -195,26 +172,6 @@ editable form:
 | Neumann condition | $\partial_n u=0$ | reflected diffusion | the Skorokhod term is the boundary local time |
 | Robin condition | $\partial_n u=\alpha u$ | reflected diffusion killed at rate $\alpha$ in local time | interpolates the two above as $\alpha:0\to\infty$ |
 | Fractional Laplacian | $-(-\Delta)^{\alpha/2}u=0$ in $\Omega$, $u=g$ on $\mathbb{R}^d\setminus\Omega$ | rotationally invariant $\alpha$-stable Lévy process | it jumps *over* the boundary, so the data lives on the whole complement |
-
-### 4.3 Stopping and control
-
-Here the equation is nonlinear in $u$, but the representation is still an
-expectation — taken over the best of a family of processes.
-
-| Name | PDE | Stochastic object | Representation |
-|---|---|---|---|
-| Obstacle problem | $\min\{ru-\mathcal{L}u,\; u-\psi\}=0$ | optimal stopping time $\theta$ | $u(x)=\sup_{\theta}\mathbb{E}_x\big[e^{-r\theta}\psi(X_\theta)\big]$ — American options |
-| Hamilton–Jacobi–Bellman | $\partial_t u+\inf_{\alpha}\{\mathcal{L}^{\alpha}u+\ell(x,\alpha)\}=0$, $u(T,\cdot)=h$ | controlled diffusion $X^\alpha$ | $u=$ value function; the minimizer is the optimal feedback |
-| Hamilton–Jacobi (first order) | $\partial_t u+H(x,\nabla u)=0$ | vanishing-noise limit $\varepsilon\to0$ | deterministic control; Freidlin–Wentzell large deviations, rate $e^{-I/\varepsilon}$ |
-
-### 4.4 Genuinely nonlinear
-
-| Name | PDE | Stochastic object | Representation |
-|---|---|---|---|
-| Semilinear parabolic | $\partial_t u+\mathcal{L}u+f(t,x,u,\sigma^\top\nabla u)=0$, $u(T,\cdot)=g$ | backward SDE $(Y,Z)$ | $Y_t=u(t,X_t)$, $Z_t=\sigma^\top\nabla u(t,X_t)$ — the nonlinear Feynman–Kac of Pardoux–Peng |
-| Linearizable HJB | quadratic cost in the control, control in the range of $\sigma$ | Cole–Hopf: $\psi=e^{-u/\lambda}$ solves a *linear* equation | $u=-\lambda\log\mathbb{E}_x\big[e^{-\frac1\lambda(h(X_T)+\int q)}\big]$ — path-integral control |
-| Nonlinear Fokker–Planck | $\partial_t\rho=\mathcal{L}^*_{\rho}\rho$ | McKean–Vlasov SDE, coefficients depending on $\mathrm{Law}(X_t)$ | propagation of chaos: $N$ interacting particles converge to the PDE |
-| Mean field game system | coupled backward HJB and forward Fokker–Planck | a continuum of small players, each solving its own control problem | equilibrium: the density each player forecasts is the one they collectively produce |
 
 
 ### References
