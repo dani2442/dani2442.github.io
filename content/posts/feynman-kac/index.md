@@ -1,12 +1,12 @@
 ---
-title: "Feynman-Kac formula"
+title: "Feynman–Kac formula"
 date: 2025-10-17
 tags: ["stochastic processes", "brownian motion", "monte carlo", "pde"]
 categories: ["pde", "probability"]
 author: "Daniel López Montero"
 showToc: true
 draft: true
-description: "The Feynman-Kac formula connects stochastic processes to partial differential equations."
+description: "The Feynman–Kac formula connects stochastic processes to partial differential equations."
 ShowWordCount: false
 ShowReadingTime: true
 comments: true
@@ -19,9 +19,9 @@ editPost:
 ---
 
 
-There is a beautiful connection between stochastic processes and partial differential equations (PDEs) given by the famous Feynman-Kac theorem.
+There is a beautiful connection between stochastic processes and partial differential equations (PDEs) given by the famous Feynman–Kac theorem.
 
-The theorem provides a way to solve stochastic differential equations (SDEs) by solving a deterministic infinite dimensional problem (a PDE). And conversely, it provides a way to solve certain PDEs by solving an SDE.
+The theorem provides a way to solve stochastic differential equations (SDEs) by solving a deterministic infinite-dimensional problem (a PDE). And conversely, it provides a way to solve certain PDEs by solving an SDE.
 
 > **Example.** Take the Dirichlet problem
 > $$ \tfrac12\Delta u = 0 \quad\text{in } \Omega, \qquad u = g \quad\text{on } \partial\Omega . $$
@@ -58,7 +58,7 @@ $\overline\Omega$; hence it is a martingale and
 $$
 u(x) \;=\; \mathbb{E}_x\big[\,u(B_{t\wedge\tau})\,\big] \qquad\text{for every } t .
 $$
-What remains is that the path leaves at all. Running the same formula on
+What remains is to check that the path leaves at all. Running the same formula on
 $h(y)=|y|^2$, for which $\tfrac12\Delta h=d$, gives
 $\mathbb{E}_x\big[|B_{t\wedge\tau}|^2\big]-|x|^2=d\,\mathbb{E}_x[t\wedge\tau]$,
 whose left-hand side is at most $\sup_{y\in\overline\Omega}|y|^2$, so
@@ -85,7 +85,7 @@ in $\mathbb{R}^d$, with $b,\sigma$ Lipschitz.
 > $$ u(t,x) \;=\; \mathbb{E}\Big[\, e^{-\int_t^T V(X_r)dr}\,g(X_T) \;+\; \int_t^T e^{-\int_t^s V(X_r)dr}\, f(s,X_s)\,ds \,\Big\vert\, X_t=x\Big]. $$
 
 
-*Proof.* Write $D_s=e^{-\int_t^s V(X_r)dr}$ for the discount factor and run
+*Proof.* Write $D_s=e^{-\int_t^s V(X_r)dr}$ for the discount factor and set
 $$
 Y_s \;=\; D_s\,u(s,X_s) + \int_t^s D_r\,f(r,X_r)\,dr , \qquad s\in[t,T].
 $$
@@ -102,21 +102,21 @@ $$
 The drift of $Y$ is therefore
 $D_s\big(\partial_s u+\mathcal{L}u-Vu+f\big)(s,X_s)=0$ by the equation, leaving
 $dY_s = D_s\,\nabla u(s,X_s)^\top\sigma(X_s)\,dW_s$. No exit time has to be
-controlled, the horizon $T$ being deterministic: the growth assumption is what
+controlled; the horizon $T$ is deterministic: the growth assumption is what
 promotes this local martingale to a true one on $[t,T]$, and then
 $u(t,x)=Y_t=\mathbb{E}[Y_T\mid X_t=x]$, which is the claim. $\;\blacksquare$
 
 This statement gives uniqueness for free, but presumes the existence of a solution. The converse, that the right-hand
-side *defines* a solution can be proven separately. 
+side *defines* a solution, can be proven separately.
 
 > **Historical note.** Feynman (1948) described the evolution of the Schrödinger
 > equation
 > $$ i\hbar\,\partial_t\psi \;=\; -\tfrac{\hbar^2}{2m}\Delta\psi + V\psi $$
 > by summing over *every* path joining the two endpoints, each weighted by a
 > complex number of modulus one whose phase is the classical action of that path,
-> measured in units of $\hbar$. Such weights only rotate, they never shrink, so
+> measured in units of $\hbar$. Such weights only rotate; they never shrink, so
 > paths cancel by interference rather than by having small weight: the sum is not
-> an ordinary probabilistic integral, and no measure on path space realises it.
+> an ordinary probabilistic integral, and no measure on path space realizes it.
 >
 > Kac (1949) observed that replacing time by imaginary time, $t\mapsto -it$,
 > turns the equation, for $\hbar=m=1$, into
@@ -139,7 +139,7 @@ a name on both sides: $V$ is the discount rate, a source $f$ is a dividend or ru
 above, in that dictionary, the statement that a hedged position has no drift.
 
 
-## 4. The dictionary
+## 4. Feynman–Kac family of equations
 
 The translation always follows the same pattern. The second-order part of the
 operator is the diffusion coefficient, the first-order part is the drift, a
@@ -162,19 +162,41 @@ $$
 so that $\mathbb{P}\big(\zeta>t\,\big\vert\,X\big)=e^{-\int_{t_0}^{t} V(X_r)dr}$: the discount
 factors below are survival probabilities.
 
-![Dictionary of Feynman-Kac correspondences: linear and semilinear parabolic and elliptic equations, Fokker-Planck, the principal eigenvalue problem and HJB, each with its stochastic object and its representation](feynman_kac-feynman-kac.png)
+![Dictionary of Feynman–Kac correspondences: linear and semilinear parabolic and elliptic equations, Fokker–Planck, the principal eigenvalue problem and HJB, each with its stochastic object and its representation](feynman_kac-feynman-kac.png)
 
-### 4.1 Boundary conditions, and operators that are not local
+### 4.1 Boundary conditions and operators that are not local
 
 | Name | PDE ingredient | Stochastic object | Note |
 |---|---|---|---|
-| Dirichlet condition | $u=g$ on $\partial\Omega$ | process killed on contact | the data is paired with the exit distribution $\omega_x$ |
+| Dirichlet condition | $u=g$ on $\partial\Omega$ | process killed on contact | the datum is paired with the exit distribution $\omega_x$ |
 | Neumann condition | $\partial_n u=0$ | reflected diffusion | the Skorokhod term is the boundary local time |
 | Robin condition | $\partial_n u=\alpha u$ | reflected diffusion killed at rate $\alpha$ in local time | interpolates the two above as $\alpha:0\to\infty$ |
 | Fractional Laplacian | $-(-\Delta)^{\alpha/2}u=0$ in $\Omega$, $u=g$ on $\mathbb{R}^d\setminus\Omega$ | rotationally invariant $\alpha$-stable Lévy process | it jumps *over* the boundary, so the data lives on the whole complement |
 
 
-### References
+### 4.2 Other families
+
+The same reading reaches past the table. Optimal stopping turns the equation
+into a variational inequality, $\min\{ru-\mathcal{L}u,\ u-\psi\}=0$, solved by
+$\sup_{\theta}\mathbb{E}_x\big[e^{-r\theta}\psi(X_\theta)\big]$ — the American
+option, a Dynkin game when two players stop against each other. A polynomial
+nonlinearity becomes branching: McKean (1975) solves KPP by multiplying the
+datum over the particles of a branching Brownian motion, and the same cascade
+reaches the three-dimensional Navier–Stokes equations in Fourier variables.
+Coefficients depending on the law of the process give the nonlinear
+Fokker–Planck equations and, coupled backward to an HJB equation, mean field
+games; a quadratic cost with the control in the range of $\sigma$ gives an HJB
+equation that Cole–Hopf makes linear and a value that is again an expectation,
+which is path-integral control. Or the driver changes rather than the
+equation: a Lévy process makes the generator nonlocal, vanishing noise leaves
+Hamilton–Jacobi with the Freidlin–Wentzell rate function in place of the
+expectation, and a Poisson random velocity gives Kac's telegraph equation —
+the wave equation itself has no such representation. Conditioning instead of
+averaging gives the last one: Kallianpur–Striebel writes the filtering density
+as a Feynman–Kac weight built from the observation.
+
+
+## References
 
 [1] R. P. Feynman. Space-Time Approach to Non-Relativistic Quantum Mechanics. Rev. Mod. Phys. 20 (1948) 367–387.
 
