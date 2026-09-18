@@ -1,0 +1,115 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2">
+  <diagram id="fk-dictionary-0001" name="feynman-kac">
+    <mxGraphModel dx="1097" dy="796" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="1" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="band-r5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="40" y="440" width="1080" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="rep-5" value="\( \begin{aligned}\lambda_1=-\lim_{t\to\infty}\tfrac1t\log\mathbb E_x\big[e^{-\int_0^t V}\mathbf 1_{\{\tau&amp;gt;t\}}\big]\end{aligned} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry x="770" y="440" width="330" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="band-head" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="40" y="40" width="1080" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="band-r1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="40" y="80" width="1080" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="band-r2" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="40" y="170" width="1080" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="band-r3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" parent="1" vertex="1">
+          <mxGeometry x="40" y="260" width="1080" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="band-r4" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="40" y="350" width="1080" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="band-r6" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="40" y="530" width="1080" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="title" value="Feynman&amp;#8211;Kac" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=3;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="40" y="40" width="170" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="h-eq" value="Equation" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;" parent="1" vertex="1">
+          <mxGeometry x="210" y="40" width="380" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="h-proc" value="Stochastic object" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;" parent="1" vertex="1">
+          <mxGeometry x="540" y="40" width="220" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="h-rep" value="Representation" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;" parent="1" vertex="1">
+          <mxGeometry x="760" y="40" width="330" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="name-1" value="&lt;b&gt;&lt;font&gt;Linear parabolic&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="40" y="80" width="170" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="name-2" value="&lt;b&gt;&lt;font&gt;Linear elliptic&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="40" y="170" width="170" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="name-3" value="&lt;b&gt;&lt;font&gt;Semilinear elliptic&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="40" y="260" width="170" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="name-4" value="&lt;b&gt;&lt;font&gt;Fokker&amp;#8211;Planck&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="40" y="350" width="170" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="name-5" value="&lt;b&gt;&lt;font&gt;Principal eigenvalue&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="40" y="440" width="170" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="name-6" value="&lt;b&gt;&lt;font&gt;HJB&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
+          <mxGeometry x="40" y="530" width="170" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="eq-1" value="\( \begin{cases}\partial_t u + \mathcal L u - Vu + f = 0 &amp;amp; \text{in } (0,T)\times\mathbb R^d\\ u(T,\cdot)=g &amp;amp; \text{in } \mathbb R^d\end{cases} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry x="210" y="80" width="310" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="eq-2" value="\( \begin{cases}\mathcal L u - Vu + f = 0 &amp;amp; \text{in } \Omega\\ u=g &amp;amp; \text{on } \partial\Omega\end{cases} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry x="210" y="170" width="310" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="eq-3" value="\( \begin{cases}\mathcal L u + f(x,u,\sigma^\top\nabla u) = 0 &amp;amp; \text{in } \Omega\\ u=g &amp;amp; \text{on } \partial\Omega\end{cases} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry x="210" y="260" width="310" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="eq-4" value="\( \begin{cases}\partial_t \rho = \mathcal L^{*}\rho &amp;amp; \text{in } (0,T)\times\mathbb R^d\\ \rho(0,\cdot)=\mu &amp;amp; \text{in } \mathbb R^d\end{cases} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry x="210" y="350" width="310" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="eq-5" value="\( \begin{cases}\mathcal L \phi - V\phi = -\lambda_1\phi &amp;amp; \text{in } \Omega\\ \phi &amp;gt; 0 &amp;amp; \text{in } \Omega\\ \phi=0 &amp;amp; \text{on } \partial\Omega\end{cases} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry x="210" y="440" width="310" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="eq-6" value="\( \begin{cases}\partial_t u + \inf_{a\in\mathcal A}\left\{\mathcal L^{a} u + \ell(x,a)\right\} = 0 &amp;amp; \text{in } (0,T)\times\mathbb R^d\\ u(T,\cdot)=h &amp;amp; \text{in } \mathbb R^d\end{cases} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry x="210" y="530" width="310" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="proc-1" value="\( dX_t=b\,dt+\sigma\,dW_t \), killed at rate \( V \), deterministic horizon \( T \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry x="540" y="80" width="220" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="proc-2" value="the same diffusion, killed at rate \( V \) and stopped at the exit time \( \tau \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry x="540" y="170" width="220" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="proc-3" value="backward SDE \( (Y,Z) \) on the random horizon \( [0,\tau] \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry x="540" y="260" width="220" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="proc-4" value="the law of the diffusion itself, \( X_0\sim\mu \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry x="540" y="350" width="220" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="proc-5" value="the killed diffusion watched as \( t\to\infty \): how it survives in \( \Omega \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry x="540" y="440" width="220" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="proc-6" value="controlled diffusion \( dX_t=b(X_t,a_t)dt+\sigma(X_t,a_t)dW_t \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry x="540" y="530" width="220" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="rep-1" value="\( \begin{aligned}u(t,x)=\mathbb E\Big[&amp;amp;e^{-\int_t^T V}g(X_T) +\int_t^T\! e^{-\int_t^s V}f(s,X_s)ds\Big|X_t=x\Big]\end{aligned} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry x="770" y="80" width="330" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="rep-2" value="\( \begin{aligned}u(x)=\mathbb E_x\Big[&amp;amp;e^{-\int_0^\tau V}g(X_\tau) +\int_0^\tau\! e^{-\int_0^t V}f(X_t)dt\Big]\end{aligned} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry x="770" y="170" width="330" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="rep-3" value="\( \begin{aligned}&amp;amp;Y_t=u(X_t),\quad Z_t=\sigma^\top\nabla u(X_t)\\ &amp;amp;Y_t=g(X_\tau)+\!\int_t^\tau\! f(X_s,Y_s,Z_s)ds-\!\int_t^\tau\! Z_s dW_s\end{aligned} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry x="770" y="260" width="330" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="rep-4" value="\( \begin{aligned}&amp;amp;\rho_t=\mathrm{Law}(X_t)\\ &amp;amp;\int_{\mathbb R^d}\!\varphi\,d\rho_t=\mathbb E_\mu[\varphi(X_t)]\end{aligned} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry x="770" y="350" width="330" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="rep-6" value="\( \begin{aligned}u(t,x)=\inf_{a}\mathbb E\Big[&amp;amp;\int_t^T\!\ell(X_s,a_s)ds +h(X_T)\Big|X_t=x\Big]\end{aligned} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
+          <mxGeometry x="770" y="530" width="340" height="90" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

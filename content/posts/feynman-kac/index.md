@@ -1,0 +1,236 @@
+---
+title: "Feynman-Kac formula"
+date: 2025-10-17
+tags: ["stochastic processes", "brownian motion", "monte carlo", "pde"]
+categories: ["pde", "probability"]
+author: "Daniel López Montero"
+showToc: true
+draft: true
+description: "The Feynman-Kac formula connects stochastic processes to partial differential equations."
+ShowWordCount: false
+ShowReadingTime: true
+comments: true
+TocOpen: true
+UseHugoToc: true
+editPost:
+    URL: "https://github.com/dani2442/dani2442.github.io/content"
+    Text: "Suggest Changes" # edit text
+    appendFilePath: true # to append file path to Edit link
+---
+
+
+There is a beautiful connection between stochastic processes and partial differential equations (PDEs) given by the famous Feynman-Kac theorem.
+
+The theorem provides a way to solve stochastic differential equations (SDEs) by solving a deterministic infinite dimensional problem (a PDE). And conversely, it provides a way to solve certain PDEs by solving an SDE.
+
+> **Example.** Take the Dirichlet problem
+> $$ \tfrac12\Delta u = 0 \quad\text{in } \Omega, \qquad u = g \quad\text{on } \partial\Omega . $$
+> The Feynman–Kac theorem says its solution is
+> $$ u(x) \;=\; \mathbb{E}\big[\,g(B_\tau)\,\big] $$
+> where $B$ is a Brownian motion started at $x$ and $\tau$ is the first time it
+> leaves $\Omega$: the value at $x$ is the boundary datum averaged over the place
+> where the path happens to come out.
+
+![One Brownian path started at x, wandering until it leaves the bean-shaped domain at the exit point B_tau](fk_bean_walk.gif)
+
+One path gives one exit point, and one number $g(B_\tau)$. The solution at $x$
+is what those numbers average to.
+
+The proof is short, and worth seeing once before the general statement. It needs
+one tool, the chain rule for Brownian paths.
+
+> **Itô's formula.** For $\varphi\in C^2(\mathbb{R}^d)$ and a Brownian motion $B$,
+> $$ d\varphi(B_t) \;=\; \nabla\varphi(B_t)^\top dB_t \;+\; \tfrac12\Delta\varphi(B_t)\,dt . $$
+> The second term is what an ordinary chain rule misses. The path is nowhere
+> differentiable, but it accumulates quadratic variation at a definite rate,
+> $d\langle B^i,B^j\rangle_t=\delta_{ij}\,dt$, and the Laplacian is what that
+> second-order term collects.
+
+*Proof of the example.* Let $\Omega$ be bounded, let $u\in C^2(\Omega)\cap C(\overline\Omega)$
+solve the problem, let $B$ start at $x\in\Omega$ and let
+$\tau=\inf\{t>0:\;B_t\notin\Omega\}$. Itô's formula applied to $u$ leaves
+$$
+du(B_t) \;=\; \nabla u(B_t)^\top dB_t \;+\; \tfrac12\Delta u(B_t)\,dt \;=\; \nabla u(B_t)^\top dB_t ,
+$$
+the $dt$ term vanishing because $u$ solves the equation. So $t\mapsto u(B_{t\wedge\tau})$
+is a local martingale, and it is bounded, $u$ being continuous on the compact
+$\overline\Omega$; hence it is a martingale and
+$$
+u(x) \;=\; \mathbb{E}_x\big[\,u(B_{t\wedge\tau})\,\big] \qquad\text{for every } t .
+$$
+What remains is that the path leaves at all. Running the same formula on
+$h(y)=|y|^2$, for which $\tfrac12\Delta h=d$, gives
+$\mathbb{E}_x\big[|B_{t\wedge\tau}|^2\big]-|x|^2=d\,\mathbb{E}_x[t\wedge\tau]$,
+whose left-hand side is at most $\sup_{y\in\overline\Omega}|y|^2$, so
+$\mathbb{E}_x[\tau]<\infty$ and in particular $\tau<\infty$ almost surely.
+Letting $t\to\infty$, $u(B_{t\wedge\tau})\to u(B_\tau)=g(B_\tau)$ because $u$ is
+continuous up to the boundary, and bounded convergence turns the display into
+$u(x)=\mathbb{E}_x\big[g(B_\tau)\big]$. $\;\blacksquare$
+
+## 1. The Feynman–Kac theorem
+
+
+Let $X$ solve the SDE
+$$
+dX_t \;=\; b(X_t)\,dt + \sigma(X_t)\,dW_t
+$$
+in $\mathbb{R}^d$, with $b,\sigma$ Lipschitz.
+
+> **Theorem (Feynman–Kac).**
+> Let $V,g:\mathbb{R}^d\to\mathbb{R}$ and $f:[0,T]\times\mathbb{R}^d\to\mathbb{R}$
+> be continuous, with $V\ge0$, and suppose
+> $u\in C^{1,2}\big([0,T)\times\mathbb{R}^d\big)\cap C\big([0,T]\times\mathbb{R}^d\big)$ solves
+> $$ \partial_t u + \tfrac12\operatorname{tr}\big(\sigma\sigma^\top D^2u\big) + b\cdot\nabla u - Vu + f \;=\; 0, \qquad u(T,\cdot)=g . $$
+> If $u$, $f$ and $\sigma^\top\nabla u$ grow at most polynomially in $x$, uniformly in $t$, then
+> $$ u(t,x) \;=\; \mathbb{E}\Big[\, e^{-\int_t^T V(X_r)dr}\,g(X_T) \;+\; \int_t^T e^{-\int_t^s V(X_r)dr}\, f(s,X_s)\,ds \,\Big\vert\, X_t=x\Big]. $$
+
+
+*Proof.* Write $D_s=e^{-\int_t^s V(X_r)dr}$ for the discount factor and run
+$$
+Y_s \;=\; D_s\,u(s,X_s) + \int_t^s D_r\,f(r,X_r)\,dr , \qquad s\in[t,T].
+$$
+Itô's formula applied to $D_s\,u(s,X_s)$ produces one $dt$ term per derivative
+of $u$, and what it collects is precisely the operator in the statement: the
+second-order part comes from the quadratic variation
+$d\langle X\rangle_s=\sigma\sigma^\top(X_s)\,ds$, the first-order part from the
+drift. That combination is the *generator* of $X$, and from here on it gets a
+name,
+$$
+\mathcal{L}\varphi \;:=\; \tfrac12\operatorname{tr}\big(a\,D^2\varphi\big) + b\cdot\nabla\varphi,
+\qquad a:=\sigma\sigma^\top .
+$$
+The drift of $Y$ is therefore
+$D_s\big(\partial_s u+\mathcal{L}u-Vu+f\big)(s,X_s)=0$ by the equation, leaving
+$dY_s = D_s\,\nabla u(s,X_s)^\top\sigma(X_s)\,dW_s$. No exit time has to be
+controlled, the horizon $T$ being deterministic: the growth assumption is what
+promotes this local martingale to a true one on $[t,T]$, and then
+$u(t,x)=Y_t=\mathbb{E}[Y_T\mid X_t=x]$, which is the claim. $\;\blacksquare$
+
+This statement gives uniqueness for free, but presumes the existence of a solution. The converse, that the right-hand
+side *defines* a solution can be proven separately. 
+
+> **Historical note.** Feynman (1948) described the evolution of the Schrödinger
+> equation
+> $$ i\hbar\,\partial_t\psi \;=\; -\tfrac{\hbar^2}{2m}\Delta\psi + V\psi $$
+> by summing over *every* path joining the two endpoints, each weighted by a
+> complex number of modulus one whose phase is the classical action of that path,
+> measured in units of $\hbar$. Such weights only rotate, they never shrink, so
+> paths cancel by interference rather than by having small weight: the sum is not
+> an ordinary probabilistic integral, and no measure on path space realises it.
+>
+> Kac (1949) observed that replacing time by imaginary time, $t\mapsto -it$,
+> turns the equation, for $\hbar=m=1$, into
+> $$ \partial_t u \;=\; \tfrac12\Delta u - Vu , $$
+> and turns that rotating phase into the real, decaying weight
+> $e^{-\int_0^t V(B_s)ds}$. What was a formal path integral becomes a genuine
+> probabilistic representation, an ordinary expectation over Brownian paths:
+> $$ u(t,x) \;=\; \mathbb{E}_x\Big[e^{-\int_0^t V(B_s)ds}\,g(B_t)\Big]. $$
+
+Black–Scholes (1973) is the same theorem read through the finance dictionary.
+Take the risk-neutral geometric Brownian motion $dX_t=rX_t\,dt+\sigma X_t\,dW_t$
+with $V\equiv r$ constant, $f=0$ and $g$ the payoff at maturity: the PDE is
+$$
+\partial_t u + \tfrac12\sigma^2x^2\,\partial_{xx}u + rx\,\partial_x u - ru = 0,
+\qquad u(T,\cdot)=g,
+$$
+and the representation is the pricing formula
+$u(t,x)=e^{-r(T-t)}\,\mathbb{E}\big[g(X_T)\mid X_t=x\big]$. Every ingredient has
+a name on both sides: $V$ is the discount rate, a source $f$ is a dividend or running payoff, and $\sigma^\top\nabla u$ is the hedging portfolio, which makes the proof
+above, in that dictionary, the statement that a hedged position has no drift.
+
+
+## 4. The dictionary
+
+The translation always follows the same pattern. The second-order part of the
+operator is the diffusion coefficient, the first-order part is the drift, a
+zeroth-order term is a killing rate, a source term is a running payoff, the
+boundary condition is a stopping rule — and a nonlinearity, when there is one,
+is a control, a game, a branching mechanism or an interaction between copies of
+the process. The tables below collect the correspondences in that order,
+writing
+$$
+\mathcal{L}\varphi=\tfrac12\operatorname{tr}\!\big(a\,D^2\varphi\big)+b\cdot\nabla\varphi,
+\qquad a=\sigma\sigma^\top,\qquad dX_t=b(X_t)\,dt+\sigma(X_t)\,dW_t ,
+$$
+and $\tau$ for the first exit time of $X$ from $\Omega$.
+
+In brief — this is the content of the diagram `feynman_kac.drawio`, kept here in
+editable form:
+
+| Feynman–Kac | Equation | Stochastic object | Representation |
+|---|---|---|---|
+| **Linear parabolic** | $\begin{cases}\partial_t u + \mathcal{L}u - Vu + f = 0 & \text{in } (0,T)\times\mathbb{R}^d\\ u(T,\cdot)=g & \text{in } \mathbb{R}^d\end{cases}$ | $dX_t=b\,dt+\sigma\,dW_t$, killed at rate $V$, deterministic horizon $T$ | $u(t,x)=\mathbb{E}\big[e^{-\int_t^T V}g(X_T)+\int_t^T e^{-\int_t^s V}f(s,X_s)ds \,\big\vert\, X_t=x\big]$ |
+| **Linear elliptic** | $\begin{cases}\mathcal{L}u - Vu + f = 0 & \text{in } \Omega\\ u=g & \text{on } \partial\Omega\end{cases}$ | the same diffusion, killed at rate $V$ and stopped at the exit time $\tau$ | $u(x)=\mathbb{E}_x\big[e^{-\int_0^\tau V}g(X_\tau)+\int_0^\tau e^{-\int_0^t V}f(X_t)dt\big]$ |
+| **Semilinear elliptic** | $\begin{cases}\mathcal{L}u + f(x,u,\sigma^\top\nabla u) = 0 & \text{in } \Omega\\ u=g & \text{on } \partial\Omega\end{cases}$ | backward SDE $(Y,Z)$ on the random horizon $[0,\tau]$ | $Y_t=u(X_t)$, $Z_t=\sigma^\top\nabla u(X_t)$, with $Y_t=g(X_\tau)+\int_t^\tau f(X_s,Y_s,Z_s)ds-\int_t^\tau Z_s\,dW_s$ |
+| **Fokker–Planck** | $\begin{cases}\partial_t\rho = \mathcal{L}^{*}\rho & \text{in } (0,T)\times\mathbb{R}^d\\ \rho(0,\cdot)=\mu & \text{in } \mathbb{R}^d\end{cases}$ | the law of the diffusion itself, $X_0\sim\mu$ | $\rho_t=\mathrm{Law}(X_t)$ |
+| **Principal eigenvalue** | $\begin{cases}\mathcal{L}\phi - V\phi = -\lambda_1\phi & \text{in } \Omega\\ \phi>0 & \text{in } \Omega\\ \phi=0 & \text{on } \partial\Omega\end{cases}$ | the killed diffusion watched as $t\to\infty$: how it survives in $\Omega$ | $\lambda_1=-\lim_{t\to\infty}\tfrac1t\log\mathbb{E}_x\big[e^{-\int_0^t V}\mathbf{1}_{\{\tau>t\}}\big]$ |
+| **HJB** | $\begin{cases}\partial_t u + \inf_{a\in\mathcal{A}}\left\{\mathcal{L}^{a}u + \ell(x,a)\right\} = 0 & \text{in } (0,T)\times\mathbb{R}^d\\ u(T,\cdot)=h & \text{in } \mathbb{R}^d\end{cases}$ | controlled diffusion $dX_t=b(X_t,a_t)dt+\sigma(X_t,a_t)dW_t$ | $u(t,x)=\inf_{a}\mathbb{E}\big[\int_t^T \ell(X_s,a_s)ds + h(X_T) \,\big\vert\, X_t=x\big]$ |
+
+### 4.1 Linear equations
+
+| Name | PDE and side conditions | Stochastic object | Representation |
+|---|---|---|---|
+| Laplace / Dirichlet problem | $\Delta u=0$ in $\Omega$, $u=g$ on $\partial\Omega$ | Brownian motion stopped on exit | $u(x)=\mathbb{E}_x[g(B_\tau)]$ |
+| Poisson equation | $\tfrac12\Delta u=-f$ in $\Omega$, $u=g$ | Brownian motion, plus its occupation time before $\tau$ | $u(x)=\mathbb{E}_x\big[g(B_\tau)+\int_0^\tau f(B_t)dt\big]$ |
+| Elliptic equation with killing | $\mathcal{L}u-Vu=-f$ in $\Omega$, $u=g$ | diffusion killed at rate $V$ | $u(x)=\mathbb{E}_x\big[e^{-\int_0^\tau V}g(X_\tau)+\int_0^\tau e^{-\int_0^t V}f(X_t)dt\big]$ |
+| Backward Kolmogorov | $\partial_t u=\mathcal{L}u$, $u(0,\cdot)=g$ | transition semigroup $e^{t\mathcal{L}}$ | $u(t,x)=\mathbb{E}_x[g(X_t)]$ |
+| Heat equation with potential | $\partial_t u=\tfrac12\Delta u-Vu$, $u(0,\cdot)=g$ | Brownian motion reweighted by $e^{-\int V}$ | $u(t,x)=\mathbb{E}_x\big[e^{-\int_0^t V(B_s)ds}g(B_t)\big]$ — Kac's original formula |
+| Black–Scholes | $\partial_t u+\mathcal{L}u-ru=0$, $u(T,\cdot)=g$ | risk-neutral diffusion | $u(t,x)=e^{-r(T-t)}\,\mathbb{E}\big[g(X_T)\mid X_t=x\big]$ |
+| Fokker–Planck (forward Kolmogorov) | $\partial_t\rho=\mathcal{L}^*\rho$, $\rho_0=\mu$ | the law of the process | $\rho_t=\mathrm{Law}(X_t)$ — adjoint to the backward equation above |
+| Principal eigenvalue problem | $\mathcal{L}\phi=-\lambda_1\phi$ in $\Omega$, $\phi=0$ on $\partial\Omega$ | survival of the killed process | $\lambda_1=\lim_{t\to\infty}-\tfrac1t\log\mathbb{P}_x(\tau>t)$ |
+
+### 4.2 Boundary conditions, and operators that are not local
+
+| Name | PDE ingredient | Stochastic object | Note |
+|---|---|---|---|
+| Dirichlet condition | $u=g$ on $\partial\Omega$ | process killed on contact | the data is paired with the exit distribution $\omega_x$ |
+| Neumann condition | $\partial_n u=0$ | reflected diffusion | the Skorokhod term is the boundary local time |
+| Robin condition | $\partial_n u=\alpha u$ | reflected diffusion killed at rate $\alpha$ in local time | interpolates the two above as $\alpha:0\to\infty$ |
+| Fractional Laplacian | $-(-\Delta)^{\alpha/2}u=0$ in $\Omega$, $u=g$ on $\mathbb{R}^d\setminus\Omega$ | rotationally invariant $\alpha$-stable Lévy process | it jumps *over* the boundary, so the data lives on the whole complement |
+
+### 4.3 Stopping and control
+
+Here the equation is nonlinear in $u$, but the representation is still an
+expectation — taken over the best of a family of processes.
+
+| Name | PDE | Stochastic object | Representation |
+|---|---|---|---|
+| Obstacle problem | $\min\{ru-\mathcal{L}u,\; u-\psi\}=0$ | optimal stopping time $\theta$ | $u(x)=\sup_{\theta}\mathbb{E}_x\big[e^{-r\theta}\psi(X_\theta)\big]$ — American options |
+| Hamilton–Jacobi–Bellman | $\partial_t u+\inf_{\alpha}\{\mathcal{L}^{\alpha}u+\ell(x,\alpha)\}=0$, $u(T,\cdot)=h$ | controlled diffusion $X^\alpha$ | $u=$ value function; the minimizer is the optimal feedback |
+| Hamilton–Jacobi (first order) | $\partial_t u+H(x,\nabla u)=0$ | vanishing-noise limit $\varepsilon\to0$ | deterministic control; Freidlin–Wentzell large deviations, rate $e^{-I/\varepsilon}$ |
+
+### 4.4 Genuinely nonlinear
+
+| Name | PDE | Stochastic object | Representation |
+|---|---|---|---|
+| Semilinear parabolic | $\partial_t u+\mathcal{L}u+f(t,x,u,\sigma^\top\nabla u)=0$, $u(T,\cdot)=g$ | backward SDE $(Y,Z)$ | $Y_t=u(t,X_t)$, $Z_t=\sigma^\top\nabla u(t,X_t)$ — the nonlinear Feynman–Kac of Pardoux–Peng |
+| Linearizable HJB | quadratic cost in the control, control in the range of $\sigma$ | Cole–Hopf: $\psi=e^{-u/\lambda}$ solves a *linear* equation | $u=-\lambda\log\mathbb{E}_x\big[e^{-\frac1\lambda(h(X_T)+\int q)}\big]$ — path-integral control |
+| Nonlinear Fokker–Planck | $\partial_t\rho=\mathcal{L}^*_{\rho}\rho$ | McKean–Vlasov SDE, coefficients depending on $\mathrm{Law}(X_t)$ | propagation of chaos: $N$ interacting particles converge to the PDE |
+| Mean field game system | coupled backward HJB and forward Fokker–Planck | a continuum of small players, each solving its own control problem | equilibrium: the density each player forecasts is the one they collectively produce |
+
+
+### References
+
+[1] R. P. Feynman. Space-Time Approach to Non-Relativistic Quantum Mechanics. Rev. Mod. Phys. 20 (1948) 367–387.
+
+[2] M. Kac. On Distributions of Certain Wiener Functionals. Trans. AMS 65 (1949) 1–13.
+
+[3] F. Black and M. Scholes. The Pricing of Options and Corporate Liabilities. J. Political Economy 81 (1973) 637–654.
+
+[4] K. Itô and H. P. McKean. *Diffusion Processes and their Sample Paths*. Springer, 1965.
+
+[5] B. Øksendal. *Stochastic Differential Equations*. 6th ed., Springer, 2003. (Ch. 8–9.)
+
+[6] I. Karatzas and S. Shreve. *Brownian Motion and Stochastic Calculus*. 2nd ed., Springer, 1991. (§4.2–4.4: harmonic measure, the Dirichlet problem, Wiener's criterion.)
+
+[7] W. H. Fleming and H. M. Soner. *Controlled Markov Processes and Viscosity Solutions*. 2nd ed., Springer, 2006.
+
+[8] E. Pardoux and S. Peng. Adapted solution of a backward stochastic differential equation. Systems & Control Letters 14 (1990) 55–61.
+
+[9] H. J. Kappen. Path integrals and symmetry breaking for optimal control theory. J. Stat. Mech. (2005) P11011.
+
+[10] J.-M. Lasry and P.-L. Lions. Mean field games. Japanese J. Math. 2 (2007) 229–260.
+
+[11] E. Gobet. Weak approximation of killed diffusion using Euler schemes. Stoch. Proc. Appl. 87 (2000) 167–197.
+
+[12] N. G. Makarov. On the distortion of boundary sets under conformal mappings. Proc. London Math. Soc. 51 (1985) 369–384.
