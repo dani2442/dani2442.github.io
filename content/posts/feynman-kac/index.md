@@ -152,19 +152,27 @@ $$
 \mathcal{L}\varphi=\tfrac12\operatorname{tr}\!\big(a\,D^2\varphi\big)+b\cdot\nabla\varphi,
 \qquad a=\sigma\sigma^\top,\qquad dX_t=b(X_t)\,dt+\sigma(X_t)\,dW_t ,
 $$
-and $\tau$ for the first exit time of $X$ from $\Omega$.
+and, for a path started at time $t_0$, the exit time and the killing time
+$$
+\tau=\inf\{t>t_0:\,X_t\notin\Omega\},
+\qquad
+\zeta=\inf\Big\{t>t_0:\ \int_{t_0}^{t} V(X_r)\,dr\ \ge\ \mathcal{E}\Big\},
+\qquad \mathcal{E}\sim\mathrm{Exp}(1)\ \text{independent of } W ,
+$$
+so that $\mathbb{P}\big(\zeta>t\,\big\vert\,X\big)=e^{-\int_{t_0}^{t} V(X_r)dr}$: the discount
+factors below are survival probabilities.
 
 In brief — this is the content of the diagram `feynman_kac.drawio`, kept here in
 editable form:
 
-| Feynman–Kac | Equation | Stochastic object | Representation |
-|---|---|---|---|
-| **Linear parabolic** | $\begin{cases}\partial_t u + \mathcal{L}u - Vu + f = 0 & \text{in } (0,T)\times\mathbb{R}^d\\ u(T,\cdot)=g & \text{in } \mathbb{R}^d\end{cases}$ | $dX_t=b\,dt+\sigma\,dW_t$, killed at rate $V$, deterministic horizon $T$ | $u(t,x)=\mathbb{E}\big[e^{-\int_t^T V}g(X_T)+\int_t^T e^{-\int_t^s V}f(s,X_s)ds \,\big\vert\, X_t=x\big]$ |
-| **Linear elliptic** | $\begin{cases}\mathcal{L}u - Vu + f = 0 & \text{in } \Omega\\ u=g & \text{on } \partial\Omega\end{cases}$ | the same diffusion, killed at rate $V$ and stopped at the exit time $\tau$ | $u(x)=\mathbb{E}_x\big[e^{-\int_0^\tau V}g(X_\tau)+\int_0^\tau e^{-\int_0^t V}f(X_t)dt\big]$ |
-| **Semilinear elliptic** | $\begin{cases}\mathcal{L}u + f(x,u,\sigma^\top\nabla u) = 0 & \text{in } \Omega\\ u=g & \text{on } \partial\Omega\end{cases}$ | backward SDE $(Y,Z)$ on the random horizon $[0,\tau]$ | $Y_t=u(X_t)$, $Z_t=\sigma^\top\nabla u(X_t)$, with $Y_t=g(X_\tau)+\int_t^\tau f(X_s,Y_s,Z_s)ds-\int_t^\tau Z_s\,dW_s$ |
-| **Fokker–Planck** | $\begin{cases}\partial_t\rho = \mathcal{L}^{*}\rho & \text{in } (0,T)\times\mathbb{R}^d\\ \rho(0,\cdot)=\mu & \text{in } \mathbb{R}^d\end{cases}$ | the law of the diffusion itself, $X_0\sim\mu$ | $\rho_t=\mathrm{Law}(X_t)$ |
-| **Principal eigenvalue** | $\begin{cases}\mathcal{L}\phi - V\phi = -\lambda_1\phi & \text{in } \Omega\\ \phi>0 & \text{in } \Omega\\ \phi=0 & \text{on } \partial\Omega\end{cases}$ | the killed diffusion watched as $t\to\infty$: how it survives in $\Omega$ | $\lambda_1=-\lim_{t\to\infty}\tfrac1t\log\mathbb{E}_x\big[e^{-\int_0^t V}\mathbf{1}_{\{\tau>t\}}\big]$ |
-| **HJB** | $\begin{cases}\partial_t u + \inf_{a\in\mathcal{A}}\left\{\mathcal{L}^{a}u + \ell(x,a)\right\} = 0 & \text{in } (0,T)\times\mathbb{R}^d\\ u(T,\cdot)=h & \text{in } \mathbb{R}^d\end{cases}$ | controlled diffusion $dX_t=b(X_t,a_t)dt+\sigma(X_t,a_t)dW_t$ | $u(t,x)=\inf_{a}\mathbb{E}\big[\int_t^T \ell(X_s,a_s)ds + h(X_T) \,\big\vert\, X_t=x\big]$ |
+| Feynman–Kac | Equation |  | Stochastic object | Representation |
+|---|---|---|---|---|
+| **Linear parabolic** | $\begin{cases}\partial_t u + \mathcal{L}u - Vu + f = 0 & \text{in } (0,T)\times\mathbb{R}^d\\ u(T,\cdot)=g & \text{in } \mathbb{R}^d\end{cases}$ | diffusion | $\begin{cases}dX_s=b(X_s)ds+\sigma(X_s)dW_s \\ X_t=x\end{cases}$ | $u(t,x)=\mathbb{E}\big[e^{-\int_t^T V}g(X_T)+\int_t^T e^{-\int_t^s V}f(s,X_s)ds \,\big\vert\, X_t=x\big]$ |
+| **Linear elliptic** | $\begin{cases}\mathcal{L}u - Vu + f = 0 & \text{in } \Omega\\ u=g & \text{on } \partial\Omega\end{cases}$ | diffusion stopped on exit | $\begin{cases}dX_t=b(X_t)dt+\sigma(X_t)dW_t\\ X_0=x\end{cases}$ | $u(x)=\mathbb{E}_x\big[e^{-\int_0^\tau V}g(X_\tau)+\int_0^\tau e^{-\int_0^t V}f(X_t)dt\big]$ |
+| **Semilinear elliptic** | $\begin{cases}\mathcal{L}u + f(x,u,\sigma^\top\nabla u) = 0 & \text{in } \Omega\\ u=g & \text{on } \partial\Omega\end{cases}$ | backward SDE along the diffusion | $\begin{cases}dX_t=b(X_t)dt+\sigma(X_t)dW_t\\ X_0=x\end{cases}$, $\ (Y,Z)$ adapted with $Y_{t\wedge\tau}=g(X_\tau)+\int_{t\wedge\tau}^\tau f(X_s,Y_s,Z_s)ds-\int_{t\wedge\tau}^\tau Z_s\,dW_s$ |  $u(x)=Y_0$ |
+| **Fokker–Planck** | $\begin{cases}\partial_t\rho = \mathcal{L}^{*}\rho & \text{in } (0,T)\times\mathbb{R}^d\\ \rho(0,\cdot)=\mu & \text{in } \mathbb{R}^d\end{cases}$ | diffusion from a random start | $\begin{cases}dX_t=b(X_t)dt+\sigma(X_t)dW_t\\ X_0\sim\mu\ \text{independent of } W\end{cases}$ | $\rho_t=\mathrm{Law}(X_t)$ |
+| **Principal eigenvalue** | $\begin{cases}\mathcal{L}\phi - V\phi = -\lambda_1\phi & \text{in } \Omega\\ \phi>0 & \text{in } \Omega\\ \phi=0 & \text{on } \partial\Omega\end{cases}$ | diffusion killed on exit | $P^V_t\varphi(x)=\mathbb{E}_x\big[e^{-\int_0^t V}\varphi(X_t)\mathbf{1}_{\{\tau>t\}}\big]$ |  $\lambda_1=-\lim_{t\to\infty}\tfrac1t\log\mathbb{E}_x\big[e^{-\int_0^t V}\mathbf{1}_{\{\tau>t\}}\big]$ |
+| **HJB** | $\begin{cases}\partial_t u + \inf_{\alpha\in\mathcal{A}}\left\{\mathcal{L}^{\alpha}u + \ell(x,\alpha)\right\} = 0 & \text{in } (0,T)\times\mathbb{R}^d\\ u(T,\cdot)=h & \text{in } \mathbb{R}^d\end{cases}$ | controlled diffusion | $\begin{cases}dX^\alpha_s=b(X^\alpha_s,\alpha_s)ds+\sigma(X^\alpha_s,\alpha_s)dW_s \\ X^\alpha_t=x\end{cases}$ | $u(t,x)=\inf_{\alpha}\mathbb{E}\big[\int_t^T \ell(X^\alpha_s,\alpha_s)ds + h(X^\alpha_T) \,\big\vert\, X^\alpha_t=x\big]$ |
 
 ### 4.1 Linear equations
 
