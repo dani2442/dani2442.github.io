@@ -19,9 +19,13 @@ editPost:
 ---
 
 
-There is a beautiful connection between stochastic processes and partial differential equations (PDEs) given by the famous Feynman–Kac theorem.
+There is a beautiful connection between random processes and partial differential equations (PDEs) given by the famous Feynman–Kac theorem.
 
-The theorem provides a way to solve stochastic differential equations (SDEs) by solving a deterministic infinite-dimensional problem (a PDE). And conversely, it provides a way to solve certain PDEs by solving an SDE.
+This result is constantly being used in finance, physics, machine learning (generative models, reinforcement learning) and control theory.
+
+And allows us to solve stochastic differential equations by transforming them into PDEs. And conversely, it provides a way to solve certain PDEs through stochastic processes.
+
+In other words, it's a bridge betwee stochastic finite-dimensional problems and deterministic infinite-dimensional problem.
 
 > **Example.** Take the Poisson problem
 > $$
