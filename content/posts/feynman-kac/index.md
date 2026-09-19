@@ -233,57 +233,58 @@ boundary: a jump can leave $\Omega$ without ever touching $\partial\Omega$, so a
 Dirichlet datum must be prescribed on the whole complement $\Omega^c$.
 
 
-#### Mean field games
+#### Deterministic flows
 
-Let the cost of one player depend on where everybody else is. Against a *given*
-flow of population densities $(m_s)_{s\le T}$, a representative player steers
+Take the opposite extreme and switch the noise off, $\sigma\equiv0$. The process
+is the ODE flow $\dot X_s=b(X_s)$ started at $X_t=x$, its law is a Dirac mass,
+and the expectation in the theorem has nothing left to average over:
 $$
-dX_s \;=\; \alpha_s\,ds+\sigma(X_s)\,dW_s ,\qquad X_0\sim m_0 ,
+u(t,x)\;=\;e^{-\int_t^TV(X_r)dr}\,g(X_T)\;+\;\int_t^Te^{-\int_t^sV(X_r)dr}\,f(s,X_s)\,ds .
 $$
-and the value of their problem is a Feynman–Kac representation, now with an
-optimization in front of the expectation,
-$$
-u(t,x)\;=\;\inf_{\alpha}\;\mathbb{E}\Big[\int_t^T\big(L(X_s,\alpha_s)+F(X_s,m_s)\big)ds+G(X_T,m_T)\;\Big\vert\;X_t=x\Big].
-$$
-Writing $H(x,p)=\sup_{\alpha}\{-\alpha\cdot p-L(x,\alpha)\}$ for the Hamiltonian,
-that infimum is attained at the feedback $\alpha^{*}=-\partial_pH(x,\nabla u)$,
-and equilibrium demands that the flow the player generates by using it be the
-flow they were given, $m_s=\operatorname{Law}(X_s)$. The two requirements
-together are a forward–backward system,
-$$
-\begin{cases}
--\partial_t u-\mathcal{L}u+H(x,\nabla u)=F(x,m_t), & u(T,\cdot)=G(\cdot,m_T),\\[4pt]
-\ \ \partial_t m-\mathcal{L}^{*}m-\operatorname{div}\big(m\,\partial_pH(x,\nabla u)\big)=0, & m_0\ \text{given},
-\end{cases}
-$$
-in which the backward Hamilton–Jacobi–Bellman equation is the value of a
-representative player and the forward Fokker–Planck equation
-transports the population density under the feedback $-\partial_pH(x,\nabla u)$
-that the first equation produces. The two are coupled through $m$: the cost a
-player faces depends on the distribution of all players, and that distribution
-is the law of the very process the player is optimizing. So the object to solve
-for is a fixed point in a space of flows of measures, and the equations run in
-both time directions at once. It is the $N\to\infty$ limit of a Nash equilibrium
-among $N$ symmetric players.
+This is the method of characteristics for the linear transport equation
+$\partial_tu+b\cdot\nabla u-Vu+f=0$: the characteristic through $(t,x)$ is the
+trajectory itself, $V$ damps the datum carried along it, $f$ feeds it, and with
+$V=f=0$ the solution is the terminal value transported back, $u(t,x)=g(X_T)$.
 
-Both halves can be carried by a single path. Along the optimally controlled
-process, with $Y_s=u(s,X_s)$ and $Z_s=\sigma^\top\nabla u(s,X_s)$, the system
-becomes one probabilistic object, a McKean–Vlasov forward–backward SDE:
+Two things do change, and they are what makes the degenerate case worth stating
+rather than dismissing.
+
+1. **The boundary.** A Brownian path hits every point of $\partial\Omega$, which
+   is why the Dirichlet problem of the opening example takes data on all of it; a
+   trajectory arrives at exactly one point, so data may be prescribed only where
+   characteristics enter, on the inflow boundary
+   $\{y\in\partial\Omega:\,b(y)\cdot n(y)<0\}$, and prescribing it anywhere else
+   overdetermines the problem. That is the degenerate end of the dictionary of
+   §4.1, and the mirror image of the nonlocal case, where a jump can leave
+   $\Omega$ without ever touching $\partial\Omega$ and the datum has to be given
+   on the whole complement.
+
+2. **Regularity.** Diffusion smooths, transport does not. With
+   $a=\sigma\sigma^\top$ nondegenerate the representation is an average over
+   infinitely many paths and $u$ is smooth however rough $g$ is, whereas here
+   $u(t,\cdot)$ is exactly $g$ transported, and a discontinuity in the datum
+   travels along its characteristic forever.
+
+The stationary rows degenerate unevenly. Ellipticity does not survive:
+$\Delta u=0$ is second-order and nothing of it is left, and the representation
+$\mathbb{E}[g(B_\tau)]$ loses the fact it rested on, that a Brownian path exits a
+bounded domain with $\tau<\infty$ almost surely. A trajectory need not exit at
+all; it can rest at an equilibrium or turn on a cycle forever.
+
+Discounting repairs exactly that. In $\rho u=b\cdot\nabla u+f$ the rate $\rho$ is
+the killing rate $V$ of the dictionary, and the weight $e^{-\rho s}$ terminates
+the path by fiat where the geometry does not, so
 $$
-\begin{cases}
-dX_s=-\partial_pH\big(X_s,\sigma^{-\top}Z_s\big)ds+\sigma(X_s)\,dW_s, & X_0\sim m_0,\quad m_s=\operatorname{Law}(X_s),\\[4pt]
-dY_s=-\big[L(X_s,\alpha^{*}_s)+F(X_s,m_s)\big]ds+Z_s^\top dW_s, & Y_T=G(X_T,m_T).
-\end{cases}
+u(x)\;=\;\int_0^\infty e^{-\rho s}f(X_s)\,ds
 $$
-The forward line is the path that uses the optimal feedback and whose law is the
-population itself; the backward line carries the cost still to be paid, and its
-martingale part $Z$ is again $\sigma^\top\nabla u$, the hedging portfolio of the
-linear theory. What is genuinely new is that the coefficients depend on
-$\operatorname{Law}(X_s)$, so the expectation is taken under a measure the
-equation itself has to produce. This is the nonlinear Feynman–Kac of
-Pardoux–Peng [5]: the conditional expectation of the linear theory becomes a
-backward SDE, and the fixed point in flows of measures is what the
-forward–backward coupling means in probabilistic terms.
+converges for bounded $f$ with no boundary condition at all. Let $b$ and $f$
+carry a control and put an infimum in front: the Hamilton–Jacobi–Bellman row
+survives for the same reason, as $\rho u=H(x,\nabla u)$.
+
+The Fokker–Planck row survives on different grounds — it never needed an exit
+time. With $\mathcal{L}^{*}m=-\operatorname{div}(bm)$ it becomes the continuity
+equation $\partial_tm+\operatorname{div}(bm)=0$: the density is pushed along the
+flow rather than diffused by it, and stays exactly as singular as it started.
 
 
 
@@ -296,7 +297,3 @@ forward–backward coupling means in probabilistic terms.
 [3] F. Black and M. Scholes. The Pricing of Options and Corporate Liabilities. *Journal of Political Economy* **81** (1973) 637–654.
 
 [4] I. Karatzas and S. Shreve. *Brownian Motion and Stochastic Calculus*. 2nd ed., Springer, 1991. (§4.2–4.4 for the Dirichlet problem, §5.7 for Feynman–Kac.)
-
-[5] E. Pardoux and S. Peng. Adapted solution of a backward stochastic differential equation. *Systems & Control Letters* **14** (1990) 55–61.
-
-[6] J.-M. Lasry and P.-L. Lions. Mean field games. *Japanese Journal of Mathematics* **2** (2007) 229–260.
