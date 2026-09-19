@@ -1,11 +1,11 @@
 ---
 title: "Feynman–Kac formula"
-date: 2025-10-17
+date: 2026-09-19
 tags: ["stochastic processes", "brownian motion", "monte carlo", "pde"]
 categories: ["pde", "probability"]
 author: "Daniel López Montero"
 showToc: true
-draft: true
+draft: false
 description: "The Feynman–Kac formula connects stochastic processes to partial differential equations."
 ShowWordCount: false
 ShowReadingTime: true
@@ -19,13 +19,15 @@ editPost:
 ---
 
 
-There is a beautiful connection between random processes and partial differential equations (PDEs) given by the famous Feynman–Kac theorem.
 
-This result is constantly being used in finance, physics, machine learning (generative models, reinforcement learning) and control theory.
+There is a beautiful connection between probability theory and partial differential equations (PDEs), given by the famous Feynman–Kac theorem.
 
-And allows us to solve stochastic differential equations by transforming them into PDEs. And conversely, it provides a way to solve certain PDEs through stochastic processes.
+This result allows us to translate between stochastic finite-dimensional problems and deterministic infinite-dimensional problems. It appears everywhere in finance, physics, control theory, and machine learning (generative modeling and reinforcement learning).
 
-In other words, it's a bridge betwee stochastic finite-dimensional problems and deterministic infinite-dimensional problem.
+This connection is useful in both directions. For example, a high-dimensional PDE (very expensive to solve numerically) can be evaluated at a single point simply by simulating a random process. Conversely, a difficult question about a stochastic process can be transformed into a deterministic PDE and tackled using PDE techniques.
+
+
+
 
 > **Example.** Take the Poisson problem
 > $$
