@@ -182,18 +182,15 @@ $$
 
 ### 4.2 Other families
 
-The same reading reaches well past the table. Four directions show how far it
-goes: change the state space, change the driver, make the equation nonlinear,
-or let the coefficients depend on the law of the process itself.
+So far we have only considered stochastic processes driven by Brownian motion, but the Feynman–Kac theorem is more general. 
 
 #### A finite state space
 
-Nothing in the proof needed a continuum. Let $\xi$ be a continuous-time Markov
-chain on $\{1,\dots,n\}$ with generator matrix $Q$ (off-diagonal entries the
-jump rates, rows summing to zero) and let $V\in\mathbb{R}^n$ be a killing rate.
+Let $\xi$ be a continuous-time Markov
+chain on $\{1,\dots,n\}$ with generator matrix $Q$ and let $V\in\mathbb{R}^n$ be a killing rate.
 The "PDE" is then a linear system of ODEs,
 $$
-\frac{d}{dt}u(t) \;=\; \big(Q-\operatorname{diag}V\big)\,u(t),
+u'(t) \;=\; \big(Q-\operatorname{diag}V\big)\,u(t),
 \qquad u(0)=g\in\mathbb{R}^n ,
 $$
 and the Feynman–Kac formula reads
@@ -206,52 +203,53 @@ the heat semigroup; not a single other word of the argument changes. It is a
 useful version to keep in mind, because it makes plain that the theorem is a
 statement about generators and semigroups, and not about Brownian motion.
 
-#### A jump driver
+#### Lévy processes
 
 Replace $W$ by a Lévy process. The simplest case is a compound Poisson path
-that waits an exponential time of rate $\lambda$ and then jumps by a draw from
-$\mu$; its generator is an integral operator, and the equation becomes
+that waits an exponential time of rate $\lambda$ and then jumps,
 $$
-\partial_t u(t,x) \;=\; \lambda\!\int_{\mathbb{R}^d}\big[u(t,x+z)-u(t,x)\big]\,\mu(dz)\;-\;V(x)\,u(t,x),
-\qquad u(0,\cdot)=g,
+X_t \;=\; x+\sum_{i=1}^{N_t}Z_i ,
 $$
-while the representation $u(t,x)=\mathbb{E}_x\big[e^{-\int_0^tV(X_s)ds}g(X_t)\big]$
-is unchanged word for word. What is new is that the operator is *nonlocal*: the
+with $N_t$ a Poisson process of rate $\lambda$, the $Z_i$ independent draws from a distribution $\mu$. Its generator is an integral operator,
+and the equation becomes
+$$
+\begin{cases}
+\partial_t u(t,x) = \lambda\!\int\big[u(t,x+z)-u(t,x)\big]\,\mu(dz)\;-\;V(x)\,u(t,x),\\
+ u(0,\cdot)=g,
+\end{cases}
+$$
+while the representation remains unchanged:
+$$ u(t,x)=\mathbb{E}_x\big[e^{-\int_0^tV(X_s)ds}g(X_t)\big]. 
+$$ 
+What is new is that the operator is *nonlocal*: the
 value at $x$ is tied to the value at every $x+z$ the path can reach in one jump,
-not merely to an infinitesimal neighbourhood. Letting the jump measure be
+not merely to an infinitesimal neighbourhood.
+
+Letting the jump measure be
 $\nu(dz)=c_{d,\alpha}|z|^{-d-\alpha}dz$ makes $X$ an $\alpha$-stable process and
 $\mathcal{L}=-(-\Delta)^{\alpha/2}$, so the fractional heat equation is
 Feynman–Kac for a pure-jump path. Nonlocality does cost something at the
 boundary: a jump can leave $\Omega$ without ever touching $\partial\Omega$, so a
 Dirichlet datum must be prescribed on the whole complement $\Omega^c$.
 
-#### A nonlinear equation, and BSDEs
 
-Allow the source to depend on the solution and on its gradient:
-$$
-\partial_t u + \mathcal{L}u + f\big(t,x,u,\sigma^\top\nabla u\big) \;=\; 0,
-\qquad u(T,\cdot)=g .
-$$
-A plain expectation can no longer represent $u$, since the integrand would have
-to know the answer. The fix is to make the *unknown* a pair of processes. Set
-$Y_s=u(s,X_s)$ and $Z_s=\sigma^\top\nabla u(s,X_s)$; Itô's formula shows they
-solve the backward stochastic differential equation
-$$
-Y_s \;=\; g(X_T)+\int_s^T f(r,X_r,Y_r,Z_r)\,dr-\int_s^T Z_r^\top\,dW_r ,
-\qquad u(t,x)=Y_t .
-$$
-This is Pardoux–Peng's *nonlinear Feynman–Kac* formula, and the linear driver
-$f=-Vu+f(t,x)$ gives the theorem of §1 back. The equation is solved backward
-from a terminal condition while $Y$ and $Z$ are required to be adapted, and $Z$
-— the same $\sigma^\top\nabla u$ that was the hedging portfolio in Black–Scholes
-— is exactly the extra unknown that buys that adaptedness. Since the
-representation is still a simulation, it is what deep BSDE solvers exploit to
-attack semilinear PDEs in hundreds of dimensions.
+#### Mean field games
 
-#### Coefficients that depend on the law: mean field games
-
-Let the cost of one player depend on where everybody else is. The equilibrium is
-described by a forward–backward system,
+Let the cost of one player depend on where everybody else is. Against a *given*
+flow of population densities $(m_s)_{s\le T}$, a representative player steers
+$$
+dX_s \;=\; \alpha_s\,ds+\sigma(X_s)\,dW_s ,\qquad X_0\sim m_0 ,
+$$
+and the value of their problem is a Feynman–Kac representation, now with an
+optimization in front of the expectation,
+$$
+u(t,x)\;=\;\inf_{\alpha}\;\mathbb{E}\Big[\int_t^T\big(L(X_s,\alpha_s)+F(X_s,m_s)\big)ds+G(X_T,m_T)\;\Big\vert\;X_t=x\Big].
+$$
+Writing $H(x,p)=\sup_{\alpha}\{-\alpha\cdot p-L(x,\alpha)\}$ for the Hamiltonian,
+that infimum is attained at the feedback $\alpha^{*}=-\partial_pH(x,\nabla u)$,
+and equilibrium demands that the flow the player generates by using it be the
+flow they were given, $m_s=\operatorname{Law}(X_s)$. The two requirements
+together are a forward–backward system,
 $$
 \begin{cases}
 -\partial_t u-\mathcal{L}u+H(x,\nabla u)=F(x,m_t), & u(T,\cdot)=G(\cdot,m_T),\\[4pt]
@@ -259,8 +257,7 @@ $$
 \end{cases}
 $$
 in which the backward Hamilton–Jacobi–Bellman equation is the value of a
-representative player — a Feynman–Kac representation, now with a supremum over
-controls in front of the expectation — and the forward Fokker–Planck equation
+representative player and the forward Fokker–Planck equation
 transports the population density under the feedback $-\partial_pH(x,\nabla u)$
 that the first equation produces. The two are coupled through $m$: the cost a
 player faces depends on the distribution of all players, and that distribution
@@ -269,19 +266,25 @@ for is a fixed point in a space of flows of measures, and the equations run in
 both time directions at once. It is the $N\to\infty$ limit of a Nash equilibrium
 among $N$ symmetric players.
 
-#### Further afield
+Both halves can be carried by a single path. Along the optimally controlled
+process, with $Y_s=u(s,X_s)$ and $Z_s=\sigma^\top\nabla u(s,X_s)$, the system
+becomes one probabilistic object, a McKean–Vlasov forward–backward SDE:
+$$
+\begin{cases}
+dX_s=-\partial_pH\big(X_s,\sigma^{-\top}Z_s\big)ds+\sigma(X_s)\,dW_s, & X_0\sim m_0,\quad m_s=\operatorname{Law}(X_s),\\[4pt]
+dY_s=-\big[L(X_s,\alpha^{*}_s)+F(X_s,m_s)\big]ds+Z_s^\top dW_s, & Y_T=G(X_T,m_T).
+\end{cases}
+$$
+The forward line is the path that uses the optimal feedback and whose law is the
+population itself; the backward line carries the cost still to be paid, and its
+martingale part $Z$ is again $\sigma^\top\nabla u$, the hedging portfolio of the
+linear theory. What is genuinely new is that the coefficients depend on
+$\operatorname{Law}(X_s)$, so the expectation is taken under a measure the
+equation itself has to produce. This is the nonlinear Feynman–Kac of
+Pardoux–Peng [5]: the conditional expectation of the linear theory becomes a
+backward SDE, and the fixed point in flows of measures is what the
+forward–backward coupling means in probabilistic terms.
 
-The same pattern keeps going. Optimal stopping turns the equation into a
-variational inequality, $\min\{ru-\mathcal{L}u,\ u-\psi\}=0$, solved by
-$\sup_\theta\mathbb{E}_x\big[e^{-r\theta}\psi(X_\theta)\big]$ over stopping times
-— the American option, and a Dynkin game when two players stop against each
-other. A polynomial nonlinearity becomes branching: McKean solves KPP by
-multiplying the datum over the particles of a branching Brownian motion.
-Vanishing noise leaves Hamilton–Jacobi with a Freidlin–Wentzell rate function in
-place of the expectation, and conditioning rather than averaging gives
-Kallianpur–Striebel, which writes the filtering density as a Feynman–Kac weight
-built from the observation. The wave equation, notably, has no such
-representation.
 
 
 ## References
