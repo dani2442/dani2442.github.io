@@ -23,18 +23,27 @@ There is a beautiful connection between stochastic processes and partial differe
 
 The theorem provides a way to solve stochastic differential equations (SDEs) by solving a deterministic infinite-dimensional problem (a PDE). And conversely, it provides a way to solve certain PDEs by solving an SDE.
 
-> **Example.** Take the Dirichlet problem
-> $$ \tfrac12\Delta u = 0 \quad\text{in } \Omega, \qquad u = g \quad\text{on } \partial\Omega . $$
+> **Example.** Take the Poisson problem
+> $$
+> \begin{cases}
+> -\Delta u = f & \text{in } \Omega, \\
+> \phantom{-\Delta} u = g & \text{on } \partial\Omega .
+> \end{cases}
+> $$
 > The Feynman–Kac theorem says its solution is
-> $$ u(x) \;=\; \mathbb{E}\big[\,g(B_\tau)\,\big] $$
+> $$ u(x) \;=\; \mathbb{E}\Big[\,g(B_\tau) \;+\; \tfrac12\int_0^\tau f(B_s)\,ds\,\Big] $$
 > where $B$ is a Brownian motion started at $x$ and $\tau$ is the first time it
-> leaves $\Omega$: the value at $x$ is the boundary datum averaged over the place
-> where the path happens to come out.
+> leaves $\Omega$: the value at $x$ is the boundary datum at the place where the
+> path happens to come out, plus the source collected along the way there,
+> averaged over paths.
 
-![One Brownian path started at x, wandering until it leaves the bean-shaped domain at the exit point B_tau](fk_bean_walk.gif)
+![One Brownian path started at x, wandering through the bean-shaped domain and collecting the source f along the way until it leaves at the exit point B_tau](fk_bean_walk.gif)
 
-One path gives one exit point, and one number $g(B_\tau)$. The solution at $x$
-is what those numbers average to.
+One path gives one exit point and one running integral, so one number
+$g(B_\tau)+\tfrac12\int_0^\tau f(B_s)\,ds$. The solution at $x$ is what those
+numbers average to. With $f=0$ only the exit point survives and this is the
+Dirichlet problem, $u$ harmonic with boundary values $g$; a source adds what the
+path picks up before it gets out.
 
 The proof is short, and worth seeing once before the general statement. It needs
 one tool, the chain rule for Brownian paths.
@@ -46,26 +55,38 @@ one tool, the chain rule for Brownian paths.
 > $d\langle B^i,B^j\rangle_t=\delta_{ij}\,dt$, and the Laplacian is what that
 > second-order term collects.
 
-*Proof of the example.* Let $\Omega$ be bounded, let $u\in C^2(\Omega)\cap C(\overline\Omega)$
-solve the problem, let $B$ start at $x\in\Omega$ and let
-$\tau=\inf\{t>0:\;B_t\notin\Omega\}$. Itô's formula applied to $u$ leaves
-$$
-du(B_t) \;=\; \nabla u(B_t)^\top dB_t \;+\; \tfrac12\Delta u(B_t)\,dt \;=\; \nabla u(B_t)^\top dB_t ,
-$$
-the $dt$ term vanishing because $u$ solves the equation. So $t\mapsto u(B_{t\wedge\tau})$
-is a local martingale, and it is bounded, $u$ being continuous on the compact
-$\overline\Omega$; hence it is a martingale and
-$$
-u(x) \;=\; \mathbb{E}_x\big[\,u(B_{t\wedge\tau})\,\big] \qquad\text{for every } t .
-$$
-What remains is to check that the path leaves at all. Running the same formula on
-$h(y)=|y|^2$, for which $\tfrac12\Delta h=d$, gives
+*Proof of the example.* Let $\Omega$ be bounded, let $f$ be bounded on $\Omega$,
+let $u\in C^2(\Omega)\cap C(\overline\Omega)$ solve the problem, let $B$ start at
+$x\in\Omega$ and let $\tau=\inf\{t>0:\;B_t\notin\Omega\}$.
+
+Check first that the path leaves at all. Itô's formula on $h(y)=|y|^2$, for which
+$\tfrac12\Delta h=d$, gives
 $\mathbb{E}_x\big[|B_{t\wedge\tau}|^2\big]-|x|^2=d\,\mathbb{E}_x[t\wedge\tau]$,
-whose left-hand side is at most $\sup_{y\in\overline\Omega}|y|^2$, so
-$\mathbb{E}_x[\tau]<\infty$ and in particular $\tau<\infty$ almost surely.
+whose left-hand side is at most $\sup_{y\in\overline\Omega}|y|^2$; letting
+$t\to\infty$ and using monotone convergence, $\mathbb{E}_x[\tau]<\infty$, and in
+particular $\tau<\infty$ almost surely.
+
+Now Itô's formula applied to $u$ leaves
+$$
+du(B_t) \;=\; \nabla u(B_t)^\top dB_t \;+\; \tfrac12\Delta u(B_t)\,dt \;=\; \nabla u(B_t)^\top dB_t \;-\; \tfrac12 f(B_t)\,dt ,
+$$
+the $dt$ term being $-\tfrac12 f$ because $u$ solves the equation. Moving it to
+the other side, the compensated process
+$$
+M_t \;:=\; u(B_{t\wedge\tau}) \;+\; \tfrac12\int_0^{t\wedge\tau} f(B_s)\,ds
+$$
+is a local martingale, and it is dominated by
+$\sup_{\overline\Omega}|u|+\tfrac12\sup_\Omega|f|\,\tau$, which is integrable by
+the previous paragraph; hence it is a martingale and
+$$
+u(x) \;=\; \mathbb{E}_x\big[\,M_t\,\big] \qquad\text{for every } t .
+$$
 Letting $t\to\infty$, $u(B_{t\wedge\tau})\to u(B_\tau)=g(B_\tau)$ because $u$ is
-continuous up to the boundary, and bounded convergence turns the display into
-$u(x)=\mathbb{E}_x\big[g(B_\tau)\big]$. $\;\blacksquare$
+continuous up to the boundary, the integral converges to $\int_0^\tau f(B_s)\,ds$,
+and dominated convergence turns the display into
+$$
+u(x) \;=\; \mathbb{E}_x\big[\,g(B_\tau)\,\big] \;+\; \tfrac12\,\mathbb{E}_x\Big[\int_0^\tau f(B_s)\,ds\Big]. \qquad\blacksquare
+$$
 
 ## 1. The Feynman–Kac theorem
 
