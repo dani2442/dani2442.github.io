@@ -24,32 +24,22 @@ There is a beautiful connection between probability theory and partial different
 
 This result allows us to translate between stochastic finite-dimensional problems and deterministic infinite-dimensional problems. It appears everywhere in finance, physics, control theory, and machine learning (generative modeling and reinforcement learning).
 
-This connection is useful in both directions. For example, a high-dimensional PDE (very expensive to solve numerically) can be evaluated at a single point simply by simulating a random process. Conversely, a difficult question about a stochastic process can be transformed into a deterministic PDE and tackled using PDE techniques.
+What makes this connection especially useful is that it works in both directions. 
+
+A high-dimensional PDE (very expensive to solve numerically) can be evaluated at a single point simply by simulating a random process. Conversely, a difficult question about a stochastic process can be transformed into a deterministic PDE and tackled using standard techniques.
 
 
 
 
-> **Example.** Take the Poisson problem
-> $$
-> \begin{cases}
-> -\Delta u = f & \text{in } \Omega, \\
-> \phantom{-\Delta} u = g & \text{on } \partial\Omega .
-> \end{cases}
-> $$
+> **Example.** Take the Dirichlet problem
+> $$ \begin{cases} \Delta u = 0 & \text{in } \Omega, \\ u = g & \text{on } \partial\Omega. \end{cases} $$
 > The Feynman–Kac theorem says its solution is
-> $$ u(x) \;=\; \mathbb{E}\Big[\,g(B_\tau) \;+\; \tfrac12\int_0^\tau f(B_s)\,ds\,\Big] $$
+> $$ u(x) \;=\; \mathbb{E}\big[\,g(B_\tau)\,\big] $$
 > where $B$ is a Brownian motion started at $x$ and $\tau$ is the first time it
-> leaves $\Omega$: the value at $x$ is the boundary datum at the place where the
-> path happens to come out, plus the source collected along the way there,
-> averaged over paths.
+> leaves $\Omega$.
 
-![One Brownian path started at x, wandering through the bean-shaped domain and collecting the source f along the way until it leaves at the exit point B_tau](fk_bean_walk.gif)
+![One Brownian path started at x, wandering through the bean-shaped domain until it leaves at the exit point B_tau](fk_bean_walk.gif)
 
-One path gives one exit point and one running integral, so one number
-$g(B_\tau)+\tfrac12\int_0^\tau f(B_s)\,ds$. The solution at $x$ is what those
-numbers average to. With $f=0$ only the exit point survives and this is the
-Dirichlet problem, $u$ harmonic with boundary values $g$; a source adds what the
-path picks up before it gets out.
 
 The proof is short, and worth seeing once before the general statement. It needs
 one tool, the chain rule for Brownian paths.
@@ -61,8 +51,8 @@ one tool, the chain rule for Brownian paths.
 > $d\langle B^i,B^j\rangle_t=\delta_{ij}\,dt$, and the Laplacian is what that
 > second-order term collects.
 
-*Proof of the example.* Let $\Omega$ be bounded, let $f$ be bounded on $\Omega$,
-let $u\in C^2(\Omega)\cap C(\overline\Omega)$ solve the problem, let $B$ start at
+*Proof of the example.* Let $\Omega$ be bounded, let
+$u\in C^2(\Omega)\cap C(\overline\Omega)$ solve the problem, let $B$ start at
 $x\in\Omega$ and let $\tau=\inf\{t>0:\;B_t\notin\Omega\}$.
 
 Check first that the path leaves at all. Itô's formula on $h(y)=|y|^2$, for which
@@ -74,25 +64,21 @@ particular $\tau<\infty$ almost surely.
 
 Now Itô's formula applied to $u$ leaves
 $$
-du(B_t) \;=\; \nabla u(B_t)^\top dB_t \;+\; \tfrac12\Delta u(B_t)\,dt \;=\; \nabla u(B_t)^\top dB_t \;-\; \tfrac12 f(B_t)\,dt ,
+du(B_t) \;=\; \nabla u(B_t)^\top dB_t ,
 $$
-the $dt$ term being $-\tfrac12 f$ because $u$ solves the equation. Moving it to
-the other side, the compensated process
+the $dt$ term vanishing because $u$ is harmonic. So the stopped process
+$M_t:=u(B_{t\wedge\tau})$ is a local martingale, and it is bounded by
+$\sup_{\overline\Omega}|u|$; hence it is a martingale and
 $$
-M_t \;:=\; u(B_{t\wedge\tau}) \;+\; \tfrac12\int_0^{t\wedge\tau} f(B_s)\,ds
+u(x) \;=\; \mathbb{E}_x\big[\,u(B_{t\wedge\tau})\,\big] \qquad\text{for every } t .
 $$
-is a local martingale, and it is dominated by
-$\sup_{\overline\Omega}|u|+\tfrac12\sup_\Omega|f|\,\tau$, which is integrable by
-the previous paragraph; hence it is a martingale and
+Letting $t\to\infty$, $u(B_{t\wedge\tau})\to u(B_\tau)=g(B_\tau)$ because the path
+does exit and $u$ is continuous up to the boundary, and bounded convergence turns
+the display into
 $$
-u(x) \;=\; \mathbb{E}_x\big[\,M_t\,\big] \qquad\text{for every } t .
+u(x) \;=\; \mathbb{E}_x\big[\,g(B_\tau)\,\big]. \qquad\blacksquare
 $$
-Letting $t\to\infty$, $u(B_{t\wedge\tau})\to u(B_\tau)=g(B_\tau)$ because $u$ is
-continuous up to the boundary, the integral converges to $\int_0^\tau f(B_s)\,ds$,
-and dominated convergence turns the display into
-$$
-u(x) \;=\; \mathbb{E}_x\big[\,g(B_\tau)\,\big] \;+\; \tfrac12\,\mathbb{E}_x\Big[\int_0^\tau f(B_s)\,ds\Big]. \qquad\blacksquare
-$$
+
 
 ## 1. The Feynman–Kac theorem
 
@@ -176,75 +162,138 @@ is a control, a game, a branching mechanism or an interaction between copies of
 the process. The dictionary below collects the correspondences in that order,
 writing
 $$
-\mathcal{L}\varphi=\tfrac12\operatorname{tr}\!\big(a\,D^2\varphi\big)+b\cdot\nabla\varphi,
-\qquad a=\sigma\sigma^\top,\qquad dX_t=b(X_t)\,dt+\sigma(X_t)\,dW_t ,
+\mathcal{L}\varphi=\tfrac12\operatorname{tr}\!\big(a\,D^2\varphi\big)+b\cdot\nabla\varphi,\qquad a:=\sigma\sigma^\top,\qquad dX_t=b(X_t)\,dt+\sigma(X_t)\,dW_t ,
 $$
-and, for a path started at time $t_0$, the exit time and the killing time
+and, for a path started at time $t_0$, the exit time
 $$
-\tau=\inf\{t>t_0:\,X_t\notin\Omega\},
-\qquad
-\zeta=\inf\Big\{t>t_0:\ \int_{t_0}^{t} V(X_r)\,dr\ \ge\ \mathcal{E}\Big\},
-\qquad \mathcal{E}\sim\mathrm{Exp}(1)\ \text{independent of } W ,
+\tau=\inf\{t>t_0:\,X_t\notin\Omega\}.
 $$
-so that $\mathbb{P}\big(\zeta>t\,\big\vert\,X\big)=e^{-\int_{t_0}^{t} V(X_r)dr}$: the discount
-factors below are survival probabilities.
 
 ![Dictionary of Feynman–Kac correspondences: linear and semilinear parabolic and elliptic equations, Fokker–Planck, the principal eigenvalue problem and HJB, each with its stochastic object and its representation](feynman_kac-feynman-kac.png)
 
-### 4.1 Boundary conditions and operators that are not local
+### 4.1 Boundary conditions
 
-| Name | PDE ingredient | Stochastic object | Note |
-|---|---|---|---|
-| Dirichlet condition | $u=g$ on $\partial\Omega$ | process killed on contact | the datum is paired with the exit distribution $\omega_x$ |
-| Neumann condition | $\partial_n u=0$ | reflected diffusion | the Skorokhod term is the boundary local time |
-| Robin condition | $\partial_n u=\alpha u$ | reflected diffusion killed at rate $\alpha$ in local time | interpolates the two above as $\alpha:0\to\infty$ |
-| Fractional Laplacian | $-(-\Delta)^{\alpha/2}u=0$ in $\Omega$, $u=g$ on $\mathbb{R}^d\setminus\Omega$ | rotationally invariant $\alpha$-stable Lévy process | it jumps *over* the boundary, so the data lives on the whole complement |
+| Name | PDE ingredient | Stochastic object |
+|---|---|---|
+| Dirichlet condition | $u=g$ on $\partial\Omega$ | process killed on contact |
+| Neumann condition | $\partial_n u=0$ | reflected diffusion |
+| Robin condition | $\partial_n u=\alpha u$ | reflected diffusion killed at rate $\alpha$ in local time |
 
 
 ### 4.2 Other families
 
-The same reading reaches past the table. Optimal stopping turns the equation
-into a variational inequality, $\min\{ru-\mathcal{L}u,\ u-\psi\}=0$, solved by
-$\sup_{\theta}\mathbb{E}_x\big[e^{-r\theta}\psi(X_\theta)\big]$ — the American
-option, a Dynkin game when two players stop against each other. A polynomial
-nonlinearity becomes branching: McKean (1975) solves KPP by multiplying the
-datum over the particles of a branching Brownian motion, and the same cascade
-reaches the three-dimensional Navier–Stokes equations in Fourier variables.
-Coefficients depending on the law of the process give the nonlinear
-Fokker–Planck equations and, coupled backward to an HJB equation, mean field
-games; a quadratic cost with the control in the range of $\sigma$ gives an HJB
-equation that Cole–Hopf makes linear and a value that is again an expectation,
-which is path-integral control. Or the driver changes rather than the
-equation: a Lévy process makes the generator nonlocal, vanishing noise leaves
-Hamilton–Jacobi with the Freidlin–Wentzell rate function in place of the
-expectation, and a Poisson random velocity gives Kac's telegraph equation —
-the wave equation itself has no such representation. Conditioning instead of
-averaging gives the last one: Kallianpur–Striebel writes the filtering density
-as a Feynman–Kac weight built from the observation.
+The same reading reaches well past the table. Four directions show how far it
+goes: change the state space, change the driver, make the equation nonlinear,
+or let the coefficients depend on the law of the process itself.
+
+#### A finite state space
+
+Nothing in the proof needed a continuum. Let $\xi$ be a continuous-time Markov
+chain on $\{1,\dots,n\}$ with generator matrix $Q$ (off-diagonal entries the
+jump rates, rows summing to zero) and let $V\in\mathbb{R}^n$ be a killing rate.
+The "PDE" is then a linear system of ODEs,
+$$
+\frac{d}{dt}u(t) \;=\; \big(Q-\operatorname{diag}V\big)\,u(t),
+\qquad u(0)=g\in\mathbb{R}^n ,
+$$
+and the Feynman–Kac formula reads
+$$
+u_i(t)\;=\;\mathbb{E}_i\Big[e^{-\int_0^t V(\xi_s)\,ds}\,g(\xi_t)\Big],
+\qquad\text{that is}\qquad u(t)=e^{t(Q-\operatorname{diag}V)}\,g .
+$$
+The generator has replaced the Laplacian and a matrix exponential has replaced
+the heat semigroup; not a single other word of the argument changes. It is a
+useful version to keep in mind, because it makes plain that the theorem is a
+statement about generators and semigroups, and not about Brownian motion.
+
+#### A jump driver
+
+Replace $W$ by a Lévy process. The simplest case is a compound Poisson path
+that waits an exponential time of rate $\lambda$ and then jumps by a draw from
+$\mu$; its generator is an integral operator, and the equation becomes
+$$
+\partial_t u(t,x) \;=\; \lambda\!\int_{\mathbb{R}^d}\big[u(t,x+z)-u(t,x)\big]\,\mu(dz)\;-\;V(x)\,u(t,x),
+\qquad u(0,\cdot)=g,
+$$
+while the representation $u(t,x)=\mathbb{E}_x\big[e^{-\int_0^tV(X_s)ds}g(X_t)\big]$
+is unchanged word for word. What is new is that the operator is *nonlocal*: the
+value at $x$ is tied to the value at every $x+z$ the path can reach in one jump,
+not merely to an infinitesimal neighbourhood. Letting the jump measure be
+$\nu(dz)=c_{d,\alpha}|z|^{-d-\alpha}dz$ makes $X$ an $\alpha$-stable process and
+$\mathcal{L}=-(-\Delta)^{\alpha/2}$, so the fractional heat equation is
+Feynman–Kac for a pure-jump path. Nonlocality does cost something at the
+boundary: a jump can leave $\Omega$ without ever touching $\partial\Omega$, so a
+Dirichlet datum must be prescribed on the whole complement $\Omega^c$.
+
+#### A nonlinear equation, and BSDEs
+
+Allow the source to depend on the solution and on its gradient:
+$$
+\partial_t u + \mathcal{L}u + f\big(t,x,u,\sigma^\top\nabla u\big) \;=\; 0,
+\qquad u(T,\cdot)=g .
+$$
+A plain expectation can no longer represent $u$, since the integrand would have
+to know the answer. The fix is to make the *unknown* a pair of processes. Set
+$Y_s=u(s,X_s)$ and $Z_s=\sigma^\top\nabla u(s,X_s)$; Itô's formula shows they
+solve the backward stochastic differential equation
+$$
+Y_s \;=\; g(X_T)+\int_s^T f(r,X_r,Y_r,Z_r)\,dr-\int_s^T Z_r^\top\,dW_r ,
+\qquad u(t,x)=Y_t .
+$$
+This is Pardoux–Peng's *nonlinear Feynman–Kac* formula, and the linear driver
+$f=-Vu+f(t,x)$ gives the theorem of §1 back. The equation is solved backward
+from a terminal condition while $Y$ and $Z$ are required to be adapted, and $Z$
+— the same $\sigma^\top\nabla u$ that was the hedging portfolio in Black–Scholes
+— is exactly the extra unknown that buys that adaptedness. Since the
+representation is still a simulation, it is what deep BSDE solvers exploit to
+attack semilinear PDEs in hundreds of dimensions.
+
+#### Coefficients that depend on the law: mean field games
+
+Let the cost of one player depend on where everybody else is. The equilibrium is
+described by a forward–backward system,
+$$
+\begin{cases}
+-\partial_t u-\mathcal{L}u+H(x,\nabla u)=F(x,m_t), & u(T,\cdot)=G(\cdot,m_T),\\[4pt]
+\ \ \partial_t m-\mathcal{L}^{*}m-\operatorname{div}\big(m\,\partial_pH(x,\nabla u)\big)=0, & m_0\ \text{given},
+\end{cases}
+$$
+in which the backward Hamilton–Jacobi–Bellman equation is the value of a
+representative player — a Feynman–Kac representation, now with a supremum over
+controls in front of the expectation — and the forward Fokker–Planck equation
+transports the population density under the feedback $-\partial_pH(x,\nabla u)$
+that the first equation produces. The two are coupled through $m$: the cost a
+player faces depends on the distribution of all players, and that distribution
+is the law of the very process the player is optimizing. So the object to solve
+for is a fixed point in a space of flows of measures, and the equations run in
+both time directions at once. It is the $N\to\infty$ limit of a Nash equilibrium
+among $N$ symmetric players.
+
+#### Further afield
+
+The same pattern keeps going. Optimal stopping turns the equation into a
+variational inequality, $\min\{ru-\mathcal{L}u,\ u-\psi\}=0$, solved by
+$\sup_\theta\mathbb{E}_x\big[e^{-r\theta}\psi(X_\theta)\big]$ over stopping times
+— the American option, and a Dynkin game when two players stop against each
+other. A polynomial nonlinearity becomes branching: McKean solves KPP by
+multiplying the datum over the particles of a branching Brownian motion.
+Vanishing noise leaves Hamilton–Jacobi with a Freidlin–Wentzell rate function in
+place of the expectation, and conditioning rather than averaging gives
+Kallianpur–Striebel, which writes the filtering density as a Feynman–Kac weight
+built from the observation. The wave equation, notably, has no such
+representation.
 
 
 ## References
 
-[1] R. P. Feynman. Space-Time Approach to Non-Relativistic Quantum Mechanics. Rev. Mod. Phys. 20 (1948) 367–387.
+[1] R. P. Feynman. Space-Time Approach to Non-Relativistic Quantum Mechanics. *Reviews of Modern Physics* **20** (1948) 367–387.
 
-[2] M. Kac. On Distributions of Certain Wiener Functionals. Trans. AMS 65 (1949) 1–13.
+[2] M. Kac. On Distributions of Certain Wiener Functionals. *Transactions of the American Mathematical Society* **65** (1949) 1–13.
 
-[3] F. Black and M. Scholes. The Pricing of Options and Corporate Liabilities. J. Political Economy 81 (1973) 637–654.
+[3] F. Black and M. Scholes. The Pricing of Options and Corporate Liabilities. *Journal of Political Economy* **81** (1973) 637–654.
 
-[4] K. Itô and H. P. McKean. *Diffusion Processes and their Sample Paths*. Springer, 1965.
+[4] I. Karatzas and S. Shreve. *Brownian Motion and Stochastic Calculus*. 2nd ed., Springer, 1991. (§4.2–4.4 for the Dirichlet problem, §5.7 for Feynman–Kac.)
 
-[5] B. Øksendal. *Stochastic Differential Equations*. 6th ed., Springer, 2003. (Ch. 8–9.)
+[5] E. Pardoux and S. Peng. Adapted solution of a backward stochastic differential equation. *Systems & Control Letters* **14** (1990) 55–61.
 
-[6] I. Karatzas and S. Shreve. *Brownian Motion and Stochastic Calculus*. 2nd ed., Springer, 1991. (§4.2–4.4: harmonic measure, the Dirichlet problem, Wiener's criterion.)
-
-[7] W. H. Fleming and H. M. Soner. *Controlled Markov Processes and Viscosity Solutions*. 2nd ed., Springer, 2006.
-
-[8] E. Pardoux and S. Peng. Adapted solution of a backward stochastic differential equation. Systems & Control Letters 14 (1990) 55–61.
-
-[9] H. J. Kappen. Path integrals and symmetry breaking for optimal control theory. J. Stat. Mech. (2005) P11011.
-
-[10] J.-M. Lasry and P.-L. Lions. Mean field games. Japanese J. Math. 2 (2007) 229–260.
-
-[11] E. Gobet. Weak approximation of killed diffusion using Euler schemes. Stoch. Proc. Appl. 87 (2000) 167–197.
-
-[12] N. G. Makarov. On the distortion of boundary sets under conformal mappings. Proc. London Math. Soc. 51 (1985) 369–384.
+[6] J.-M. Lasry and P.-L. Lions. Mean field games. *Japanese Journal of Mathematics* **2** (2007) 229–260.
