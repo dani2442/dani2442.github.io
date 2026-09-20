@@ -1,321 +1,160 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2" pages="3">
-  <diagram id="fk-dictionary-0001" name="feynman-kac">
-    <mxGraphModel dx="906" dy="1407" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="750" math="1" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-        <mxCell id="band-head" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" parent="1" vertex="1">
-          <mxGeometry x="40" y="40" width="1200" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="band-r1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" parent="1" vertex="1">
-          <mxGeometry x="40" y="80" width="1200" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="band-r2" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" parent="1" vertex="1">
-          <mxGeometry x="40" y="140" width="1200" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="band-r3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" parent="1" vertex="1">
-          <mxGeometry x="40" y="200" width="1200" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="band-r4" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" parent="1" vertex="1">
-          <mxGeometry x="40" y="260" width="1200" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="band-r5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" parent="1" vertex="1">
-          <mxGeometry x="40" y="320" width="1200" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="band-r6" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" parent="1" vertex="1">
-          <mxGeometry x="40" y="380" width="1200" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="band-r7" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" parent="1" vertex="1">
-          <mxGeometry x="40" y="440" width="1200" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="title" value="Feynman–Kac Theorem" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=30;fontStyle=1;" parent="1" vertex="1">
-          <mxGeometry x="190" y="-20" width="350" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="h-eq" value="Equation" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="210" y="40" width="230" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="h-proc" value="Stochastic object" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="680" y="40" width="150" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="h-rep" value="Representation" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1" parent="1" vertex="1">
-          <mxGeometry x="910" y="40" width="310" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="name-1" value="&lt;b&gt;Linear parabolic&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="40" y="80" width="150" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="eq-1" value="\( \begin{cases}\partial_t u + \mathcal L u - Vu + f = 0 &amp;amp; \text{in } (0,T)\times\mathbb R^d\\ u(T,\cdot)=g &amp;amp; \text{in } \mathbb R^d\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="200" y="80" width="320" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="desc-1" value="diffusion" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" parent="1" vertex="1">
-          <mxGeometry x="530" y="80" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="sde-1" value="\( \begin{cases}dX_s=b(X_s)ds+\sigma(X_s)dW_s\\ X_t=x\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="660" y="80" width="230" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="rep-1" value="\( \begin{aligned}u(t,x)=\mathbb E_x\Big[&amp;amp;e^{-\int_t^T V}g(X_T)+\int_t^T\! e^{-\int_t^s V}f(s,X_s)ds\,\Big]\end{aligned} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="920" y="80" width="320" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="name-2" value="&lt;b&gt;Linear elliptic&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="40" y="140" width="150" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="eq-2" value="\( \begin{cases}\mathcal L u - Vu + f = 0 &amp;amp; \text{in } \Omega\\ u=g &amp;amp; \text{on } \partial\Omega\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="200" y="140" width="320" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="desc-2" value="diffusion stopped on exit" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" parent="1" vertex="1">
-          <mxGeometry x="530" y="140" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="sde-2" value="\( \begin{cases}dX_t=b(X_t)dt+\sigma(X_t)dW_t\\ X_0=x\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="660" y="140" width="220" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="rep-2" value="\( \begin{aligned}u(x)=\mathbb E_x\Big[&amp;amp;e^{-\int_0^\tau V}g(X_\tau)+\int_0^\tau\! e^{-\int_0^t V}f(X_t)dt\Big]\end{aligned} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="920" y="140" width="320" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="name-3" value="&lt;b&gt;Semilinear parabolic&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="40" y="200" width="150" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="eq-3" value="\( \begin{cases}\partial_t u + \mathcal L u + f(t,x,u,\sigma^\top\nabla u) = 0 &amp;amp; \text{in } (0,T)\times\mathbb R^d\\ u(T,\cdot)=g &amp;amp; \text{in } \mathbb R^d\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="200" y="200" width="320" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="desc-3" value="backward SDE run from the exit time along the diffusion" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" parent="1" vertex="1">
-          <mxGeometry x="530" y="200" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="sde-3" value="\( \begin{cases}dY_s=-f(s,X_s,Y_s,Z_s)ds+Z_s\cdot dW_s\\ Y_T=g(X_T),\quad Z_s=\sigma^\top\nabla u(s,X_s)\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="660" y="200" width="280" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="rep-3" value="\( u(t,x)=Y_t \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="920" y="200" width="320" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="name-4" value="&lt;b&gt;Semilinear elliptic&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="40" y="260" width="150" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="eq-4" value="\( \begin{cases}\mathcal L u + f(x,u,\sigma^\top\nabla u) = 0 &amp;amp; \text{in } \Omega\\ u=g &amp;amp; \text{on } \partial\Omega\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="200" y="260" width="320" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="desc-4" value="backward SDE run from the exit time along the diffusion" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" parent="1" vertex="1">
-          <mxGeometry x="530" y="260" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="sde-4" value="\( \begin{cases}dY_t=-f(X_t,Y_t,Z_t)dt+Z_t\cdot dW_t\\ Y_\tau=g(X_\tau),\quad Z_t=\sigma^\top\nabla u(X_t)\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="660" y="260" width="260" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="rep-4" value="\( u(x)=Y_0 \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="920" y="260" width="320" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="name-5" value="&lt;b&gt;Fokker–Planck&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="40" y="320" width="150" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="eq-5" value="\( \begin{cases}\partial_t \rho = \mathcal L^{*}\rho &amp;amp; \text{in } (0,T)\times\mathbb R^d\\ \rho(0,\cdot)=\mu &amp;amp; \text{in } \mathbb R^d\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="200" y="320" width="320" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="desc-5" value="diffusion from a random start" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" parent="1" vertex="1">
-          <mxGeometry x="530" y="320" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="sde-5" value="\( \begin{cases}dX_t=b(X_t)dt+\sigma(X_t)dW_t\\ X_0\sim\mu\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="660" y="320" width="230" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="rep-5" value="\( \rho_t=\mathrm{Law}(X_t) \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="920" y="320" width="320" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="name-6" value="&lt;b&gt;Principal eigenvalue&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="40" y="380" width="150" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="eq-6" value="\( \begin{cases}\mathcal L \phi - V\phi = -\lambda_1\phi &amp;amp; \text{in } \Omega\\ \phi=0 &amp;amp; \text{on } \partial\Omega\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="200" y="380" width="320" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="desc-6" value="diffusion stopped on exit" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" parent="1" vertex="1">
-          <mxGeometry x="530" y="380" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="sde-6" value="\( \begin{cases}dX_t=b(X_t)dt+\sigma(X_t)dW_t\\ X_0=x\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="660" y="380" width="230" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="rep-6" value="\( \lambda_1=-\lim_{t\to\infty}\tfrac1t\log\mathbb E_x\big[e^{-\int_0^t V}\mathbf 1_{\{\tau&amp;gt;t\}}\big] \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="920" y="380" width="320" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="name-7" value="&lt;b&gt;HJB&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="40" y="440" width="150" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="eq-7" value="\( \begin{cases}\partial_t u + \inf_{\alpha\in\mathcal A}\left\{\mathcal L^{\alpha}u + \ell(x,\alpha)\right\} = 0 &amp;amp; \text{in } (0,T)\times\mathbb R^d\\ u(T,\cdot)=h &amp;amp; \text{in } \mathbb R^d\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="200" y="440" width="320" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="desc-7" value="controlled diffusion" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" parent="1" vertex="1">
-          <mxGeometry x="530" y="440" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="sde-7" value="\( \begin{cases}dX^\alpha_s=b(X^\alpha_s,\alpha_s)ds+\sigma(X^\alpha_s,\alpha_s)dW_s\\ X^\alpha_t=x\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="660" y="440" width="290" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="rep-7" value="\( \begin{aligned}u(t,x)=\inf_{\alpha}\mathbb E\Big[&amp;amp;\int_t^T\! \ell(X^\alpha_s,\alpha_s)ds+h(X^\alpha_T)\,\Big]\end{aligned} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="1" vertex="1">
-          <mxGeometry x="920" y="440" width="320" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="QvVRoslQFuuTe3eO3aBH-1" value="\(&amp;nbsp;\mathcal{L}\varphi:=\tfrac12\operatorname{tr}\!\big(\sigma\sigma^\top\,D^2\varphi\big)+b\cdot\nabla\varphi \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacing=4;" parent="1" vertex="1">
-          <mxGeometry x="985" y="-20" width="230" height="20" as="geometry" />
-        </mxCell>
-        <mxCell id="KCWNQB4Kuvf-Z07Os2uw-1" value="\(&amp;nbsp;\tau := \inf \{t\geq 0: X_t \not\in&amp;nbsp; \Omega\} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
-          <mxGeometry x="995" y="10" width="200" height="20" as="geometry" />
-        </mxCell>
-        <mxCell id="KCWNQB4Kuvf-Z07Os2uw-3" value="Generator" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=2" vertex="1" parent="1">
-          <mxGeometry x="915" y="-20" width="60" height="20" as="geometry" />
-        </mxCell>
-        <mxCell id="KCWNQB4Kuvf-Z07Os2uw-4" value="Exit time" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=2" vertex="1" parent="1">
-          <mxGeometry x="915" y="10" width="60" height="20" as="geometry" />
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
-  <diagram name="feynman-kac2" id="BG2M-cFsvb6EgaWPQyRJ">
-    <mxGraphModel dx="868" dy="630" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="750" math="1" shadow="0">
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2" pages="2">
+  <diagram name="feynman-kac" id="BG2M-cFsvb6EgaWPQyRJ">
+    <mxGraphModel dx="1042" dy="756" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="750" math="1" shadow="0">
       <root>
         <mxCell id="XZhYp0Dp_hmtZWfRll8S-0" />
         <mxCell id="XZhYp0Dp_hmtZWfRll8S-1" parent="XZhYp0Dp_hmtZWfRll8S-0" />
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-2" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-2" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="40" y="40" width="1200" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="40" y="80" width="1200" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-4" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-4" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="40" y="140" width="1200" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="40" y="200" width="1200" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-6" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-6" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="40" y="260" width="1200" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-7" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-7" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="40" y="320" width="1200" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-8" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-8" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="40" y="380" width="1200" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-9" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-9" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="40" y="440" width="1200" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-11" value="Equation" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-11" value="Equation" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="210" y="40" width="230" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-12" value="Stochastic object" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-12" value="Stochastic object" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="680" y="40" width="150" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-13" value="Representation" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-13" value="Representation" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontStyle=1" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="910" y="40" width="310" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-14" value="&lt;b&gt;Linear parabolic&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-14" value="&lt;b&gt;Linear parabolic&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="40" y="80" width="150" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-15" value="\( \begin{cases}\partial_t u + \mathcal L u - Vu + f = 0 &amp;amp; \text{in } (0,T)\times\mathbb R^d\\ u(T,\cdot)=g &amp;amp; \text{in } \mathbb R^d\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-15" value="\( \begin{cases}\partial_t u + \mathcal L u - Vu + f = 0 &amp;amp; \text{in } (0,T)\times\mathbb R^d\\ u(T,\cdot)=g &amp;amp; \text{in } \mathbb R^d\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="200" y="80" width="320" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-16" value="diffusion" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-16" value="diffusion" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="530" y="80" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-17" value="\( \begin{cases}dX_s=b(X_s)ds+\sigma(X_s)dW_s\\ X_t=x\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-17" value="\( \begin{cases}dX_s=b(X_s)ds+\sigma(X_s)dW_s\\ X_t=x\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="660" y="80" width="230" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-18" value="\( \begin{aligned}u(t,x)=\mathbb E_x\Big[&amp;amp;e^{-\int_t^T V}g(X_T)+\int_t^T\! e^{-\int_t^s V}f(s,X_s)ds\,\Big]\end{aligned} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-18" value="\( \begin{aligned}u(t,x)=\mathbb E_x\Big[&amp;amp;e^{-\int_t^T V}g(X_T)+\int_t^T\! e^{-\int_t^s V}f(s,X_s)ds\,\Big]\end{aligned} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="920" y="80" width="320" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-19" value="&lt;b&gt;Linear elliptic&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-19" value="&lt;b&gt;Linear elliptic&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="40" y="140" width="150" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-20" value="\( \begin{cases}\mathcal L u - Vu + f = 0 &amp;amp; \text{in } \Omega\\ u=g &amp;amp; \text{on } \partial\Omega\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-20" value="\( \begin{cases}\mathcal L u - Vu + f = 0 &amp;amp; \text{in } \Omega\\ u=g &amp;amp; \text{on } \partial\Omega\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="200" y="140" width="320" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-21" value="diffusion stopped on exit" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-21" value="diffusion stopped on exit" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="530" y="140" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-22" value="\( \begin{cases}dX_t=b(X_t)dt+\sigma(X_t)dW_t\\ X_0=x\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-22" value="\( \begin{cases}dX_t=b(X_t)dt+\sigma(X_t)dW_t\\ X_0=x\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="660" y="140" width="220" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-23" value="\( \begin{aligned}u(x)=\mathbb E_x\Big[&amp;amp;e^{-\int_0^\tau V}g(X_\tau)+\int_0^\tau\! e^{-\int_0^t V}f(X_t)dt\Big]\end{aligned} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-23" value="\( \begin{aligned}u(x)=\mathbb E_x\Big[&amp;amp;e^{-\int_0^\tau V}g(X_\tau)+\int_0^\tau\! e^{-\int_0^t V}f(X_t)dt\Big]\end{aligned} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="920" y="140" width="320" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-24" value="&lt;b&gt;Semilinear parabolic&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-24" value="&lt;b&gt;Semilinear parabolic&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="40" y="200" width="150" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-25" value="\( \begin{cases}\partial_t u + \mathcal L u + f(t,x,u,\sigma^\top\nabla u) = 0 &amp;amp; \text{in } (0,T)\times\mathbb R^d\\ u(T,\cdot)=g &amp;amp; \text{in } \mathbb R^d\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-25" value="\( \begin{cases}\partial_t u + \mathcal L u + f(t,x,u,\sigma^\top\nabla u) = 0 &amp;amp; \text{in } (0,T)\times\mathbb R^d\\ u(T,\cdot)=g &amp;amp; \text{in } \mathbb R^d\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="200" y="200" width="320" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-26" value="backward SDE run from the exit time along the diffusion" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-26" value="backward SDE" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="530" y="200" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-27" value="\( \begin{cases}dY_s=-f(s,X_s,Y_s,Z_s)ds+Z_s\cdot dW_s\\ Y_T=g(X_T),\quad Z_s=\sigma^\top\nabla u(s,X_s)\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-27" value="\( \begin{cases}dY_s=-f(s,X_s,Y_s,Z_s)ds+Z_s\cdot dW_s\\ Y_T=g(X_T),\quad Z_s=\sigma^\top\nabla u(s,X_s)\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="660" y="200" width="280" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-28" value="\( u(t,x)=Y_t \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-28" value="\( u(t,x)=Y_t \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="920" y="200" width="320" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-29" value="&lt;b&gt;Semilinear elliptic&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-29" value="&lt;b&gt;Semilinear elliptic&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="40" y="260" width="150" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-30" value="\( \begin{cases}\mathcal L u + f(x,u,\sigma^\top\nabla u) = 0 &amp;amp; \text{in } \Omega\\ u=g &amp;amp; \text{on } \partial\Omega\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-30" value="\( \begin{cases}\mathcal L u + f(x,u,\sigma^\top\nabla u) = 0 &amp;amp; \text{in } \Omega\\ u=g &amp;amp; \text{on } \partial\Omega\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="200" y="260" width="320" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-31" value="backward SDE run from the exit time along the diffusion" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-31" value="backward SDE run from the exit time" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="530" y="260" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-32" value="\( \begin{cases}dY_t=-f(X_t,Y_t,Z_t)dt+Z_t\cdot dW_t\\ Y_\tau=g(X_\tau),\quad Z_t=\sigma^\top\nabla u(X_t)\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-32" value="\( \begin{cases}dY_t=-f(X_t,Y_t,Z_t)dt+Z_t\cdot dW_t\\ Y_\tau=g(X_\tau),\quad Z_t=\sigma^\top\nabla u(X_t)\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="660" y="260" width="260" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-33" value="\( u(x)=Y_0 \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-33" value="\( u(x)=Y_0 \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="920" y="260" width="320" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-34" value="&lt;b&gt;Fokker–Planck&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-34" value="&lt;b&gt;Fokker–Planck&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="40" y="320" width="150" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-35" value="\( \begin{cases}\partial_t \rho = \mathcal L^{*}\rho &amp;amp; \text{in } (0,T)\times\mathbb R^d\\ \rho(0,\cdot)=\mu &amp;amp; \text{in } \mathbb R^d\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-35" value="\( \begin{cases}\partial_t \rho = \mathcal L^{*}\rho &amp;amp; \text{in } (0,T)\times\mathbb R^d\\ \rho(0,\cdot)=\mu &amp;amp; \text{in } \mathbb R^d\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="200" y="320" width="320" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-36" value="diffusion from a random start" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-36" value="diffusion" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="530" y="320" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-37" value="\( \begin{cases}dX_t=b(X_t)dt+\sigma(X_t)dW_t\\ X_0\sim\mu\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-37" value="\( \begin{cases}dX_t=b(X_t)dt+\sigma(X_t)dW_t\\ X_0\sim\mu\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="660" y="320" width="230" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-38" value="\( \rho_t=\mathrm{Law}(X_t) \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-38" value="\( \rho_t=\mathrm{Law}(X_t) \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="920" y="320" width="320" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-39" value="&lt;b&gt;Principal eigenvalue&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-39" value="&lt;b&gt;Principal eigenvalue&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="40" y="380" width="150" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-40" value="\( \begin{cases}\mathcal L \phi - V\phi = -\lambda_1\phi &amp;amp; \text{in } \Omega\\ \phi=0 &amp;amp; \text{on } \partial\Omega\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-40" value="\( \begin{cases}\mathcal L \phi - V\phi = -\lambda_1\phi &amp;amp; \text{in } \Omega\\ \phi=0 &amp;amp; \text{on } \partial\Omega\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="200" y="380" width="320" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-41" value="diffusion stopped on exit" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-41" value="diffusion stopped on exit" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="530" y="380" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-42" value="\( \begin{cases}dX_t=b(X_t)dt+\sigma(X_t)dW_t\\ X_0=x\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-42" value="\( \begin{cases}dX_t=b(X_t)dt+\sigma(X_t)dW_t\\ X_0=x\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="660" y="380" width="230" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-43" value="\( \lambda_1=-\lim_{t\to\infty}\tfrac1t\log\mathbb E_x\big[e^{-\int_0^t V}\mathbf 1_{\{\tau&amp;gt;t\}}\big] \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-43" value="\( \lambda_1=-\lim_{t\to\infty}\tfrac1t\log\mathbb E_x\big[e^{-\int_0^t V}\mathbf 1_{\{\tau&amp;gt;t\}}\big] \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="920" y="380" width="320" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-44" value="&lt;b&gt;HJB&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-44" value="&lt;b&gt;HJB&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="40" y="440" width="150" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-45" value="\( \begin{cases}\partial_t u + \inf_{\alpha\in\mathcal A}\left\{\mathcal L^{\alpha}u + \ell(x,\alpha)\right\} = 0 &amp;amp; \text{in } (0,T)\times\mathbb R^d\\ u(T,\cdot)=h &amp;amp; \text{in } \mathbb R^d\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-45" value="\( \begin{cases}\partial_t u + \inf_{\alpha\in\mathcal A}\left\{\mathcal L^{\alpha}u + \ell(x,\alpha)\right\} = 0 &amp;amp; \text{in } (0,T)\times\mathbb R^d\\ u(T,\cdot)=h &amp;amp; \text{in } \mathbb R^d\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="200" y="440" width="320" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-46" value="controlled diffusion" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-46" value="controlled diffusion" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#808080;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="530" y="440" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-47" value="\( \begin{cases}dX^\alpha_s=b(X^\alpha_s,\alpha_s)ds+\sigma(X^\alpha_s,\alpha_s)dW_s\\ X^\alpha_t=x\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-47" value="\( \begin{cases}dX^\alpha_s=b(X^\alpha_s,\alpha_s)ds+\sigma(X^\alpha_s,\alpha_s)dW_s\\ X^\alpha_t=x\end{cases} \)" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="660" y="440" width="290" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-48" value="\( \begin{aligned}u(t,x)=\inf_{\alpha}\mathbb E\Big[&amp;amp;\int_t^T\! \ell(X^\alpha_s,\alpha_s)ds+h(X^\alpha_T)\,\Big]\end{aligned} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-48" value="\( \begin{aligned}u(t,x)=\inf_{\alpha}\mathbb E\Big[&amp;amp;\int_t^T\! \ell(X^\alpha_s,\alpha_s)ds+h(X^\alpha_T)\,\Big]\end{aligned} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="920" y="440" width="320" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-49" value="\(&amp;nbsp;\mathcal{L}\varphi:=\tfrac12\operatorname{tr}\!\big(\sigma\sigma^\top\,D^2\varphi\big)+b\cdot\nabla\varphi \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacing=4;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-49" value="\(&amp;nbsp;\mathcal{L}\varphi:=\tfrac12\operatorname{tr}\!\big(\sigma\sigma^\top\,D^2\varphi\big)+b\cdot\nabla\varphi \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacing=4;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="370" y="510" width="230" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-50" value="\(&amp;nbsp;\tau := \inf \{t\geq 0: X_t \not\in&amp;nbsp; \Omega\} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-50" value="\(&amp;nbsp;\tau := \inf \{t\geq 0: X_t \not\in&amp;nbsp; \Omega\} \)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="780" y="510" width="200" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-51" value="Generator" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=2" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-51" value="Generator" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=2" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="300" y="510" width="60" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="XZhYp0Dp_hmtZWfRll8S-52" value="Exit time" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=2" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="XZhYp0Dp_hmtZWfRll8S-52" value="Exit time" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=2" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="710" y="510" width="60" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="dg9heWlnbKePdnTp2RWE-0" value="" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;opacity=0;fillColor=default;" vertex="1" parent="XZhYp0Dp_hmtZWfRll8S-1">
+        <mxCell id="dg9heWlnbKePdnTp2RWE-0" value="" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;opacity=0;fillColor=default;" parent="XZhYp0Dp_hmtZWfRll8S-1" vertex="1">
           <mxGeometry x="620" y="510" width="60" height="30" as="geometry" />
         </mxCell>
       </root>
