@@ -22,18 +22,18 @@ editPost:
 
 There is a beautiful connection between probability theory and partial differential equations (PDEs), given by the famous Feynman–Kac theorem.
 
-This result allows us to translate between stochastic finite-dimensional problems and deterministic infinite-dimensional problems. It appears everywhere in finance, physics, control theory, and machine learning (generative modeling and reinforcement learning).
+This result allows us to translate between finite-dimensional stochastic problems and infinite-dimensional deterministic problems. It appears throughout finance, physics, control theory, and machine learning (generative modeling and reinforcement learning).
 
-What makes this connection especially useful is that it works in both directions. 
+What makes this connection especially useful is that it works in both directions.
 
-A high-dimensional PDE (very expensive to solve numerically) can be evaluated at a single point simply by simulating a random process. Conversely, a difficult question about a stochastic process can be transformed into a deterministic PDE and tackled using standard techniques.
+The solution to a high-dimensional PDE (which can be very expensive to compute numerically) can be evaluated at a single point simply by simulating a random process. Conversely, a difficult question about a stochastic process can be transformed into a deterministic PDE and tackled using standard techniques.
 
 
 
 
 > **Example.** Take the Dirichlet problem
 > $$ \begin{cases} \Delta u = 0 & \text{in } \Omega, \\ u = g & \text{on } \partial\Omega. \end{cases} $$
-> The Feynman–Kac theorem says its solution is
+> Then its solution satisfies
 > $$ u(x) \;=\; \mathbb{E}_x\big[\,g(B_\tau)\,\big] $$
 > where $B$ is a Brownian motion started at $x$ and $\tau$ is the first time it
 > leaves $\Omega$.
@@ -42,7 +42,7 @@ A high-dimensional PDE (very expensive to solve numerically) can be evaluated at
 
 
 The proof is short and worth seeing once before the general statement. It needs
-one tool, the chain rule for Brownian paths.
+one tool: the chain rule for Brownian paths.
 
 > **Itô's formula.** For $\varphi\in C^2(\mathbb{R}^d)$ and a Brownian motion $B$,
 > $$ d\varphi(B_t) \;=\; \nabla\varphi(B_t)^\top dB_t \;+\; \tfrac12\Delta\varphi(B_t)\,dt . $$
@@ -53,7 +53,7 @@ one tool, the chain rule for Brownian paths.
 
 *Proof of the example.* Let $\Omega$ be bounded, say $\Omega\subset B(0,R)$, let
 $u\in C^2(\Omega)\cap C(\overline\Omega)$ solve the problem, let $B$ start at
-$x\in\Omega$ and let $\tau=\inf\{s\ge0:\;B_s\notin\Omega\}$. That such a $u$
+$x\in\Omega$, and let $\tau=\inf\{s\ge0:\;B_s\notin\Omega\}$. That such a $u$
 exists is a separate question; here we take one as given and show it has to be
 the average of its own boundary data.
 
@@ -72,8 +72,8 @@ $$
 d\cdot\mathbb{E}_x[t\wedge\tau]
 =\mathbb{E}_x\big[|B_{t\wedge\tau}|^2\big]-|x|^2\;\le\;R^2 .
 $$
-Letting $t\to\infty$ and using monotone convergence, $\mathbb{E}_x[\tau]\le R^2/d$;
-in particular $\tau<\infty$ almost surely, and since Brownian paths are
+Letting $t\to\infty$ and using monotone convergence, we obtain $\mathbb{E}_x[\tau]\le R^2/d$;
+in particular, $\tau<\infty$ almost surely, and since Brownian paths are
 continuous, the exit point $B_\tau$ lies on $\partial\Omega$.
 
 Now apply Itô's formula to $u$. Since $\nabla u$ need not stay bounded near
@@ -118,14 +118,14 @@ $$
 \mathcal{L}\varphi \;:=\; \tfrac12\operatorname{tr}\big(\sigma\sigma^\top D^2\varphi\big)+b\cdot\nabla\varphi .
 $$
 It is the drift term in Itô's formula for $\varphi(X_t)$: the first-order part
-comes from the drift of $X$, and the second-order part from its quadratic variation.
+comes from the drift of $X$, and the second-order part comes from its quadratic variation.
 
 > **Theorem (Feynman–Kac).**
 > Let $V,g:\mathbb{R}^d\to\mathbb{R}$ and $f:[0,T]\times\mathbb{R}^d\to\mathbb{R}$
 > be continuous, with $V\ge0$, and suppose
 > $u\in C^{1,2}\big([0,T)\times\mathbb{R}^d\big)\cap C\big([0,T]\times\mathbb{R}^d\big)$ solves
 > $$ \partial_t u + \mathcal{L}u - Vu + f \;=\; 0, \qquad u(T,\cdot)=g . $$
-> If $u$, $f$ and $\sigma^\top\nabla u$ grow at most polynomially in $x$, uniformly in $t$, then
+> If $u$, $f$, and $\sigma^\top\nabla u$ grow at most polynomially in $x$, uniformly in $t$, then
 > $$ u(t,x) \;=\; \mathbb{E}_{t,x}\Big[\, e^{-\int_t^T V(X_r)dr}\,g(X_T) \;+\; \int_t^T e^{-\int_t^s V(X_r)dr}\, f(s,X_s)\,ds \,\Big], $$
 > where $\mathbb{E}_{t,x}$ is the expectation for the path started at $X_t=x$.
 
@@ -135,7 +135,7 @@ the same strategy as the Dirichlet example: Itô's formula produces a martingale
 and taking expectations gives the representation.
 
 This statement gives uniqueness for free, but it presumes that a solution exists.
-Also, the converse of the theorem (that the expectation on the right-hand side is itself a solution of
+The converse of the theorem (that the expectation on the right-hand side is itself a solution of
 the PDE) needs considerably more technical work. That construction is carried out in Friedman [5], Ch. 6, §§4–5.
 
 > **Historical note.** Feynman (1948) described the evolution of the Schrödinger
@@ -152,7 +152,7 @@ the PDE) needs considerably more technical work. That construction is carried ou
 
 Black–Scholes (1973) is the same theorem read through the finance dictionary.
 Take the risk-neutral geometric Brownian motion $dX_t=rX_t\,dt+\sigma X_t\,dW_t$
-with $V\equiv r$ constant, $f=0$ and $g$ the payoff at maturity: the PDE is
+with $V\equiv r$ constant, $f=0$, and $g$ the payoff at maturity: the PDE is
 $$
 \partial_t u + \tfrac12\sigma^2x^2\,\partial_{xx}u + rx\,\partial_x u - ru = 0,
 \qquad u(T,\cdot)=g,
@@ -169,13 +169,13 @@ no drift.
 
 Look back at the proof and notice how little of it was about the heat equation.
 Itô's formula turned the operator into a drift, the equation cancelled that
-drift, and what was left was a martingale. Not one step of that argument asks
+drift, and what was left was a martingale. Not a single step of that argument asks
 which operator it was handed. Change the operator and the same three lines still
 run.
 
 The dictionary below collects the correspondences
 in that order, with $\mathcal{L}$ the generator of $dX_t=b(X_t)\,dt+\sigma(X_t)\,dW_t$ as above
-and, for a path started at time $t_0$, the exit time
+and, for a path started at time $t_0$, the exit time defined by
 $$
 \tau=\inf\{t>t_0:\,X_t\notin\Omega\}.
 $$
@@ -193,12 +193,12 @@ $$
 
 ### 2.2 Other families
 
-So far we have only considered stochastic processes driven by Brownian motion, but the Feynman–Kac theorem is more general. 
+So far, we have only considered stochastic processes driven by Brownian motion, but the Feynman–Kac theorem is more general.
 
 #### A finite state space
 
 Let $\xi$ be a continuous-time Markov
-chain on $\{1,\dots,n\}$ with generator matrix $Q$ and let $V\in\mathbb{R}^n$ be a killing rate.
+chain on $\{1,\dots,n\}$ with generator matrix $Q$, and let $V\in\mathbb{R}^n$ be a killing rate.
 The "PDE" is then a linear system of ODEs,
 $$
 u'(t) \;=\; \big(Q-\operatorname{diag}V\big)\,u(t),
@@ -211,13 +211,13 @@ u_i(t)\;=\;\mathbb{E}_i\Big[e^{-\int_0^t V(\xi_s)\,ds}\,g(\xi_t)\Big],
 $$
 The generator has replaced the Laplacian and a matrix exponential has replaced
 the heat semigroup; not a single other word of the argument changes. It is a
-useful version to keep in mind, because it makes plain that the theorem is a
-statement about generators and semigroups, and not about Brownian motion.
+useful version to keep in mind because it makes plain that the theorem is a
+statement about generators and semigroups rather than Brownian motion specifically.
 
 #### Lévy processes
 
 Replace $W$ by a Lévy process. The simplest case is a compound Poisson path
-that waits an exponential time of rate $\lambda$ and then jumps,
+that waits for an exponentially distributed time with rate $\lambda$ and then jumps,
 $$
 X_t \;=\; x+\sum_{i=1}^{N_t}Z_i ,
 $$
@@ -231,8 +231,8 @@ $$
 \end{cases}
 $$
 while the representation remains unchanged:
-$$ u(t,x)=\mathbb{E}_x\big[e^{-\int_0^tV(X_s)ds}g(X_t)\big]. 
-$$ 
+$$ u(t,x)=\mathbb{E}_x\big[e^{-\int_0^tV(X_s)ds}g(X_t)\big].
+$$
 What is new is that the operator is *nonlocal*: the
 value at $x$ is tied to the value at every $x+z$ the path can reach in one jump,
 not merely to an infinitesimal neighborhood.
@@ -248,7 +248,7 @@ Dirichlet datum must be prescribed on the whole complement $\Omega^c$.
 #### Deterministic flows
 
 Take the opposite extreme and switch the noise off, $\sigma\equiv0$. The process
-is the ODE flow $\dot X_s=b(X_s)$ started at $X_t=x$, its law is a Dirac mass,
+is the ODE flow $\dot X_s=b(X_s)$ started at $X_t=x$; its law is a Dirac mass,
 and the expectation in the theorem has nothing left to average over:
 $$
 u(t,x)\;=\;e^{-\int_t^TV(X_r)dr}\,g(X_T)\;+\;\int_t^Te^{-\int_t^sV(X_r)dr}\,f(s,X_s)\,ds .
@@ -258,7 +258,7 @@ $\partial_tu+b\cdot\nabla u-Vu+f=0$: the characteristic through $(t,x)$ is the
 trajectory itself, $V$ damps the datum carried along it, $f$ feeds it, and with
 $V=f=0$ the solution is the terminal value transported back, $u(t,x)=g(X_T)$.
 
-Two things do change, and they are what makes the degenerate case worth stating
+Two things do change, and they are what make the degenerate case worth stating
 rather than dismissing.
 
 1. **The boundary.** A Brownian path hits every point of $\partial\Omega$, which
@@ -271,7 +271,7 @@ rather than dismissing.
    $\Omega$ without ever touching $\partial\Omega$ and the datum has to be given
    on the whole complement.
 
-2. **Regularity.** Diffusion smooths, transport does not. With
+2. **Regularity.** Diffusion smooths; transport does not. With
    $\sigma\sigma^\top$ nondegenerate the representation is an average over
    infinitely many paths and $u$ is smooth however rough $g$ is, whereas here
    $u(t,\cdot)$ is exactly $g$ transported, and a discontinuity in the datum
@@ -346,7 +346,7 @@ u(t,x)=\mathbb{E}_{t,x}\!\left[
 D_su(s,X_s)+\int_t^s D_r f(r,X_r)\,dr\right].
 $$
 
-Finally let $s\uparrow T$. Continuity and the terminal condition give
+Finally, let $s\uparrow T$. Continuity and the terminal condition give
 $u(s,X_s)\to g(X_T)$ almost surely. The polynomial growth of $u$ and $f$
 bounds the expression inside the expectation by
 $C'(1+\sup_{t\le r\le T}|X_r|^q)$ for suitable $C'>0$ and $q\ge2$.
