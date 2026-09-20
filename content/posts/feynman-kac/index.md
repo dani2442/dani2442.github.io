@@ -41,7 +41,7 @@ A high-dimensional PDE (very expensive to solve numerically) can be evaluated at
 ![One Brownian path started at x, wandering through the bean-shaped domain until it leaves at the exit point B_tau](fk_bean_walk.gif)
 
 
-The proof is short, and worth seeing once before the general statement. It needs
+The proof is short and worth seeing once before the general statement. It needs
 one tool, the chain rule for Brownian paths.
 
 > **Itô's formula.** For $\varphi\in C^2(\mathbb{R}^d)$ and a Brownian motion $B$,
@@ -67,7 +67,7 @@ where $t\wedge\tau=\min(t,\tau)$ means that we stop the path when it exits.
 The stochastic integral has expectation zero: before $\tau$, its integrand
 stays in the bounded domain, so it is square-integrable on every finite time
 interval. Since the stopped path stays in $\overline\Omega$, taking expectations
-therefore yields
+yields
 $$
 d\cdot\mathbb{E}_x[t\wedge\tau]
 =\mathbb{E}_x\big[|B_{t\wedge\tau}|^2\big]-|x|^2\;\le\;R^2 .
@@ -92,9 +92,9 @@ $$
 The last integral vanishes because $u$ is harmonic, and the stochastic integral
 has expectation zero because $\nabla u$ is bounded there, so
 $\mathbb{E}_x[u(B_{t\wedge\tau_n})]=u(x)$. Since $u$ is continuous on the compact
-set $\overline\Omega$, hence bounded, bounded convergence as $n\to\infty$ and
-then as $t\to\infty$ — the path does exit, and $u$ is continuous up to the
-boundary — turns this into
+set $\overline\Omega$, it is bounded, so bounded convergence — first as
+$n\to\infty$, then as $t\to\infty$, using that the path does exit and that $u$ is
+continuous up to the boundary — turns this into
 $$
 u(x) \;=\; \mathbb{E}_x\big[\,g(B_\tau)\,\big]. \qquad\blacksquare
 $$
@@ -115,8 +115,7 @@ $$
 in $\mathbb{R}^d$, with $b,\sigma$ globally Lipschitz. Its *generator* is the
 spatial differential operator
 $$
-\mathcal{L}\varphi \;:=\; \tfrac12\operatorname{tr}\big(a\,D^2\varphi\big)+b\cdot\nabla\varphi,
-\qquad a:=\sigma\sigma^\top.
+\mathcal{L}\varphi \;:=\; \tfrac12\operatorname{tr}\big(\sigma\sigma^\top D^2\varphi\big)+b\cdot\nabla\varphi .
 $$
 It is the drift term in Itô's formula for $\varphi(X_t)$: the first-order part
 comes from the drift of $X$, and the second-order part from its quadratic variation.
@@ -125,7 +124,7 @@ comes from the drift of $X$, and the second-order part from its quadratic variat
 > Let $V,g:\mathbb{R}^d\to\mathbb{R}$ and $f:[0,T]\times\mathbb{R}^d\to\mathbb{R}$
 > be continuous, with $V\ge0$, and suppose
 > $u\in C^{1,2}\big([0,T)\times\mathbb{R}^d\big)\cap C\big([0,T]\times\mathbb{R}^d\big)$ solves
-> $$ \partial_t u + \tfrac12\operatorname{tr}\big(\sigma\sigma^\top D^2u\big) + b\cdot\nabla u - Vu + f \;=\; 0, \qquad u(T,\cdot)=g . $$
+> $$ \partial_t u + \mathcal{L}u - Vu + f \;=\; 0, \qquad u(T,\cdot)=g . $$
 > If $u$, $f$ and $\sigma^\top\nabla u$ grow at most polynomially in $x$, uniformly in $t$, then
 > $$ u(t,x) \;=\; \mathbb{E}_{t,x}\Big[\, e^{-\int_t^T V(X_r)dr}\,g(X_T) \;+\; \int_t^T e^{-\int_t^s V(X_r)dr}\, f(s,X_s)\,ds \,\Big], $$
 > where $\mathbb{E}_{t,x}$ is the expectation for the path started at $X_t=x$.
@@ -136,7 +135,8 @@ the same strategy as the Dirichlet example: Itô's formula produces a martingale
 and taking expectations gives the representation.
 
 This statement gives uniqueness for free, but it presumes that a solution exists.
-The converse is proved separately; see Friedman [5], Ch. 6, §§4–5.
+Also, the converse of the theorem (that the expectation on the right-hand side is itself a solution of
+the PDE) needs considerably more technical work. That construction is carried out in Friedman [5], Ch. 6, §§4–5.
 
 > **Historical note.** Feynman (1948) described the evolution of the Schrödinger
 > equation
@@ -159,22 +159,22 @@ $$
 $$
 and the representation is the pricing formula
 $u(t,x)=e^{-r(T-t)}\,\mathbb{E}\big[g(X_T)\mid X_t=x\big]$. Every ingredient has
-a name on both sides: $V$ is the discount rate, a source $f$ is a dividend or running payoff, and $\sigma^\top\nabla u$ is the hedging portfolio, which makes the proof
-in the appendix, in that dictionary, the statement that a hedged position has no drift.
+a name on both sides: $V$ is the discount rate, a source $f$ is a dividend or
+running payoff, and $\sigma^\top\nabla u$ is the hedging portfolio. Read in that
+dictionary, the proof in the appendix is the statement that a hedged position has
+no drift.
 
 
 ## 2. Feynman–Kac family of equations
 
-The translation always follows the same pattern. The second-order part of the
-operator is the diffusion coefficient, the first-order part is the drift, a
-zeroth-order term is a killing rate, a source term is a running payoff, the
-boundary condition is a stopping rule — and a nonlinearity, when there is one,
-is a control, a game, a branching mechanism or an interaction between copies of
-the process. The dictionary below collects the correspondences in that order,
-writing
-$$
-\mathcal{L}\varphi=\tfrac12\operatorname{tr}\!\big(a\,D^2\varphi\big)+b\cdot\nabla\varphi,\qquad a:=\sigma\sigma^\top,\qquad dX_t=b(X_t)\,dt+\sigma(X_t)\,dW_t ,
-$$
+Look back at the proof and notice how little of it was about the heat equation.
+Itô's formula turned the operator into a drift, the equation cancelled that
+drift, and what was left was a martingale. Not one step of that argument asks
+which operator it was handed. Change the operator and the same three lines still
+run.
+
+The dictionary below collects the correspondences
+in that order, with $\mathcal{L}$ the generator of $dX_t=b(X_t)\,dt+\sigma(X_t)\,dW_t$ as above
 and, for a path started at time $t_0$, the exit time
 $$
 \tau=\inf\{t>t_0:\,X_t\notin\Omega\}.
@@ -221,7 +221,8 @@ that waits an exponential time of rate $\lambda$ and then jumps,
 $$
 X_t \;=\; x+\sum_{i=1}^{N_t}Z_i ,
 $$
-with $N_t$ a Poisson process of rate $\lambda$, the $Z_i$ independent draws from a distribution $\mu$. Its generator is an integral operator,
+with $N_t$ a Poisson process of rate $\lambda$ and the $Z_i$ independent draws
+from a distribution $\mu$. Its generator is an integral operator,
 and the equation becomes
 $$
 \begin{cases}
@@ -234,7 +235,7 @@ $$ u(t,x)=\mathbb{E}_x\big[e^{-\int_0^tV(X_s)ds}g(X_t)\big].
 $$ 
 What is new is that the operator is *nonlocal*: the
 value at $x$ is tied to the value at every $x+z$ the path can reach in one jump,
-not merely to an infinitesimal neighbourhood.
+not merely to an infinitesimal neighborhood.
 
 Letting the jump measure be
 $\nu(dz)=c_{d,\alpha}|z|^{-d-\alpha}dz$ makes $X$ an $\alpha$-stable process and
@@ -271,7 +272,7 @@ rather than dismissing.
    on the whole complement.
 
 2. **Regularity.** Diffusion smooths, transport does not. With
-   $a=\sigma\sigma^\top$ nondegenerate the representation is an average over
+   $\sigma\sigma^\top$ nondegenerate the representation is an average over
    infinitely many paths and $u$ is smooth however rough $g$ is, whereas here
    $u(t,\cdot)$ is exactly $g$ transported, and a discontinuity in the datum
    travels along its characteristic forever.
@@ -288,7 +289,7 @@ rather than dismissing.
 
 [4] I. Karatzas and S. Shreve. *Brownian Motion and Stochastic Calculus*. 2nd ed., Springer, 1991. (§4.2–4.4 for the Dirichlet problem, §5.7 for Feynman–Kac.)
 
-[5] A. Friedman. *Stochastic Differential Equations and Applications*, Vol. 1. Academic Press, 1975. (Ch. 6, §4–5: fundamental solutions for parabolic equations and the stochastic representation of solutions.)
+[5] A. Friedman. *Stochastic Differential Equations and Applications*, Vol. 1. Academic Press, 1975. (Ch. 6, §§4–5: fundamental solutions for parabolic equations and the stochastic representation of solutions.)
 
 
 ## Appendix: Proof of the Feynman–Kac theorem {#appendix-proof-of-the-feynman-kac-theorem}
