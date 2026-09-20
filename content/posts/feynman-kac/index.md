@@ -34,7 +34,7 @@ A high-dimensional PDE (very expensive to solve numerically) can be evaluated at
 > **Example.** Take the Dirichlet problem
 > $$ \begin{cases} \Delta u = 0 & \text{in } \Omega, \\ u = g & \text{on } \partial\Omega. \end{cases} $$
 > The Feynman–Kac theorem says its solution is
-> $$ u(x) \;=\; \mathbb{E}\big[\,g(B_\tau)\,\big] $$
+> $$ u(x) \;=\; \mathbb{E}_x\big[\,g(B_\tau)\,\big] $$
 > where $B$ is a Brownian motion started at $x$ and $\tau$ is the first time it
 > leaves $\Omega$.
 
@@ -51,53 +51,50 @@ one tool, the chain rule for Brownian paths.
 > $d\langle B^i,B^j\rangle_t=\delta_{ij}\,dt$, and the Laplacian is what that
 > second-order term collects.
 
-*Proof of the example.* Let $\Omega$ be bounded, let
+*Proof of the example.* Let $\Omega$ be bounded, say $\Omega\subset B(0,R)$, let
 $u\in C^2(\Omega)\cap C(\overline\Omega)$ solve the problem, let $B$ start at
-$x\in\Omega$ and let $\tau=\inf\{t>0:\;B_t\notin\Omega\}$.
+$x\in\Omega$ and let $\tau=\inf\{s\ge0:\;B_s\notin\Omega\}$. That such a $u$
+exists is a separate question; here we take one as given and show it has to be
+the average of its own boundary data.
 
 Check first that the path leaves at all. Itô's formula on $h(y)=|y|^2$, for which
 $\tfrac12\Delta h=d$, gives
 $$
 |B_{t\wedge\tau}|^2
-=|x|^2+2\int_0^{t\wedge\tau}B_s^\top dB_s+d(t\wedge\tau).
+=|x|^2+2\int_0^{t\wedge\tau}B_s^\top dB_s+d\cdot(t\wedge\tau),
 $$
-Here $t\wedge\tau=\min(t,\tau)$ means that we stop the path when it exits.
+where $t\wedge\tau=\min(t,\tau)$ means that we stop the path when it exits.
 The stochastic integral has expectation zero: before $\tau$, its integrand
 stays in the bounded domain, so it is square-integrable on every finite time
-interval. Taking expectations therefore yields
+interval. Since the stopped path stays in $\overline\Omega$, taking expectations
+therefore yields
 $$
-d\,\mathbb{E}_x[t\wedge\tau]
-=\mathbb{E}_x\big[|B_{t\wedge\tau}|^2\big]-|x|^2
-\le \sup_{y\in\overline\Omega}|y|^2.
+d\cdot\mathbb{E}_x[t\wedge\tau]
+=\mathbb{E}_x\big[|B_{t\wedge\tau}|^2\big]-|x|^2\;\le\;R^2 .
 $$
-Letting
-$t\to\infty$ and using monotone convergence, $\mathbb{E}_x[\tau]<\infty$, and in
-particular $\tau<\infty$ almost surely. Since Brownian paths are continuous,
-the exit point $B_\tau$ lies on $\partial\Omega$.
+Letting $t\to\infty$ and using monotone convergence, $\mathbb{E}_x[\tau]\le R^2/d$;
+in particular $\tau<\infty$ almost surely, and since Brownian paths are
+continuous, the exit point $B_\tau$ lies on $\partial\Omega$.
 
-Now apply Itô's formula to $u$. Its derivatives need not remain bounded near
-the boundary, so first stop a little earlier, at
+Now apply Itô's formula to $u$. Since $\nabla u$ need not stay bounded near
+$\partial\Omega$, stop just short of it, at
 $$
 \tau_n:=\inf\{s\ge0:\;\operatorname{dist}(B_s,\partial\Omega)\le 1/n\},
 $$
-for $n$ large enough that $\operatorname{dist}(x,\partial\Omega)>1/n$.
-Then $\tau_n\uparrow\tau$, and
+with $n$ large enough that $\operatorname{dist}(x,\partial\Omega)>1/n$; the
+stopped path then lives in a compact subset of $\Omega$, and $\tau_n\uparrow\tau$.
+Itô's formula gives
 $$
 u(B_{t\wedge\tau_n})
 =u(x)+\int_0^{t\wedge\tau_n}\nabla u(B_s)^\top dB_s
   +\frac12\int_0^{t\wedge\tau_n}\Delta u(B_s)\,ds.
 $$
-The last integral vanishes because $u$ is harmonic. The stochastic integral
-has expectation zero because $\nabla u$ is bounded on the compact set where
-the stopped path lives. Thus $\mathbb{E}_x[u(B_{t\wedge\tau_n})]=u(x)$.
-Since $u$ is continuous on the compact set $\overline\Omega$, it is bounded;
-bounded convergence as $n\to\infty$ gives
-$$
-u(x) \;=\; \mathbb{E}_x\big[\,u(B_{t\wedge\tau})\,\big] \qquad\text{for every } t .
-$$
-Letting $t\to\infty$, $u(B_{t\wedge\tau})\to u(B_\tau)=g(B_\tau)$ because the path
-does exit and $u$ is continuous up to the boundary, and bounded convergence turns
-the display into
+The last integral vanishes because $u$ is harmonic, and the stochastic integral
+has expectation zero because $\nabla u$ is bounded there, so
+$\mathbb{E}_x[u(B_{t\wedge\tau_n})]=u(x)$. Since $u$ is continuous on the compact
+set $\overline\Omega$, hence bounded, bounded convergence as $n\to\infty$ and
+then as $t\to\infty$ — the path does exit, and $u$ is continuous up to the
+boundary — turns this into
 $$
 u(x) \;=\; \mathbb{E}_x\big[\,g(B_\tau)\,\big]. \qquad\blacksquare
 $$
@@ -130,7 +127,8 @@ comes from the drift of $X$, and the second-order part from its quadratic variat
 > $u\in C^{1,2}\big([0,T)\times\mathbb{R}^d\big)\cap C\big([0,T]\times\mathbb{R}^d\big)$ solves
 > $$ \partial_t u + \tfrac12\operatorname{tr}\big(\sigma\sigma^\top D^2u\big) + b\cdot\nabla u - Vu + f \;=\; 0, \qquad u(T,\cdot)=g . $$
 > If $u$, $f$ and $\sigma^\top\nabla u$ grow at most polynomially in $x$, uniformly in $t$, then
-> $$ u(t,x) \;=\; \mathbb{E}\Big[\, e^{-\int_t^T V(X_r)dr}\,g(X_T) \;+\; \int_t^T e^{-\int_t^s V(X_r)dr}\, f(s,X_s)\,ds \,\Big\vert\, X_t=x\Big]. $$
+> $$ u(t,x) \;=\; \mathbb{E}_{t,x}\Big[\, e^{-\int_t^T V(X_r)dr}\,g(X_T) \;+\; \int_t^T e^{-\int_t^s V(X_r)dr}\, f(s,X_s)\,ds \,\Big], $$
+> where $\mathbb{E}_{t,x}$ is the expectation for the path started at $X_t=x$.
 
 
 The [proof in the appendix](#appendix-proof-of-the-feynman-kac-theorem) follows
@@ -144,17 +142,12 @@ The converse is proved separately; see Friedman [5], Ch. 6, §§4–5.
 > equation
 > $$ i\hbar\,\partial_t\psi \;=\; -\tfrac{\hbar^2}{2m}\Delta\psi + V\psi $$
 > by summing over *every* path joining the two endpoints, each weighted by a
-> complex number of modulus one whose phase is the classical action of that path,
-> measured in units of $\hbar$. Such weights only rotate; they never shrink, so
-> paths cancel by interference rather than by having small weight: the sum is not
-> an ordinary probabilistic integral, and no measure on path space realizes it.
+> complex number of modulus one.
 >
-> Kac (1949) observed that replacing time by imaginary time, $t\mapsto -it$,
-> turns the equation, for $\hbar=m=1$, into
-> $$ \partial_t u \;=\; \tfrac12\Delta u - Vu , $$
-> and turns that rotating phase into the real, decaying weight
-> $e^{-\int_0^t V(B_s)ds}$. What was a formal path integral becomes a genuine
-> probabilistic representation, an ordinary expectation over Brownian paths:
+> Kac (1949) later developed a related idea for the heat equation
+> (the Schrödinger equation in imaginary time):
+> $$ \partial_t u \;=\; \tfrac12\Delta u - Vu . $$
+> He observed that the solution can be written as an average over random Brownian paths:
 > $$ u(t,x) \;=\; \mathbb{E}_x\Big[e^{-\int_0^t V(B_s)ds}\,g(B_t)\Big]. $$
 
 Black–Scholes (1973) is the same theorem read through the finance dictionary.
@@ -170,7 +163,7 @@ a name on both sides: $V$ is the discount rate, a source $f$ is a dividend or ru
 in the appendix, in that dictionary, the statement that a hedged position has no drift.
 
 
-## 4. Feynman–Kac family of equations
+## 2. Feynman–Kac family of equations
 
 The translation always follows the same pattern. The second-order part of the
 operator is the diffusion coefficient, the first-order part is the drift, a
@@ -189,7 +182,7 @@ $$
 
 ![Dictionary of Feynman–Kac correspondences: linear and semilinear parabolic and elliptic equations, Fokker–Planck, the principal eigenvalue problem and HJB, each with its stochastic object and its representation](feynman_kac-feynman-kac.png)
 
-### 4.1 Boundary conditions
+### 2.1 Boundary conditions
 
 | Name | PDE ingredient | Stochastic object |
 |---|---|---|
@@ -198,7 +191,7 @@ $$
 | Robin condition | $\partial_n u=\alpha u$ | reflected diffusion killed at rate $\alpha$ in local time |
 
 
-### 4.2 Other families
+### 2.2 Other families
 
 So far we have only considered stochastic processes driven by Brownian motion, but the Feynman–Kac theorem is more general. 
 
@@ -273,7 +266,7 @@ rather than dismissing.
    characteristics enter, on the inflow boundary
    $\{y\in\partial\Omega:\,b(y)\cdot n(y)<0\}$, and prescribing it anywhere else
    overdetermines the problem. That is the degenerate end of the dictionary of
-   §4.1, and the mirror image of the nonlocal case, where a jump can leave
+   §2.1, and the mirror image of the nonlocal case, where a jump can leave
    $\Omega$ without ever touching $\partial\Omega$ and the datum has to be given
    on the whole complement.
 
@@ -300,8 +293,7 @@ rather than dismissing.
 
 ## Appendix: Proof of the Feynman–Kac theorem {#appendix-proof-of-the-feynman-kac-theorem}
 
-Fix $t<T$ and start the SDE at $X_t=x$. Write $\mathbb{E}_{t,x}$ for expectation
-under this starting condition. The discount factor
+Fix $t<T$ and start the SDE at $X_t=x$. The discount factor
 $$
 D_s:=e^{-\int_t^s V(X_r)\,dr}
 $$
