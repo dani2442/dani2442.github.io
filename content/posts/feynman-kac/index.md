@@ -6,7 +6,7 @@ categories: ["pde", "probability"]
 author: "Daniel López Montero"
 showToc: true
 draft: false
-description: "The Feynman–Kac formula connects stochastic processes to partial differential equations."
+description: "The Feynman–Kac formula connects probability theorey to partial differential equations."
 ShowWordCount: false
 ShowReadingTime: true
 comments: true
@@ -92,9 +92,7 @@ $$
 The last integral vanishes because $u$ is harmonic, and the stochastic integral
 has expectation zero because $\nabla u$ is bounded there, so
 $\mathbb{E}_x[u(B_{t\wedge\tau_n})]=u(x)$. Since $u$ is continuous on the compact
-set $\overline\Omega$, it is bounded, so bounded convergence — first as
-$n\to\infty$, then as $t\to\infty$, using that the path does exit and that $u$ is
-continuous up to the boundary — turns this into
+set $\overline\Omega$, it is bounded, so bounded convergence turns this into
 $$
 u(x) \;=\; \mathbb{E}_x\big[\,g(B_\tau)\,\big]. \qquad\blacksquare
 $$
