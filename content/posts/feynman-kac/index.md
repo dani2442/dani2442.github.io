@@ -57,18 +57,41 @@ $x\in\Omega$ and let $\tau=\inf\{t>0:\;B_t\notin\Omega\}$.
 
 Check first that the path leaves at all. Itô's formula on $h(y)=|y|^2$, for which
 $\tfrac12\Delta h=d$, gives
-$\mathbb{E}_x\big[|B_{t\wedge\tau}|^2\big]-|x|^2=d\,\mathbb{E}_x[t\wedge\tau]$,
-whose left-hand side is at most $\sup_{y\in\overline\Omega}|y|^2$; letting
+$$
+|B_{t\wedge\tau}|^2
+=|x|^2+2\int_0^{t\wedge\tau}B_s^\top dB_s+d(t\wedge\tau).
+$$
+Here $t\wedge\tau=\min(t,\tau)$ means that we stop the path when it exits.
+The stochastic integral has expectation zero: before $\tau$, its integrand
+stays in the bounded domain, so it is square-integrable on every finite time
+interval. Taking expectations therefore yields
+$$
+d\,\mathbb{E}_x[t\wedge\tau]
+=\mathbb{E}_x\big[|B_{t\wedge\tau}|^2\big]-|x|^2
+\le \sup_{y\in\overline\Omega}|y|^2.
+$$
+Letting
 $t\to\infty$ and using monotone convergence, $\mathbb{E}_x[\tau]<\infty$, and in
-particular $\tau<\infty$ almost surely.
+particular $\tau<\infty$ almost surely. Since Brownian paths are continuous,
+the exit point $B_\tau$ lies on $\partial\Omega$.
 
-Now Itô's formula applied to $u$ leaves
+Now apply Itô's formula to $u$. Its derivatives need not remain bounded near
+the boundary, so first stop a little earlier, at
 $$
-du(B_t) \;=\; \nabla u(B_t)^\top dB_t ,
+\tau_n:=\inf\{s\ge0:\;\operatorname{dist}(B_s,\partial\Omega)\le 1/n\},
 $$
-the $dt$ term vanishing because $u$ is harmonic. So the stopped process
-$M_t:=u(B_{t\wedge\tau})$ is a local martingale, and it is bounded by
-$\sup_{\overline\Omega}|u|$; hence it is a martingale and
+for $n$ large enough that $\operatorname{dist}(x,\partial\Omega)>1/n$.
+Then $\tau_n\uparrow\tau$, and
+$$
+u(B_{t\wedge\tau_n})
+=u(x)+\int_0^{t\wedge\tau_n}\nabla u(B_s)^\top dB_s
+  +\frac12\int_0^{t\wedge\tau_n}\Delta u(B_s)\,ds.
+$$
+The last integral vanishes because $u$ is harmonic. The stochastic integral
+has expectation zero because $\nabla u$ is bounded on the compact set where
+the stopped path lives. Thus $\mathbb{E}_x[u(B_{t\wedge\tau_n})]=u(x)$.
+Since $u$ is continuous on the compact set $\overline\Omega$, it is bounded;
+bounded convergence as $n\to\infty$ gives
 $$
 u(x) \;=\; \mathbb{E}_x\big[\,u(B_{t\wedge\tau})\,\big] \qquad\text{for every } t .
 $$
@@ -82,12 +105,24 @@ $$
 
 ## 1. The Feynman–Kac theorem
 
+With the previous example in mind, we now turn to the classical Feynman–Kac
+theorem, which connects stochastic differential equations (SDEs) with parabolic
+PDEs. The idea is the same: follow a random path and average the data it reaches.
+Here we run the process to a fixed terminal time, allowing for drift, a
+space-dependent diffusion, discounting, and a source accumulated along the path.
 
 Let $X$ solve the SDE
 $$
 dX_t \;=\; b(X_t)\,dt + \sigma(X_t)\,dW_t
 $$
-in $\mathbb{R}^d$, with $b,\sigma$ Lipschitz.
+in $\mathbb{R}^d$, with $b,\sigma$ globally Lipschitz. Its *generator* is the
+spatial differential operator
+$$
+\mathcal{L}\varphi \;:=\; \tfrac12\operatorname{tr}\big(a\,D^2\varphi\big)+b\cdot\nabla\varphi,
+\qquad a:=\sigma\sigma^\top.
+$$
+It is the drift term in Itô's formula for $\varphi(X_t)$: the first-order part
+comes from the drift of $X$, and the second-order part from its quadratic variation.
 
 > **Theorem (Feynman–Kac).**
 > Let $V,g:\mathbb{R}^d\to\mathbb{R}$ and $f:[0,T]\times\mathbb{R}^d\to\mathbb{R}$
@@ -98,29 +133,12 @@ in $\mathbb{R}^d$, with $b,\sigma$ Lipschitz.
 > $$ u(t,x) \;=\; \mathbb{E}\Big[\, e^{-\int_t^T V(X_r)dr}\,g(X_T) \;+\; \int_t^T e^{-\int_t^s V(X_r)dr}\, f(s,X_s)\,ds \,\Big\vert\, X_t=x\Big]. $$
 
 
-*Proof.* Write $D_s=e^{-\int_t^s V(X_r)dr}$ for the discount factor and set
-$$
-Y_s \;=\; D_s\,u(s,X_s) + \int_t^s D_r\,f(r,X_r)\,dr , \qquad s\in[t,T].
-$$
-Itô's formula applied to $D_s\,u(s,X_s)$ produces one $dt$ term per derivative
-of $u$, and what it collects is precisely the operator in the statement: the
-second-order part comes from the quadratic variation
-$d\langle X\rangle_s=\sigma\sigma^\top(X_s)\,ds$, the first-order part from the
-drift. That combination is the *generator* of $X$, and from here on it gets a
-name,
-$$
-\mathcal{L}\varphi \;:=\; \tfrac12\operatorname{tr}\big(a\,D^2\varphi\big) + b\cdot\nabla\varphi,
-\qquad a:=\sigma\sigma^\top .
-$$
-The drift of $Y$ is therefore
-$D_s\big(\partial_s u+\mathcal{L}u-Vu+f\big)(s,X_s)=0$ by the equation, leaving
-$dY_s = D_s\,\nabla u(s,X_s)^\top\sigma(X_s)\,dW_s$. No exit time has to be
-controlled; the horizon $T$ is deterministic: the growth assumption is what
-promotes this local martingale to a true one on $[t,T]$, and then
-$u(t,x)=Y_t=\mathbb{E}[Y_T\mid X_t=x]$, which is the claim. $\;\blacksquare$
+The [proof in the appendix](#appendix-proof-of-the-feynman-kac-theorem) follows
+the same strategy as the Dirichlet example: Itô's formula produces a martingale,
+and taking expectations gives the representation.
 
-This statement gives uniqueness for free, but presumes the existence of a solution. The converse, that the right-hand
-side *defines* a solution, can be proven separately.
+This statement gives uniqueness for free, but it presumes that a solution exists.
+The converse is proved separately; see Friedman [5], Ch. 6, §§4–5.
 
 > **Historical note.** Feynman (1948) described the evolution of the Schrödinger
 > equation
@@ -149,7 +167,7 @@ $$
 and the representation is the pricing formula
 $u(t,x)=e^{-r(T-t)}\,\mathbb{E}\big[g(X_T)\mid X_t=x\big]$. Every ingredient has
 a name on both sides: $V$ is the discount rate, a source $f$ is a dividend or running payoff, and $\sigma^\top\nabla u$ is the hedging portfolio, which makes the proof
-above, in that dictionary, the statement that a hedged position has no drift.
+in the appendix, in that dictionary, the statement that a hedged position has no drift.
 
 
 ## 4. Feynman–Kac family of equations
@@ -265,27 +283,6 @@ rather than dismissing.
    $u(t,\cdot)$ is exactly $g$ transported, and a discontinuity in the datum
    travels along its characteristic forever.
 
-The stationary rows degenerate unevenly. Ellipticity does not survive:
-$\Delta u=0$ is second-order and nothing of it is left, and the representation
-$\mathbb{E}[g(B_\tau)]$ loses the fact it rested on, that a Brownian path exits a
-bounded domain with $\tau<\infty$ almost surely. A trajectory need not exit at
-all; it can rest at an equilibrium or turn on a cycle forever.
-
-Discounting repairs exactly that. In $\rho u=b\cdot\nabla u+f$ the rate $\rho$ is
-the killing rate $V$ of the dictionary, and the weight $e^{-\rho s}$ terminates
-the path by fiat where the geometry does not, so
-$$
-u(x)\;=\;\int_0^\infty e^{-\rho s}f(X_s)\,ds
-$$
-converges for bounded $f$ with no boundary condition at all. Let $b$ and $f$
-carry a control and put an infimum in front: the Hamilton–Jacobi–Bellman row
-survives for the same reason, as $\rho u=H(x,\nabla u)$.
-
-The Fokker–Planck row survives on different grounds — it never needed an exit
-time. With $\mathcal{L}^{*}m=-\operatorname{div}(bm)$ it becomes the continuity
-equation $\partial_tm+\operatorname{div}(bm)=0$: the density is pushed along the
-flow rather than diffused by it, and stays exactly as singular as it started.
-
 
 
 ## References
@@ -297,3 +294,74 @@ flow rather than diffused by it, and stays exactly as singular as it started.
 [3] F. Black and M. Scholes. The Pricing of Options and Corporate Liabilities. *Journal of Political Economy* **81** (1973) 637–654.
 
 [4] I. Karatzas and S. Shreve. *Brownian Motion and Stochastic Calculus*. 2nd ed., Springer, 1991. (§4.2–4.4 for the Dirichlet problem, §5.7 for Feynman–Kac.)
+
+[5] A. Friedman. *Stochastic Differential Equations and Applications*, Vol. 1. Academic Press, 1975. (Ch. 6, §4–5: fundamental solutions for parabolic equations and the stochastic representation of solutions.)
+
+
+## Appendix: Proof of the Feynman–Kac theorem {#appendix-proof-of-the-feynman-kac-theorem}
+
+Fix $t<T$ and start the SDE at $X_t=x$. Write $\mathbb{E}_{t,x}$ for expectation
+under this starting condition. The discount factor
+$$
+D_s:=e^{-\int_t^s V(X_r)\,dr}
+$$
+satisfies $D_t=1$ and $dD_s=-V(X_s)D_s\,ds$. Since $V\ge0$, we also have
+$0<D_s\le1$.
+
+First apply Itô's formula to the time-dependent function $u(s,X_s)$, for $s<T$:
+$$
+du(s,X_s)
+=\big(\partial_s u+\mathcal{L}u\big)(s,X_s)\,ds
+ +\nabla u(s,X_s)^\top\sigma(X_s)\,dW_s.
+$$
+The product rule gives $d(D_su)=D_s\,du+u\,dD_s$; there is no quadratic
+covariation term because $D$ has finite variation. Consequently,
+$$
+d\big(D_su(s,X_s)\big)
+=D_s\big(\partial_s u+\mathcal{L}u-Vu\big)(s,X_s)\,ds
+ +D_s\nabla u(s,X_s)^\top\sigma(X_s)\,dW_s.
+$$
+The PDE says that the drift in parentheses is $-f$. Adding the accumulated
+source therefore cancels it: if
+$$
+Y_s:=D_su(s,X_s)+\int_t^s D_r f(r,X_r)\,dr,
+$$
+then
+$$
+Y_s=u(t,x)+\int_t^s D_r\nabla u(r,X_r)^\top\sigma(X_r)\,dW_r.
+$$
+
+To take expectations, we must check that this stochastic integral is a true
+martingale. Globally Lipschitz coefficients give finite moments on a finite
+time interval:
+$$
+\mathbb{E}_{t,x}\!\left[\sup_{t\le r\le T}|X_r|^p\right]<\infty
+\qquad\text{for every }p\ge2.
+$$
+By the polynomial growth assumption, choose $C>0$ and $m\ge1$ such that
+$|\sigma^\top\nabla u(r,y)|\le C(1+|y|^m)$. Together with $D_r\le1$, this gives
+$$
+\mathbb{E}_{t,x}\!\left[\int_t^T
+ D_r^2\,|\sigma(X_r)^\top\nabla u(r,X_r)|^2\,dr\right]
+\le 2C^2(T-t)\,\mathbb{E}_{t,x}\!\left[1+\sup_{t\le r\le T}|X_r|^{2m}\right]
+<\infty.
+$$
+Thus the stochastic integral is square-integrable and has expectation zero.
+For every $s<T$ we obtain
+$$
+u(t,x)=\mathbb{E}_{t,x}\!\left[
+D_su(s,X_s)+\int_t^s D_r f(r,X_r)\,dr\right].
+$$
+
+Finally let $s\uparrow T$. Continuity and the terminal condition give
+$u(s,X_s)\to g(X_T)$ almost surely. The polynomial growth of $u$ and $f$
+bounds the expression inside the expectation by
+$C'(1+\sup_{t\le r\le T}|X_r|^q)$ for suitable $C'>0$ and $q\ge2$.
+This bound is integrable by the same moment estimate, so dominated convergence
+yields
+$$
+u(t,x)=\mathbb{E}_{t,x}\!\left[
+e^{-\int_t^T V(X_r)\,dr}\,g(X_T)
++\int_t^T e^{-\int_t^s V(X_r)\,dr}\,f(s,X_s)\,ds
+\right]. \qquad\blacksquare
+$$
