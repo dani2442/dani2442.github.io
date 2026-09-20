@@ -5,7 +5,7 @@ tags: ["control theory", "PDEs"]
 categories: ["pde", "optimal control"]
 author: "Daniel López Montero"
 showToc: true
-draft: false
+draft: true
 description: "Why the HJB is Bellman's equation in continuous time, why continuous time matters, and how to solve the resulting control problem with neural policy iteration."
 ShowWordCount: false
 ShowReadingTime: true
