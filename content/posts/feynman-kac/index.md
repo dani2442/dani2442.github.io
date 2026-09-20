@@ -188,7 +188,7 @@ $$
 |---|---|---|
 | Dirichlet condition | $u=g$ on $\partial\Omega$ | process killed on contact |
 | Neumann condition | $\partial_n u=0$ | reflected diffusion |
-| Robin condition | $\partial_n u=\alpha u$ | reflected diffusion killed at rate $\alpha$ in local time |
+| Robin condition | $\partial_n u+\alpha u=0$, $\alpha\ge0$ | reflected diffusion killed at rate $\alpha$ in boundary local time |
 
 
 ### 2.2 Other families
