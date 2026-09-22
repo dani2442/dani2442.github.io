@@ -468,6 +468,9 @@ hence the resulting topology, along that direction.
 
 ![Design domain and boundary conditions](td_mesh.png)
 
+*The cantilever domain $\Omega_0$, drawn at $24\times12$ cells so the
+triangulation is legible; every run below uses $150\times75$.*
+
 Let $V_h\subset V(\Omega)$ be the conforming space of continuous piecewise
 affine vector fields vanishing on $\Gamma_D$. On a triangle with vertices
 $(x_1,y_1),(x_2,y_2),(x_3,y_3)$ and area $A_e$, the affine shape functions have
