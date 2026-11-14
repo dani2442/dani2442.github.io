@@ -93,7 +93,7 @@ $$
 Use $\log p(Z\mid X;\Phi)=\log p(X,Z;\Phi)-\log p(X;\Phi)$; substitute and rearrange:
 $$
 \mathrm{KL}(q\|p(\cdot\mid X;\Phi))
-=\mathbb{E}_q[\log q(Z)]-\mathbb{E}_q[\log p(X,Z;\Phi)]+\log p(X;\Phi)\\
+=\mathbb{E}_q[\log q(Z)]-\mathbb{E}_q[\log p(X,Z;\Phi)]+\log p(X;\Phi)
 $$
 Hence,
 $$\begin{aligned}

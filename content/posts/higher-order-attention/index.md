@@ -377,7 +377,7 @@ $$
 \;=\;
 \sum_{r=1}^{m} \phi_r(x)\,\phi_r(y)\,\phi_r(z).
 $$
-Expanding with $W$ shows this is precisely the orthogonal projection (in the unfolding space) of the mode-1 fibers associated with $x,y,z$ onto $\operatorname{col}(G)$ \emph{for each mode}, yielding the
+Expanding with $W$ shows this is precisely the orthogonal projection (in the unfolding space) of the mode-1 fibers associated with $x,y,z$ onto $\operatorname{col}(G)$ *for each mode*, yielding the
 best approximation in the induced least-squares sense among all tri-linear forms supported on that span. In particular, if $x\in C$ then $k_x\in\operatorname{col}(G)$ and the projection is exact for that mode.
 
 

@@ -24,7 +24,7 @@ For many years, principal component analysis has been a key dimension reduction 
 
 Specifically, the dimension reduction is achieved through the Karhunen-Loève expansion, which is a well-known result in stochastic processes. It decomposes observed random trajectories $X_i(t)$ in a functional basis that consists of the eigenvectors of the covariance operator of the process $X$, i.e., $K(s,t) := \text{Cov}(X_s,X_t)$.
 
-The extension of FPCA to multivariate functional data is hence of high practical relevance. Existing approaches for multivariate functional principal component analysis (mFPCA) are based on the multivariate functional Karhunen-Loève expansion to compress the data into a finite-dimensional space (Berrendero, 2011; Chiou, 2014; Jacques, 2014; Ramsay, 2005). However, (Berrendero, 2014) proposed a PCA-like method to compress a multivariate function space \(L^2(\mathbb{R}, \mathbb{R}^p)\) to a lower-dimensional multivariate function space \(L^2(\mathbb{R}, \mathbb{R}^k)\) with \(k\ll p\), using the principles of standard finite-dimensional PCA.
+The extension of FPCA to multivariate functional data is hence of high practical relevance. Existing approaches for multivariate functional principal component analysis (mFPCA) are based on the multivariate functional Karhunen-Loève expansion to compress the data into a finite-dimensional space (Berrendero, 2011; Chiou, 2014; Jacques, 2014; Ramsay, 2005). However, (Berrendero, 2014) proposed a PCA-like method to compress a multivariate function space $L^2(\mathbb{R}, \mathbb{R}^p)$ to a lower-dimensional multivariate function space $L^2(\mathbb{R}, \mathbb{R}^k)$ with $k\ll p$, using the principles of standard finite-dimensional PCA.
 
 
  We will denote by $\mathcal{X}$ the space of our input space; in our case, it will be $L^2(\mathbb{R},\mathbb{R}^d)$. We will denote by $\mathcal{Z}$ the space of the *principal component space* or *latent* space; it can be a finite or infinite-dimensional space, e.g., $\mathbb{R}^n$ or $L^2(\mathbb{R},\mathbb{R}^k)$, see the next Table. The compression method has two functions, the projection that transforms the input into the lower dimensional space, and the functions that *reverse* or 
@@ -52,7 +52,7 @@ $$
 
 ## Experiments
 
-### 1. Correlated $n-$dimensional Brownian Motion
+### 1. Correlated $n$-dimensional Brownian Motion
 
 We simulate a multidimensional Brownian motion with covariance given by the product of $\Sigma = CC^T$ (it needs to be symmetric) where $C$ is a random matrix. Then, the simulated Brownian motion is given by
 $$

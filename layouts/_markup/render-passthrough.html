@@ -1,0 +1,13 @@
+{{- /*
+  Math passthrough ($$...$$ and $...$, see markup.goldmark.extensions.passthrough).
+  Same output as Hugo's default, except the TeX is HTML-escaped: unescaped, an
+  expression like $t<T$ is read by the browser as an HTML tag (<T$ ...>) and the
+  rest of the sentence disappears. KaTeX (layouts/partials/math.html) reads the
+  page text, where &lt; is back to <, so the math it receives is unchanged.
+  Hugo reports every $$ as "block" (even mid-paragraph) and every $ as "inline".
+*/ -}}
+{{- if eq .Type "block" -}}
+$${{ .Inner }}$$
+{{- else -}}
+${{ .Inner }}$
+{{- end -}}

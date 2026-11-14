@@ -43,13 +43,14 @@ The chaotic behavior of arises from a very simple nonlinear dynamical equation. 
 
 One of the most important theorems in Bifurcation Theory is the Crandall-Rabinowitz Theorem [[Crandall \& Rabinowitz, 1971]](https://www.sciencedirect.com/science/article/pii/0022123671900152) which state the sufficient conditions to find a simple bifurcation point, it is build upon the Implicit Function Theorem and therefore the convergence of the Newton method. Firstly, it defines a function $\mathfrak{G}$ as follows
 
-\[\tag{1}
+$$
+\tag{1}
 \mathfrak{G}(s, \lambda, y):=
 \begin{cases}
 s^{-1}\mathfrak{F}(\lambda, s(\varphi_0 + y)) & \text{if }s\not=0\\
 D_u\mathfrak{F}(\lambda, 0)(\varphi_0 + y)& \text{if }s=0
 \end{cases}
-\]
+$$
 where $\varphi_0$ is the simple eigenvector of  $D_u \mathfrak{F}_u(\lambda_0)$ whose corresponding eigenvalue is 0. Using the Implicit Function Theorem, we can prove that there exists two unique mappings $\lambda(s)$ and $y(s)$ such that $\mathfrak{G}(s, \lambda(s), y(s))=0$.
 
 ### Application to equation: $-u'' = \lambda u - a(x) u^3$
@@ -102,9 +103,9 @@ Predicion Method             |  Correction Method
     g^j (y) = 0
     \end{cases}
     $$
-    The simplest method, also called Natural, defines $g^j$ as follows: $g^j(y) = y_{i_0} - \tilde{y}_{i_0}^{j+1}. Geometrically, it restraints to solution to the prediction $i_0$-plane. However, it is noteworthy that this method does not work when the curve is turning in that axis. 
+    The simplest method, also called Natural, defines $g^j$ as follows: $g^j(y) = y_{i_0} - \tilde{y}_{i_0}^{j+1}$. Geometrically, it restraints to solution to the prediction $i_0$-plane. However, it is noteworthy that this method does not work when the curve is turning in that axis. 
 
-    An alternative method is the so called Pseudo-arclength that defines $g^j(y) = \langle y-\tilde{y}^j+1 , v^j \rangle$. Intuitively, it restraints the solutions to the perpendicular plane to $v^j$ at the point $\tilde{y}^{j+1}$.
+    An alternative method is the so called Pseudo-arclength that defines $g^j(y) = \langle y-\tilde{y}^{j+1} , v^j \rangle$. Intuitively, it restraints the solutions to the perpendicular plane to $v^j$ at the point $\tilde{y}^{j+1}$.
 
 ### Bifurcation Point Detection
 
