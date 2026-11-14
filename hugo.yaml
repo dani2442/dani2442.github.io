@@ -1,6 +1,6 @@
 baseURL: https://dani2442.github.io/
-languageCode: en-us
-title: dani2442's Blog
+locale: en-us
+title: Daniel López Montero
 theme: "PaperMod"
 
 comments: true
@@ -17,12 +17,12 @@ minify:
 
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
-  title: ExampleSite
-  description: "ExampleSite description"
-  keywords: [Blog, Portfolio, Machine Learning, Mathematics, Programming]
+  title: Daniel López Montero
+  description: "Daniel López Montero, PhD student in mathematics at FAU Erlangen-Nürnberg. Notes, papers and essays on machine learning, control theory and applied mathematics."
+  keywords: [Daniel López Montero, Machine Learning, Mathematics, Control Theory, FAU, Blog]
   author: Daniel López Montero
   # author: ["Me", "You"] # multiple authors
-  images: ["<link or path of image for opengraph, twitter-cards>"]
+  images: ["assets/img/og/og-image.png"] # default preview image for pages without a cover
   DateFormat: "January 2, 2006"
   defaultTheme: auto # dark, light
   disableThemeToggle: false
@@ -90,19 +90,20 @@ params:
       url: "https://scholar.google.com/citations?user=0nOOKpgAAAAJ"
     - name: Email
       url: "mailto:dlopez31415@gmail.com"
-    - name: CV
-      url: "https://github.com/dani2442"
+    # TODO: re-enable once there is a CV to link to (e.g. /files/cv.pdf)
+    # - name: CV
+    #   url: "/files/cv.pdf"
     - name: x
       url: "https://x.com/DprogrammerL"
     
 
-  analytics:
-    google:
-      SiteVerificationTag: "G-1WNMYZJ1S9"
-    bing:
-      SiteVerificationTag: "XYZabc"
-    yandex:
-      SiteVerificationTag: "XYZabc"
+  # Search-engine ownership verification. Paste the real codes from Google Search
+  # Console / Bing Webmaster Tools here (the GA4 ID G-... is not a verification code).
+  # analytics:
+  #   google:
+  #     SiteVerificationTag: ""
+  #   bing:
+  #     SiteVerificationTag: ""
 
   cover:
     hidden: false # hide everywhere but not in structured data
@@ -110,7 +111,7 @@ params:
     hiddenInSingle: false # hide on single page
 
   editPost:
-    URL: "https://github.com/dani2442/dani2442.github.io/content"
+    URL: "https://github.com/dani2442/dani2442.github.io/blob/main/content"
     Text: "Suggest Changes" # edit text
     appendFilePath: true # to append file path to Edit link
 
@@ -147,11 +148,30 @@ menu:
       name: about
       url: /about/
       weight: 40
-    
+    - identifier: search
+      name: search
+      url: /search/
+      weight: 50
+
     # - identifier: web page
     #   name: dprogrammer.org
     #   url: http://dprogrammer.org
     #   weight: 30
+# JSON feeds the /search/ page (Fuse.js); llms uses PaperMod's layouts/llms.txt.
+outputFormats:
+  llms:
+    mediaType: "text/plain"
+    baseName: "llms"
+    isPlainText: true
+    notAlternative: true
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
+    - llms
+
 # Read: https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#using-hugos-syntax-highlighter-chroma
 pygmentsUseClasses: true
 markup:

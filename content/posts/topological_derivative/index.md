@@ -13,7 +13,7 @@ comments: true
 TocOpen: false
 UseHugoToc: true
 editPost:
-    URL: "https://github.com/dani2442/dani2442.github.io/content"
+    URL: "https://github.com/dani2442/dani2442.github.io/blob/main/content"
     Text: "Suggest Changes" # edit text
     appendFilePath: true # to append file path to Edit link
 ---
@@ -54,7 +54,7 @@ The state equation and notation come first (§1–§2), followed by the derivati
 (§3), the discretization (§4), and the algorithm and examples (§5–§6); the
 appendices hold the exterior solution, the numerical verification of the
 formula and an exact check. All the code is in
-[`code/topological_derivative/`](https://github.com/dani2442/dani2442.github.io/tree/main/code/topological_derivative):
+[`code/topological_derivative/`](https://github.com/dani2442/dani2442_code/tree/main/topological_derivative):
 `numpy` + `scipy.sparse` + `matplotlib`, with Pillow for the GIF.
 
 ## 1. The state problem

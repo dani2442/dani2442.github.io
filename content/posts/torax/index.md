@@ -13,13 +13,13 @@ comments: true
 TocOpen: true
 UseHugoToc: true
 editPost:
-    URL: "https://github.com/dani2442/dani2442.github.io/content"
+    URL: "https://github.com/dani2442/dani2442.github.io/blob/main/content"
     Text: "Suggest Changes" # edit text
     appendFilePath: true # to append file path to Edit link
 ---
 
 
-![alt text](particles.gif)
+{{< animation src="particles.mp4" alt="Animation of simulated particles in a tokamak cross-section" >}}
 
 
 I think there are 3 major milestones remaining for humanity, and one of them is clean and abundant energy. Fusion energy has the potential to provide a nearly limitless source of clean energy by replicating the processes that power the sun. However, achieving controlled fusion reactions on Earth has proven to be a formidable and very challenging task.
@@ -509,7 +509,7 @@ dt, state_history = torax.run_simulation(torax_config)
 ```
 And after some post-processing, you can generate plots like the following:
 
-![](axial_layers.gif)
+{{< animation src="axial_layers.mp4" alt="Animation of an axial view of the plasma inside a tokamak during a simulation" >}}
 *Figure: Axial view of plasma inside a tokamak during a simulation.*
 
 The most important quantities are the ones related to fusion power density, which can be plotted as follows:

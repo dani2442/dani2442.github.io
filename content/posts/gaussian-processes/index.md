@@ -13,7 +13,7 @@ ShowReadingTime: true
 comments: true
 UseHugoToc: true
 editPost:
-    URL: "https://github.com/dani2442/dani2442.github.io/content"
+    URL: "https://github.com/dani2442/dani2442.github.io/blob/main/content"
     Text: "Suggest Changes" # edit text
     appendFilePath: true # to append file path to Edit link
 ---

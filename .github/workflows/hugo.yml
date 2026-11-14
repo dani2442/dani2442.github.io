@@ -31,7 +31,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      HUGO_VERSION: 0.147.0
+      HUGO_VERSION: 0.169.0
     steps:
       - name: Install Hugo CLI
         run: |
@@ -43,6 +43,19 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+      # Git LFS files (*.mp4) are not fetched by checkout by default; without this the
+      # site would serve the 134-byte LFS pointer. Cache the objects so each deploy
+      # doesn't re-download them and use up the LFS bandwidth quota.
+      - name: Hash Git LFS object list
+        id: lfs-id
+        run: echo "hash=$(git lfs ls-files --long | cut -d ' ' -f1 | sort | sha256sum | cut -d ' ' -f1)" >> "$GITHUB_OUTPUT"
+      - name: Restore Git LFS cache
+        uses: actions/cache@v4
+        with:
+          path: .git/lfs
+          key: lfs-${{ steps.lfs-id.outputs.hash }}
+      - name: Fetch Git LFS objects
+        run: git lfs pull
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5

@@ -21,7 +21,7 @@ images:
     - high_resolution2.jpg
 UseHugoToc: true
 editPost:
-    URL: "https://github.com/dani2442/dani2442.github.io/content"
+    URL: "https://github.com/dani2442/dani2442.github.io/blob/main/content"
     Text: "Suggest Changes" # edit text
     appendFilePath: true # to append file path to Edit link
 ---
@@ -111,7 +111,7 @@ In contrast, for me, it is not entirely obvious why would anyone want to use the
 
 
 4. Industrial monitoring, prevention and planning: Many suppliers, customers can benefit from a better information flow provided by the satellites. It can be use for road planning, traffic congestion measurement, port and parking monitoring, and industrial site surveillance. This information can also be valuable in financial markets to improve revenue estimates or to verify and compare less reliable data sources.
-![alt text](image.png)
+![alt text](image.webp)
 
 
 
@@ -158,4 +158,4 @@ In contrast, for me, it is not entirely obvious why would anyone want to use the
 A useful website that shows real-time satellite locations is https://satellitemap.space/. I highly recommend checking it out:
 
 
-![alt text](satellite.gif)
+{{< animation src="satellite.mp4" alt="Animation of satellite positions around the Earth" >}}

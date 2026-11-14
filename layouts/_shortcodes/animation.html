@@ -1,0 +1,11 @@
+{{- /*
+  GIF-style looping video: autoplays muted and loops, no controls.
+  Usage: {{< animation src="clip.mp4" alt="What the animation shows" >}}
+  `src` is a page-bundle resource or a URL.
+*/ -}}
+{{- $src := .Get "src" -}}
+{{- with .Page.Resources.Get $src }}{{ $src = .RelPermalink }}{{ end -}}
+<figure>
+  <video src="{{ $src }}" autoplay loop muted playsinline
+    {{- with .Get "alt" }} aria-label="{{ . }}" role="img"{{ end }}></video>
+</figure>
