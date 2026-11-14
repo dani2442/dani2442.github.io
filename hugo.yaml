@@ -52,7 +52,7 @@ params:
     favicon192x192: "assets/img/favico/favicon-192x192.png"
     favicon512x512: "assets/img/favico/favicon-512x512.png"
     apple_touch_icon: "assets/img/favico/apple-touch-icon.png"
-    safari_pinned_tab: "assets/img/favico/apple-touch-icon.png"
+    safari_pinned_tab: "assets/img/favico/favicon.svg"
 
   label:
     text: "Home"
